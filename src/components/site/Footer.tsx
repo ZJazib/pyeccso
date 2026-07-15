@@ -1,28 +1,28 @@
 import { Link } from "@tanstack/react-router";
-import { MapPin, Phone, Mail, Globe, Facebook, Twitter, Linkedin, Youtube } from "lucide-react";
+import { MapPin, Phone, Mail, Globe } from "lucide-react";
 
 const quickLinks = [
-  { label: "About Us", to: "/about" },
+  { label: "About PYECSO", to: "/about" },
   { label: "Our Programs", to: "/programs" },
-  { label: "Projects", to: "/projects" },
-  { label: "Media Center", to: "/media" },
+  { label: "Implemented Projects", to: "/projects" },
+  { label: "Partners & Donors", to: "/partners" },
   { label: "Careers", to: "/careers" },
 ];
 
 const resources = [
-  { label: "Reports & Publications", to: "/transparency" },
-  { label: "Policies", to: "/transparency" },
-  { label: "Procurement", to: "/transparency" },
-  { label: "Downloads", to: "/media" },
+  { label: "Transparency", to: "/transparency" },
+  { label: "Media Center", to: "/media" },
   { label: "Contact Us", to: "/contact" },
 ];
 
-const focusAreas = [
-  "Education",
-  "Livelihoods",
-  "Health & Nutrition",
-  "Protection",
-  "Emergency Response",
+const sectors = [
+  "Cash Assistance",
+  "Food Assistance",
+  "Livelihoods & TVET",
+  "Education & Capacity Building",
+  "Agriculture",
+  "Protection, Gender & AAP",
+  "Health, Nutrition & MHPSS",
 ];
 
 export function Footer() {
@@ -42,30 +42,30 @@ export function Footer() {
               <div>
                 <div className="text-white font-extrabold text-xl">PYECSO</div>
                 <div className="text-[10px] text-white/60 leading-tight">
-                  Patriotic Youths Education, Cultural<br />and Social Organization
+                  Patriotic Youths Education, Cultural
+                  <br />and Social Organization
                 </div>
               </div>
             </div>
-            <div className="flex gap-2 mt-6">
-              {[Facebook, Twitter, Linkedin, Youtube].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="size-9 rounded-md bg-white/5 hover:bg-brand-blue transition-colors flex items-center justify-center"
-                >
-                  <Icon className="size-4 text-white" />
-                </a>
-              ))}
+            <p className="text-white/60 leading-relaxed max-w-sm">
+              Empowering Afghan women, children and youth since 2006 through education,
+              humanitarian aid and livelihood programs.
+            </p>
+            <div className="mt-5 text-xs text-white/50 space-y-1">
+              <div>Registered: Ministry of Economy — No. 1201</div>
+              <div>Ministry of Labor and Social Affairs</div>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-semibold mb-5">Quick Links</h4>
+            <h4 className="text-white font-semibold mb-5">Organization</h4>
             <ul className="space-y-3">
               {quickLinks.map((l) => (
                 <li key={l.label}>
-                  <Link to={l.to} className="hover:text-white transition-colors">{l.label}</Link>
+                  <Link to={l.to} className="hover:text-white transition-colors">
+                    {l.label}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -77,31 +77,35 @@ export function Footer() {
             <ul className="space-y-3">
               {resources.map((l) => (
                 <li key={l.label}>
-                  <Link to={l.to} className="hover:text-white transition-colors">{l.label}</Link>
+                  <Link to={l.to} className="hover:text-white transition-colors">
+                    {l.label}
+                  </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Focus Areas */}
+          {/* Sectors */}
           <div>
-            <h4 className="text-white font-semibold mb-5">Our Focus Areas</h4>
+            <h4 className="text-white font-semibold mb-5">Sectors</h4>
             <ul className="space-y-3">
-              {focusAreas.map((l) => (
-                <li key={l}><span className="hover:text-white transition-colors cursor-default">{l}</span></li>
+              {sectors.map((l) => (
+                <li key={l}>
+                  <span className="cursor-default">{l}</span>
+                </li>
               ))}
             </ul>
           </div>
         </div>
 
         {/* Contact row */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-14 pt-10 border-t border-white/10">
-          <div className="md:col-span-2">
-            <h4 className="text-white font-semibold mb-4">Contact Us</h4>
+        <div className="mt-14 pt-10 border-t border-white/10 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <h4 className="text-white font-semibold mb-4">Contact</h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <MapPin className="size-4 text-brand-blue shrink-0 mt-0.5" />
-                <span>House # 15, Street 3, Karte Seh, Kabul, Afghanistan</span>
+                <span>Kabul, Afghanistan</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="size-4 text-brand-blue shrink-0" />
@@ -117,16 +121,24 @@ export function Footer() {
               </li>
             </ul>
           </div>
+          <div>
+            <h4 className="text-white font-semibold mb-4">Cluster Memberships</h4>
+            <ul className="space-y-2 text-white/70">
+              <li>Afghanistan Education Cluster</li>
+              <li>Gender in Humanitarian Action — Afghanistan</li>
+              <li>Afghanistan Food Security & Agriculture Cluster</li>
+              <li>Global Protection Cluster</li>
+            </ul>
+          </div>
         </div>
       </div>
 
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
-          <p>© {new Date().getFullYear()} PYECSO. All Rights Reserved.</p>
+          <p>© {new Date().getFullYear()} PYECSO. All rights reserved.</p>
           <div className="flex items-center gap-6">
-            <a href="#" className="hover:text-white">Privacy Policy</a>
-            <a href="#" className="hover:text-white">Terms of Use</a>
-            <a href="#" className="hover:text-white">Sitemap</a>
+            <Link to="/transparency" className="hover:text-white">Transparency</Link>
+            <Link to="/contact" className="hover:text-white">Contact</Link>
           </div>
         </div>
       </div>
