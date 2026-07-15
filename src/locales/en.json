@@ -1,0 +1,81 @@
+{
+  "brand": {
+    "short": "PYECSO",
+    "full": "Patriotic Youths Education, Cultural and Social Organization"
+  },
+  "top": {
+    "registered": "Registered NGO · Ministry of Economy No. 1201"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "programs": "Programs",
+    "projects": "Projects",
+    "partners": "Partners",
+    "media": "Media",
+    "transparency": "Transparency",
+    "careers": "Careers",
+    "contact": "Contact",
+    "contactUs": "Contact Us",
+    "language": "Language"
+  },
+  "footer": {
+    "organization": "Organization",
+    "resources": "Resources",
+    "sectors": "Sectors",
+    "contact": "Contact",
+    "clusters": "Cluster Memberships",
+    "tagline": "Empowering Afghan women, children and youth since 2006 through education, humanitarian aid and livelihood programs.",
+    "reg1": "Registered: Ministry of Economy — No. 1201",
+    "reg2": "Ministry of Labor and Social Affairs",
+    "rights": "All rights reserved."
+  },
+  "hero": {
+    "home": {
+      "eyebrow": "Serving Afghanistan since 2006",
+      "title": "A women-led Afghan NGO for education, resilience and dignity",
+      "description": "PYECSO delivers education, livelihoods, protection and humanitarian assistance in partnership with UN agencies and international donors across 24+ provinces."
+    },
+    "about": {
+      "title": "About PYECSO",
+      "description": "A women-led, non-profit Afghan organization established in 2006, working with communities, government partners and the international humanitarian system."
+    },
+    "programs": {
+      "title": "Our Programs",
+      "description": "Seven integrated sectors delivering assistance and long-term development to women, children and vulnerable communities across Afghanistan."
+    },
+    "projects": {
+      "title": "Implemented Projects",
+      "description": "A portfolio of over thirty projects delivered with UN agencies, government ministries and international partners since 2006."
+    },
+    "partners": {
+      "title": "Partners & Donors",
+      "description": "PYECSO collaborates with United Nations agencies, government institutions, diplomatic missions and international NGOs."
+    },
+    "media": {
+      "title": "Media Center",
+      "description": "Photos, videos and press releases documenting PYECSO's work across Afghanistan."
+    },
+    "transparency": {
+      "title": "Transparency & Accountability",
+      "description": "Our policies, financial reports and accountability commitments to communities, donors and partners."
+    },
+    "careers": {
+      "title": "Careers",
+      "description": "Join a women-led Afghan team delivering education, protection and humanitarian assistance."
+    },
+    "contact": {
+      "title": "Contact PYECSO",
+      "description": "Reach our head office in Kabul or connect with our programs team."
+    }
+  },
+  "common": {
+    "readMore": "Read more",
+    "learnMore": "Learn more",
+    "viewAll": "View all",
+    "search": "Search",
+    "filter": "Filter",
+    "back": "Back",
+    "notice": "This page is available in English while additional languages are being finalized."
+  }
+}
