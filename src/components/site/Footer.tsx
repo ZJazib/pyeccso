@@ -1,19 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, Phone, Mail, Globe } from "lucide-react";
-
-const quickLinks = [
-  { label: "About PYECSO", to: "/about" },
-  { label: "Our Programs", to: "/programs" },
-  { label: "Implemented Projects", to: "/projects" },
-  { label: "Partners & Donors", to: "/partners" },
-  { label: "Careers", to: "/careers" },
-];
-
-const resources = [
-  { label: "Transparency", to: "/transparency" },
-  { label: "Media Center", to: "/media" },
-  { label: "Contact Us", to: "/contact" },
-];
+import { useTranslation } from "react-i18next";
 
 const sectors = [
   "Cash Assistance",
@@ -26,6 +13,22 @@ const sectors = [
 ];
 
 export function Footer() {
+  const { t } = useTranslation();
+
+  const quickLinks = [
+    { label: t("nav.about"), to: "/about" },
+    { label: t("nav.programs"), to: "/programs" },
+    { label: t("nav.projects"), to: "/projects" },
+    { label: t("nav.partners"), to: "/partners" },
+    { label: t("nav.careers"), to: "/careers" },
+  ] as const;
+
+  const resources = [
+    { label: t("nav.transparency"), to: "/transparency" },
+    { label: t("nav.media"), to: "/media" },
+    { label: t("nav.contact"), to: "/contact" },
+  ] as const;
+
   return (
     <footer className="bg-navy-950 text-white/70 text-sm">
       <div className="max-w-7xl mx-auto px-4 md:px-6 pt-16 pb-10">
@@ -40,29 +43,25 @@ export function Footer() {
                 </svg>
               </div>
               <div>
-                <div className="text-white font-extrabold text-xl">PYECSO</div>
-                <div className="text-[10px] text-white/60 leading-tight">
-                  Patriotic Youths Education, Cultural
-                  <br />and Social Organization
+                <div className="text-white font-extrabold text-xl">{t("brand.short")}</div>
+                <div className="text-[10px] text-white/60 leading-tight max-w-[220px]">
+                  {t("brand.full")}
                 </div>
               </div>
             </div>
-            <p className="text-white/60 leading-relaxed max-w-sm">
-              Empowering Afghan women, children and youth since 2006 through education,
-              humanitarian aid and livelihood programs.
-            </p>
+            <p className="text-white/60 leading-relaxed max-w-sm">{t("footer.tagline")}</p>
             <div className="mt-5 text-xs text-white/50 space-y-1">
-              <div>Registered: Ministry of Economy — No. 1201</div>
-              <div>Ministry of Labor and Social Affairs</div>
+              <div>{t("footer.reg1")}</div>
+              <div>{t("footer.reg2")}</div>
             </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white font-semibold mb-5">Organization</h4>
+            <h4 className="text-white font-semibold mb-5">{t("footer.organization")}</h4>
             <ul className="space-y-3">
               {quickLinks.map((l) => (
-                <li key={l.label}>
+                <li key={l.to}>
                   <Link to={l.to} className="hover:text-white transition-colors">
                     {l.label}
                   </Link>
@@ -73,10 +72,10 @@ export function Footer() {
 
           {/* Resources */}
           <div>
-            <h4 className="text-white font-semibold mb-5">Resources</h4>
+            <h4 className="text-white font-semibold mb-5">{t("footer.resources")}</h4>
             <ul className="space-y-3">
               {resources.map((l) => (
-                <li key={l.label}>
+                <li key={l.to}>
                   <Link to={l.to} className="hover:text-white transition-colors">
                     {l.label}
                   </Link>
@@ -87,7 +86,7 @@ export function Footer() {
 
           {/* Sectors */}
           <div>
-            <h4 className="text-white font-semibold mb-5">Sectors</h4>
+            <h4 className="text-white font-semibold mb-5">{t("footer.sectors")}</h4>
             <ul className="space-y-3">
               {sectors.map((l) => (
                 <li key={l}>
@@ -101,7 +100,7 @@ export function Footer() {
         {/* Contact row */}
         <div className="mt-14 pt-10 border-t border-white/10 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h4 className="text-white font-semibold mb-4">Contact</h4>
+            <h4 className="text-white font-semibold mb-4">{t("footer.contact")}</h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <MapPin className="size-4 text-brand-blue shrink-0 mt-0.5" />
@@ -122,7 +121,7 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-semibold mb-4">Cluster Memberships</h4>
+            <h4 className="text-white font-semibold mb-4">{t("footer.clusters")}</h4>
             <ul className="space-y-2 text-white/70">
               <li>Afghanistan Education Cluster</li>
               <li>Gender in Humanitarian Action — Afghanistan</li>
@@ -135,10 +134,10 @@ export function Footer() {
 
       <div className="border-t border-white/10">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
-          <p>© {new Date().getFullYear()} PYECSO. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} PYECSO. {t("footer.rights")}</p>
           <div className="flex items-center gap-6">
-            <Link to="/transparency" className="hover:text-white">Transparency</Link>
-            <Link to="/contact" className="hover:text-white">Contact</Link>
+            <Link to="/transparency" className="hover:text-white">{t("nav.transparency")}</Link>
+            <Link to="/contact" className="hover:text-white">{t("nav.contact")}</Link>
           </div>
         </div>
       </div>

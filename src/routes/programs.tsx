@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/programs")({
   component: Programs,
@@ -140,12 +141,13 @@ const highlights = [
 ];
 
 function Programs() {
+  const { t } = useTranslation();
   return (
     <SiteLayout>
       <PageHero
-        title="Our Programs"
-        description="PYECSO delivers integrated programs in humanitarian assistance, livelihoods, education, agriculture, protection and health across Afghanistan."
-        breadcrumb={[{ label: "Home", to: "/" }, { label: "Our Programs" }]}
+        title={t("hero.programs.title")}
+        description={t("hero.programs.description")}
+        breadcrumb={[{ label: t("nav.home"), to: "/" }, { label: t("hero.programs.title") }]}
       />
 
       <section className="py-20">

@@ -1,0 +1,81 @@
+{
+  "brand": {
+    "short": "PYECSO",
+    "full": "Organisation d'Éducation, Culturelle et Sociale des Jeunes Patriotes"
+  },
+  "top": {
+    "registered": "ONG enregistrée · Ministère de l'Économie n° 1201"
+  },
+  "nav": {
+    "home": "Accueil",
+    "about": "À propos",
+    "programs": "Programmes",
+    "projects": "Projets",
+    "partners": "Partenaires",
+    "media": "Médias",
+    "transparency": "Transparence",
+    "careers": "Carrières",
+    "contact": "Contact",
+    "contactUs": "Nous contacter",
+    "language": "Langue"
+  },
+  "footer": {
+    "organization": "Organisation",
+    "resources": "Ressources",
+    "sectors": "Secteurs",
+    "contact": "Contact",
+    "clusters": "Adhésions aux clusters",
+    "tagline": "Autonomiser les femmes, enfants et jeunes afghans depuis 2006 grâce à l'éducation, l'aide humanitaire et les programmes de moyens de subsistance.",
+    "reg1": "Enregistrée : Ministère de l'Économie — n° 1201",
+    "reg2": "Ministère du Travail et des Affaires sociales",
+    "rights": "Tous droits réservés."
+  },
+  "hero": {
+    "home": {
+      "eyebrow": "Au service de l'Afghanistan depuis 2006",
+      "title": "Une ONG afghane dirigée par des femmes pour l'éducation, la résilience et la dignité",
+      "description": "PYECSO fournit éducation, moyens de subsistance, protection et aide humanitaire en partenariat avec les agences des Nations Unies et les bailleurs internationaux dans plus de 24 provinces."
+    },
+    "about": {
+      "title": "À propos de PYECSO",
+      "description": "Une organisation afghane à but non lucratif dirigée par des femmes, créée en 2006, travaillant avec les communautés, les partenaires gouvernementaux et le système humanitaire international."
+    },
+    "programs": {
+      "title": "Nos programmes",
+      "description": "Sept secteurs intégrés fournissant aide et développement à long terme aux femmes, enfants et communautés vulnérables à travers l'Afghanistan."
+    },
+    "projects": {
+      "title": "Projets mis en œuvre",
+      "description": "Un portefeuille de plus de trente projets réalisés avec les agences de l'ONU, les ministères et les partenaires internationaux depuis 2006."
+    },
+    "partners": {
+      "title": "Partenaires et bailleurs",
+      "description": "PYECSO collabore avec les agences des Nations Unies, les institutions gouvernementales, les missions diplomatiques et les ONG internationales."
+    },
+    "media": {
+      "title": "Centre médias",
+      "description": "Photos, vidéos et communiqués de presse documentant le travail de PYECSO à travers l'Afghanistan."
+    },
+    "transparency": {
+      "title": "Transparence et redevabilité",
+      "description": "Nos politiques, rapports financiers et engagements de redevabilité envers les communautés, les bailleurs et les partenaires."
+    },
+    "careers": {
+      "title": "Carrières",
+      "description": "Rejoignez une équipe afghane dirigée par des femmes qui fournit éducation, protection et aide humanitaire."
+    },
+    "contact": {
+      "title": "Contacter PYECSO",
+      "description": "Contactez notre siège à Kaboul ou notre équipe des programmes."
+    }
+  },
+  "common": {
+    "readMore": "Lire la suite",
+    "learnMore": "En savoir plus",
+    "viewAll": "Voir tout",
+    "search": "Rechercher",
+    "filter": "Filtrer",
+    "back": "Retour",
+    "notice": "Cette page est disponible en anglais pendant la finalisation des traductions supplémentaires."
+  }
+}

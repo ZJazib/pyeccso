@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
+import { useTranslation } from "react-i18next";
 import cardEducation from "@/assets/card-education.jpg";
 import cardLivelihoods from "@/assets/card-livelihoods.jpg";
 import cardWash from "@/assets/card-wash.jpg";
@@ -63,12 +64,13 @@ const stories = [
 ];
 
 function Media() {
+  const { t } = useTranslation();
   return (
     <SiteLayout>
       <PageHero
-        title="Media Center"
-        description="Explore our stories, photos, videos, and press releases to see the impact of our work across Afghanistan."
-        breadcrumb={[{ label: "Home", to: "/" }, { label: "Media Center" }]}
+        title={t("hero.media.title")}
+        description={t("hero.media.description")}
+        breadcrumb={[{ label: t("nav.home"), to: "/" }, { label: t("hero.media.title") }]}
       />
 
       {/* Tabs */}

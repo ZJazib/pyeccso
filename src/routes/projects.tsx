@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { MapPin, ArrowRight, ChevronDown, Search, Handshake } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/projects")({
   component: Projects,
@@ -206,12 +207,13 @@ const projects: Project[] = [
 ];
 
 function Projects() {
+  const { t } = useTranslation();
   return (
     <SiteLayout>
       <PageHero
-        title="Implemented Projects"
-        description="A public overview of projects PYECSO has implemented across Afghanistan in partnership with UN agencies, embassies, INGOs and government institutions."
-        breadcrumb={[{ label: "Home", to: "/" }, { label: "Projects" }]}
+        title={t("hero.projects.title")}
+        description={t("hero.projects.description")}
+        breadcrumb={[{ label: t("nav.home"), to: "/" }, { label: t("hero.projects.title") }]}
       />
 
       <section className="py-20 bg-surface">

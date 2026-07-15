@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/transparency")({
   component: Transparency,
@@ -72,12 +73,13 @@ const mealItems = [
 ];
 
 function Transparency() {
+  const { t } = useTranslation();
   return (
     <SiteLayout>
       <PageHero
-        title="Transparency & Accountability"
-        description="We are committed to being transparent, accountable and ethical in everything we do. We share information openly to build trust with our partners, donors and the communities we serve."
-        breadcrumb={[{ label: "Home", to: "/" }, { label: "Transparency & Accountability" }]}
+        title={t("hero.transparency.title")}
+        description={t("hero.transparency.description")}
+        breadcrumb={[{ label: t("nav.home"), to: "/" }, { label: t("hero.transparency.title") }]}
       />
 
       {/* Tabs */}
