@@ -116,15 +116,128 @@
   }
 }
 
-/* RTL + script-specific typography */
-html[dir="rtl"] body,
-html[lang="fa"] body,
-html[lang="ps"] body,
-html[lang="ar"] body {
+/* ============================================================
+   RTL + script-specific typography (Dari, Pashto, Arabic)
+   ============================================================ */
+
+html[dir="rtl"] body {
   font-family: "Noto Naskh Arabic", "Noto Sans Arabic", "Inter", system-ui, sans-serif;
+  letter-spacing: 0;
 }
 
-html[dir="rtl"] .text-balance,
-html[dir="rtl"] .text-pretty {
-  text-align: start;
+/* Arabic-script languages: slightly larger, looser line-height */
+html[lang="ar"] body { font-family: "Noto Naskh Arabic", "Noto Sans Arabic", system-ui, sans-serif; }
+html[lang="fa"] body,
+html[lang="ps"] body { font-family: "Noto Sans Arabic", "Noto Naskh Arabic", system-ui, sans-serif; }
+
+html[dir="rtl"] p,
+html[dir="rtl"] li,
+html[dir="rtl"] dd,
+html[dir="rtl"] dt,
+html[dir="rtl"] label,
+html[dir="rtl"] input,
+html[dir="rtl"] textarea,
+html[dir="rtl"] select {
+  line-height: 1.85;
 }
+html[dir="rtl"] h1,
+html[dir="rtl"] h2,
+html[dir="rtl"] h3,
+html[dir="rtl"] h4 {
+  line-height: 1.4;
+  letter-spacing: 0;
+  font-weight: 700;
+}
+
+/* Text alignment */
+html[dir="rtl"] .text-left { text-align: right; }
+html[dir="rtl"] .text-right { text-align: left; }
+html[dir="rtl"] .text-balance,
+html[dir="rtl"] .text-pretty { text-align: start; }
+
+/* Directional margins */
+html[dir="rtl"] .ml-1 { margin-left: 0; margin-right: 0.25rem; }
+html[dir="rtl"] .ml-2 { margin-left: 0; margin-right: 0.5rem; }
+html[dir="rtl"] .ml-3 { margin-left: 0; margin-right: 0.75rem; }
+html[dir="rtl"] .ml-4 { margin-left: 0; margin-right: 1rem; }
+html[dir="rtl"] .ml-auto { margin-left: 0; margin-right: auto; }
+html[dir="rtl"] .mr-1 { margin-right: 0; margin-left: 0.25rem; }
+html[dir="rtl"] .mr-2 { margin-right: 0; margin-left: 0.5rem; }
+html[dir="rtl"] .mr-3 { margin-right: 0; margin-left: 0.75rem; }
+html[dir="rtl"] .mr-4 { margin-right: 0; margin-left: 1rem; }
+html[dir="rtl"] .mr-auto { margin-right: 0; margin-left: auto; }
+
+/* Directional padding */
+html[dir="rtl"] .pl-3 { padding-left: 0; padding-right: 0.75rem; }
+html[dir="rtl"] .pl-8 { padding-left: 0; padding-right: 2rem; }
+html[dir="rtl"] .pl-9 { padding-left: 0; padding-right: 2.25rem; }
+html[dir="rtl"] .pr-3 { padding-right: 0; padding-left: 0.75rem; }
+html[dir="rtl"] .pr-8 { padding-right: 0; padding-left: 2rem; }
+html[dir="rtl"] .pr-9 { padding-right: 0; padding-left: 2.25rem; }
+
+/* Absolute positioning: swap left/right anchors */
+html[dir="rtl"] .left-0 { left: auto; right: 0; }
+html[dir="rtl"] .left-2 { left: auto; right: 0.5rem; }
+html[dir="rtl"] .left-3 { left: auto; right: 0.75rem; }
+html[dir="rtl"] .left-4 { left: auto; right: 1rem; }
+html[dir="rtl"] .right-0 { right: auto; left: 0; }
+html[dir="rtl"] .right-2 { right: auto; left: 0.5rem; }
+html[dir="rtl"] .right-3 { right: auto; left: 0.75rem; }
+html[dir="rtl"] .right-4 { right: auto; left: 1rem; }
+
+/* Borders and rounded corners */
+html[dir="rtl"] .border-l { border-left-width: 0; border-right-width: 1px; }
+html[dir="rtl"] .border-l-2 { border-left-width: 0; border-right-width: 2px; }
+html[dir="rtl"] .border-l-4 { border-left-width: 0; border-right-width: 4px; }
+html[dir="rtl"] .border-r { border-right-width: 0; border-left-width: 1px; }
+html[dir="rtl"] .border-r-2 { border-right-width: 0; border-left-width: 2px; }
+html[dir="rtl"] .rounded-l-md { border-radius: 0 0.375rem 0.375rem 0; }
+html[dir="rtl"] .rounded-r-md { border-radius: 0.375rem 0 0 0.375rem; }
+html[dir="rtl"] .rounded-l-lg { border-radius: 0 0.5rem 0.5rem 0; }
+html[dir="rtl"] .rounded-r-lg { border-radius: 0.5rem 0 0 0.5rem; }
+
+/* Sibling spacing */
+html[dir="rtl"] .space-x-1 > :not([hidden]) ~ :not([hidden]) { margin-right: 0.25rem; margin-left: 0; }
+html[dir="rtl"] .space-x-2 > :not([hidden]) ~ :not([hidden]) { margin-right: 0.5rem; margin-left: 0; }
+html[dir="rtl"] .space-x-3 > :not([hidden]) ~ :not([hidden]) { margin-right: 0.75rem; margin-left: 0; }
+html[dir="rtl"] .space-x-4 > :not([hidden]) ~ :not([hidden]) { margin-right: 1rem; margin-left: 0; }
+
+/* Flip directional icons (arrows, chevrons) so they follow reading flow */
+html[dir="rtl"] .rtl-flip,
+html[dir="rtl"] .lucide-arrow-right,
+html[dir="rtl"] .lucide-arrow-left,
+html[dir="rtl"] .lucide-chevron-right,
+html[dir="rtl"] .lucide-chevron-left {
+  transform: scaleX(-1);
+}
+
+/* Gradients: reverse LTR reading order */
+html[dir="rtl"] .bg-gradient-to-r,
+html[dir="rtl"] .bg-linear-to-r {
+  background-image: linear-gradient(to left, var(--tw-gradient-stops));
+}
+html[dir="rtl"] .bg-gradient-to-l,
+html[dir="rtl"] .bg-linear-to-l {
+  background-image: linear-gradient(to right, var(--tw-gradient-stops));
+}
+
+/* Form controls align to start */
+html[dir="rtl"] input,
+html[dir="rtl"] textarea,
+html[dir="rtl"] select {
+  text-align: right;
+}
+
+/* Keep phone/email/URLs in LTR even inside RTL layouts */
+html[dir="rtl"] a[href^="tel:"],
+html[dir="rtl"] a[href^="mailto:"],
+html[dir="rtl"] .ltr-inline {
+  direction: ltr;
+  unicode-bidi: isolate;
+  display: inline-block;
+}
+
+/* Hero background image: right-anchored image should mirror to left */
+html[dir="rtl"] .object-right { object-position: left; }
+html[dir="rtl"] .object-left { object-position: right; }
+
