@@ -19,13 +19,13 @@ export function Footer() {
     { label: t("nav.about"), to: "/about" },
     { label: t("nav.programs"), to: "/programs" },
     { label: t("nav.projects"), to: "/projects" },
-    { label: t("nav.partners"), to: "/partners" },
+    { label: t("nav.learn"), to: "/learn" },
     { label: t("nav.careers"), to: "/careers" },
   ] as const;
 
   const resources = [
-    { label: t("nav.transparency"), to: "/transparency" },
     { label: t("nav.media"), to: "/media" },
+    { label: t("nav.donate"), to: "/donate" },
     { label: t("nav.contact"), to: "/contact" },
   ] as const;
 
@@ -136,7 +136,7 @@ export function Footer() {
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
           <p>© {new Date().getFullYear()} PYECSO. {t("footer.rights")}</p>
           <div className="flex items-center gap-6">
-            <Link to="/transparency" className="hover:text-white">{t("nav.transparency")}</Link>
+            <Link to="/donate" className="hover:text-white">{t("nav.donate")}</Link>
             <Link to="/contact" className="hover:text-white">{t("nav.contact")}</Link>
           </div>
         </div>
