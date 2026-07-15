@@ -83,6 +83,7 @@ const highlights = [
 const partners = ["UN Women", "UNESCO", "UNICEF", "WFP", "FAO", "Embassy of Japan", "DAI / LGCD", "IRD"];
 
 function Home() {
+  const { t } = useTranslation();
   return (
     <SiteLayout>
       {/* Hero */}
@@ -99,16 +100,14 @@ function Home() {
         </div>
         <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28">
           <div className="max-w-2xl">
-            <span className="inline-block bg-white/10 ring-1 ring-white/20 text-white text-xs font-semibold tracking-[0.2em] px-4 py-1.5 rounded-full mb-6">
-              EMPOWERING AFGHAN COMMUNITIES SINCE 2006
+            <span className="inline-block bg-white/10 ring-1 ring-white/20 text-white text-xs font-semibold tracking-[0.2em] px-4 py-1.5 rounded-full mb-6 uppercase">
+              {t("hero.home.eyebrow")}
             </span>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight mb-5">
-              Education, humanitarian aid and livelihoods for Afghan women, children and youth.
+              {t("hero.home.title")}
             </h1>
             <p className="text-white/85 text-base md:text-lg leading-relaxed mb-8 max-w-xl text-pretty">
-              PYECSO is a women-led national NGO working in partnership with UN agencies,
-              embassies, international NGOs and Afghan government institutions to build
-              resilience and opportunity in Afghan communities.
+              {t("hero.home.description")}
             </p>
             <div className="flex flex-wrap gap-3">
               <Link
