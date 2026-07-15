@@ -28,25 +28,49 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-navy-deep: var(--navy-deep);
-  --color-navy-mid: var(--navy-mid);
-  --color-blue-main: var(--blue-main);
-  --color-blue-wash: var(--blue-wash);
-  --color-surface: var(--surface);
+
+  /* Brand tokens */
+  --color-navy-950: var(--navy-950);
+  --color-navy-900: var(--navy-900);
+  --color-navy-800: var(--navy-800);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-blue-hover: var(--brand-blue-hover);
+  --color-brand-blue-soft: var(--brand-blue-soft);
+  --color-brand-blue-wash: var(--brand-blue-wash);
   --color-ink: var(--ink);
-  --font-sans: "Roboto", system-ui, sans-serif;
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+
+  /* Sector accent colors from mockups */
+  --color-sector-education: #1f7fd4;
+  --color-sector-livelihoods: #16a274;
+  --color-sector-health: #e0453f;
+  --color-sector-wash: #1f7fd4;
+  --color-sector-food: #eab308;
+  --color-sector-agriculture: #22a06b;
+  --color-sector-child: #8b5cf6;
+  --color-sector-women: #ec4899;
+  --color-sector-youth: #14b8a6;
+  --color-sector-emergency: #dc2626;
+  --color-sector-climate: #10b981;
+  --color-sector-other: #6b7280;
+
+  --font-sans: "Inter", system-ui, sans-serif;
 }
 
 :root {
   --radius: 0.5rem;
 
-  /* Navy Trust palette */
-  --navy-deep: #0f1b3d;
-  --navy-mid: #1e3a5f;
-  --blue-main: #3b6fa0;
-  --blue-wash: #e8edf3;
-  --surface: #fcfcfc;
-  --ink: #18181b;
+  --navy-950: #071a35;
+  --navy-900: #0a2350;
+  --navy-800: #0f2c5c;
+  --brand-blue: #1e5ba8;
+  --brand-blue-hover: #174a8a;
+  --brand-blue-soft: #dbeafe;
+  --brand-blue-wash: #eff5fb;
+  --ink: #0f172a;
+  --surface: #ffffff;
+  --surface-alt: #f6f8fb;
 
   --background: var(--surface);
   --foreground: var(--ink);
@@ -54,39 +78,29 @@
   --card-foreground: var(--ink);
   --popover: #ffffff;
   --popover-foreground: var(--ink);
-  --primary: var(--navy-deep);
+  --primary: var(--brand-blue);
   --primary-foreground: #ffffff;
-  --secondary: var(--blue-wash);
-  --secondary-foreground: var(--navy-deep);
-  --muted: var(--blue-wash);
+  --secondary: var(--brand-blue-wash);
+  --secondary-foreground: var(--navy-900);
+  --muted: var(--surface-alt);
   --muted-foreground: #52606d;
-  --accent: var(--blue-main);
-  --accent-foreground: #ffffff;
+  --accent: var(--brand-blue-soft);
+  --accent-foreground: var(--navy-900);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: #ffffff;
-  --border: rgba(15, 27, 61, 0.08);
-  --input: rgba(15, 27, 61, 0.12);
-  --ring: var(--blue-main);
+  --border: rgba(10, 35, 80, 0.1);
+  --input: rgba(10, 35, 80, 0.14);
+  --ring: var(--brand-blue);
 }
 
 .dark {
-  --background: var(--navy-deep);
+  --background: var(--navy-950);
   --foreground: #ffffff;
-  --card: var(--navy-mid);
+  --card: var(--navy-900);
   --card-foreground: #ffffff;
-  --popover: var(--navy-mid);
-  --popover-foreground: #ffffff;
   --primary: #ffffff;
-  --primary-foreground: var(--navy-deep);
-  --secondary: var(--navy-mid);
-  --secondary-foreground: #ffffff;
-  --muted: var(--navy-mid);
-  --muted-foreground: rgba(232, 237, 243, 0.7);
-  --accent: var(--blue-main);
-  --accent-foreground: #ffffff;
+  --primary-foreground: var(--navy-950);
   --border: rgba(255, 255, 255, 0.1);
-  --input: rgba(255, 255, 255, 0.15);
-  --ring: var(--blue-main);
 }
 
 @layer base {
