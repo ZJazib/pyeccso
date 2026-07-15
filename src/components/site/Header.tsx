@@ -1,16 +1,16 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, Phone, Facebook, Twitter, Linkedin, Youtube, Heart } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 
 const nav = [
   { label: "Home", to: "/" },
-  { label: "About Us", to: "/about" },
-  { label: "Our Programs", to: "/programs" },
+  { label: "About", to: "/about" },
+  { label: "Programs", to: "/programs" },
   { label: "Projects", to: "/projects" },
-  { label: "Media Center", to: "/media" },
-  { label: "Transparency", to: "/transparency" },
   { label: "Partners", to: "/partners" },
+  { label: "Media", to: "/media" },
+  { label: "Transparency", to: "/transparency" },
   { label: "Careers", to: "/careers" },
-  { label: "Contact Us", to: "/contact" },
+  { label: "Contact", to: "/contact" },
 ];
 
 export function Header() {
@@ -27,20 +27,8 @@ export function Header() {
               <Phone className="size-3.5" /> +93 (0) 20 250 0312
             </a>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-3 text-[11px]">
-              <a href="#" className="hover:text-white">Dari</a>
-              <span className="text-white/30">|</span>
-              <a href="#" className="hover:text-white">Pashto</a>
-              <span className="text-white/30">|</span>
-              <a href="#" className="text-white">English</a>
-            </div>
-            <div className="flex items-center gap-3 text-white/70">
-              <a href="#" aria-label="Facebook" className="hover:text-white"><Facebook className="size-3.5" /></a>
-              <a href="#" aria-label="Twitter" className="hover:text-white"><Twitter className="size-3.5" /></a>
-              <a href="#" aria-label="LinkedIn" className="hover:text-white"><Linkedin className="size-3.5" /></a>
-              <a href="#" aria-label="YouTube" className="hover:text-white"><Youtube className="size-3.5" /></a>
-            </div>
+          <div className="hidden md:block text-white/70 text-[11px]">
+            Registered NGO · Ministry of Economy No. 1201
           </div>
         </div>
       </div>
@@ -78,10 +66,10 @@ export function Header() {
           </nav>
 
           <Link
-            to="/transparency"
-            className="bg-brand-blue text-white h-11 px-6 rounded-md font-bold text-sm tracking-wider inline-flex items-center gap-2 hover:bg-brand-blue-hover transition-colors shrink-0"
+            to="/contact"
+            className="bg-brand-blue text-white h-11 px-5 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-hover transition-colors shrink-0"
           >
-            <Heart className="size-4 fill-white" /> DONATE
+            Contact Us
           </Link>
         </div>
       </div>
