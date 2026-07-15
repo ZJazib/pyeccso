@@ -66,10 +66,10 @@ export function Header() {
           </nav>
 
           <Link
-            to="/transparency"
-            className="bg-brand-blue text-white h-11 px-6 rounded-md font-bold text-sm tracking-wider inline-flex items-center gap-2 hover:bg-brand-blue-hover transition-colors shrink-0"
+            to="/contact"
+            className="bg-brand-blue text-white h-11 px-5 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-hover transition-colors shrink-0"
           >
-            <Heart className="size-4 fill-white" /> DONATE
+            Contact Us
           </Link>
         </div>
       </div>
