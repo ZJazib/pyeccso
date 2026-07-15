@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, Eye, Target, Compass, Layers, Gem } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
+import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/about")({
   component: About,
@@ -60,12 +61,13 @@ const memberships = [
 ];
 
 function About() {
+  const { t } = useTranslation();
   return (
     <SiteLayout>
       <PageHero
-        title="About PYECSO"
-        description="Empowering Afghan communities since 2006 through education, humanitarian aid and livelihoods."
-        breadcrumb={[{ label: "Home", to: "/" }, { label: "About Us" }]}
+        title={t("hero.about.title")}
+        description={t("hero.about.description")}
+        breadcrumb={[{ label: t("nav.home"), to: "/" }, { label: t("hero.about.title") }]}
       />
 
       {/* Who We Are */}

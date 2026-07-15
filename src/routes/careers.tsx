@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
+import { useTranslation } from "react-i18next";
 import { Briefcase, MapPin, Clock } from "lucide-react";
 
 export const Route = createFileRoute("/careers")({
@@ -24,12 +25,13 @@ const openings = [
 ];
 
 function Careers() {
+  const { t } = useTranslation();
   return (
     <SiteLayout>
       <PageHero
-        title="Careers"
-        description="Join a mission-driven team dedicated to improving lives across Afghanistan. Explore our current openings."
-        breadcrumb={[{ label: "Home", to: "/" }, { label: "Careers" }]}
+        title={t("hero.careers.title")}
+        description={t("hero.careers.description")}
+        breadcrumb={[{ label: t("nav.home"), to: "/" }, { label: t("hero.careers.title") }]}
       />
       <section className="py-20">
         <div className="max-w-4xl mx-auto px-4 md:px-6">

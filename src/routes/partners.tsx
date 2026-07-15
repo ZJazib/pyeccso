@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
+import { useTranslation } from "react-i18next";
 import { Handshake } from "lucide-react";
 
 export const Route = createFileRoute("/partners")({
@@ -52,12 +53,13 @@ const clusters = [
 ];
 
 function Partners() {
+  const { t } = useTranslation();
   return (
     <SiteLayout>
       <PageHero
-        title="Partners & Donors"
-        description="PYECSO's work is powered by long-standing partnerships with UN agencies, embassies, international NGOs and Afghan government institutions."
-        breadcrumb={[{ label: "Home", to: "/" }, { label: "Partners" }]}
+        title={t("hero.partners.title")}
+        description={t("hero.partners.description")}
+        breadcrumb={[{ label: t("nav.home"), to: "/" }, { label: t("hero.partners.title") }]}
       />
 
       <section className="py-20">
