@@ -11,9 +11,8 @@ export function Header() {
     { label: t("nav.about"), to: "/about" },
     { label: t("nav.programs"), to: "/programs" },
     { label: t("nav.projects"), to: "/projects" },
-    { label: t("nav.partners"), to: "/partners" },
+    { label: t("nav.learn"), to: "/learn" },
     { label: t("nav.media"), to: "/media" },
-    { label: t("nav.transparency"), to: "/transparency" },
     { label: t("nav.careers"), to: "/careers" },
     { label: t("nav.contact"), to: "/contact" },
   ] as const;
@@ -73,10 +72,10 @@ export function Header() {
           </nav>
 
           <Link
-            to="/contact"
+            to="/donate"
             className="bg-brand-blue text-white h-11 px-5 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-hover transition-colors shrink-0"
           >
-            {t("nav.contactUs")}
+            {t("nav.donate")}
           </Link>
         </div>
       </div>

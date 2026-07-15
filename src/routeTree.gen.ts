@@ -9,21 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TransparencyRouteImport } from './routes/transparency'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ProgramsRouteImport } from './routes/programs'
-import { Route as PartnersRouteImport } from './routes/partners'
 import { Route as MediaRouteImport } from './routes/media'
+import { Route as LearnRouteImport } from './routes/learn'
+import { Route as DonateRouteImport } from './routes/donate'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 
-const TransparencyRoute = TransparencyRouteImport.update({
-  id: '/transparency',
-  path: '/transparency',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
   path: '/projects',
@@ -34,14 +29,19 @@ const ProgramsRoute = ProgramsRouteImport.update({
   path: '/programs',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PartnersRoute = PartnersRouteImport.update({
-  id: '/partners',
-  path: '/partners',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const MediaRoute = MediaRouteImport.update({
   id: '/media',
   path: '/media',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LearnRoute = LearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DonateRoute = DonateRouteImport.update({
+  id: '/donate',
+  path: '/donate',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -70,22 +70,22 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
+  '/donate': typeof DonateRoute
+  '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
-  '/partners': typeof PartnersRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
-  '/transparency': typeof TransparencyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
+  '/donate': typeof DonateRoute
+  '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
-  '/partners': typeof PartnersRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
-  '/transparency': typeof TransparencyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -93,11 +93,11 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
+  '/donate': typeof DonateRoute
+  '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
-  '/partners': typeof PartnersRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
-  '/transparency': typeof TransparencyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -106,33 +106,33 @@ export interface FileRouteTypes {
     | '/about'
     | '/careers'
     | '/contact'
+    | '/donate'
+    | '/learn'
     | '/media'
-    | '/partners'
     | '/programs'
     | '/projects'
-    | '/transparency'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
     | '/careers'
     | '/contact'
+    | '/donate'
+    | '/learn'
     | '/media'
-    | '/partners'
     | '/programs'
     | '/projects'
-    | '/transparency'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/careers'
     | '/contact'
+    | '/donate'
+    | '/learn'
     | '/media'
-    | '/partners'
     | '/programs'
     | '/projects'
-    | '/transparency'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -140,22 +140,15 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
+  DonateRoute: typeof DonateRoute
+  LearnRoute: typeof LearnRoute
   MediaRoute: typeof MediaRoute
-  PartnersRoute: typeof PartnersRoute
   ProgramsRoute: typeof ProgramsRoute
   ProjectsRoute: typeof ProjectsRoute
-  TransparencyRoute: typeof TransparencyRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/transparency': {
-      id: '/transparency'
-      path: '/transparency'
-      fullPath: '/transparency'
-      preLoaderRoute: typeof TransparencyRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/projects': {
       id: '/projects'
       path: '/projects'
@@ -170,18 +163,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProgramsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/partners': {
-      id: '/partners'
-      path: '/partners'
-      fullPath: '/partners'
-      preLoaderRoute: typeof PartnersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/media': {
       id: '/media'
       path: '/media'
       fullPath: '/media'
       preLoaderRoute: typeof MediaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/learn': {
+      id: '/learn'
+      path: '/learn'
+      fullPath: '/learn'
+      preLoaderRoute: typeof LearnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/donate': {
+      id: '/donate'
+      path: '/donate'
+      fullPath: '/donate'
+      preLoaderRoute: typeof DonateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -220,11 +220,11 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,
+  DonateRoute: DonateRoute,
+  LearnRoute: LearnRoute,
   MediaRoute: MediaRoute,
-  PartnersRoute: PartnersRoute,
   ProgramsRoute: ProgramsRoute,
   ProjectsRoute: ProjectsRoute,
-  TransparencyRoute: TransparencyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
