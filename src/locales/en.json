@@ -11,13 +11,13 @@
     "about": "About",
     "programs": "Programs",
     "projects": "Projects",
-    "partners": "Partners",
     "media": "Media",
-    "transparency": "Transparency",
     "careers": "Careers",
     "contact": "Contact",
     "contactUs": "Contact Us",
-    "language": "Language"
+    "language": "Language",
+    "donate": "Donate",
+    "learn": "PYECSO Learn"
   },
   "footer": {
     "organization": "Organization",
@@ -48,17 +48,9 @@
       "title": "Implemented Projects",
       "description": "A portfolio of over thirty projects delivered with UN agencies, government ministries and international partners since 2006."
     },
-    "partners": {
-      "title": "Partners & Donors",
-      "description": "PYECSO collaborates with United Nations agencies, government institutions, diplomatic missions and international NGOs."
-    },
     "media": {
       "title": "Media Center",
       "description": "Photos, videos and press releases documenting PYECSO's work across Afghanistan."
-    },
-    "transparency": {
-      "title": "Transparency & Accountability",
-      "description": "Our policies, financial reports and accountability commitments to communities, donors and partners."
     },
     "careers": {
       "title": "Careers",
@@ -67,6 +59,14 @@
     "contact": {
       "title": "Contact PYECSO",
       "description": "Reach our head office in Kabul or connect with our programs team."
+    },
+    "donate": {
+      "title": "Donate to PYECSO",
+      "description": "Support education, humanitarian aid and livelihoods for Afghan women, children and youth. Donate via HesabPay or in person at our Kabul office."
+    },
+    "learn": {
+      "title": "PYECSO Learn",
+      "description": "Announced trainings, workshops and short courses for youth, women and professionals. Apply online before each deadline."
     }
   },
   "common": {

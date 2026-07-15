@@ -11,13 +11,13 @@
     "about": "À propos",
     "programs": "Programmes",
     "projects": "Projets",
-    "partners": "Partenaires",
     "media": "Médias",
-    "transparency": "Transparence",
     "careers": "Carrières",
     "contact": "Contact",
     "contactUs": "Nous contacter",
-    "language": "Langue"
+    "language": "Langue",
+    "donate": "Faire un don",
+    "learn": "PYECSO Learn"
   },
   "footer": {
     "organization": "Organisation",
@@ -48,17 +48,9 @@
       "title": "Projets mis en œuvre",
       "description": "Un portefeuille de plus de trente projets réalisés avec les agences de l'ONU, les ministères et les partenaires internationaux depuis 2006."
     },
-    "partners": {
-      "title": "Partenaires et bailleurs",
-      "description": "PYECSO collabore avec les agences des Nations Unies, les institutions gouvernementales, les missions diplomatiques et les ONG internationales."
-    },
     "media": {
       "title": "Centre médias",
       "description": "Photos, vidéos et communiqués de presse documentant le travail de PYECSO à travers l'Afghanistan."
-    },
-    "transparency": {
-      "title": "Transparence et redevabilité",
-      "description": "Nos politiques, rapports financiers et engagements de redevabilité envers les communautés, les bailleurs et les partenaires."
     },
     "careers": {
       "title": "Carrières",
@@ -67,6 +59,14 @@
     "contact": {
       "title": "Contacter PYECSO",
       "description": "Contactez notre siège à Kaboul ou notre équipe des programmes."
+    },
+    "donate": {
+      "title": "Faire un don à PYECSO",
+      "description": "Soutenez l'éducation, l'aide humanitaire et les moyens de subsistance des femmes, enfants et jeunes afghans. Donnez via HesabPay ou en personne à notre bureau de Kaboul."
+    },
+    "learn": {
+      "title": "PYECSO Learn",
+      "description": "Formations, ateliers et cours courts annoncés pour les jeunes, les femmes et les professionnels. Candidatez en ligne avant chaque date limite."
     }
   },
   "common": {
