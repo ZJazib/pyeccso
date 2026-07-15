@@ -1,19 +1,23 @@
 import { Link } from "@tanstack/react-router";
 import { Mail, Phone } from "lucide-react";
-
-const nav = [
-  { label: "Home", to: "/" },
-  { label: "About", to: "/about" },
-  { label: "Programs", to: "/programs" },
-  { label: "Projects", to: "/projects" },
-  { label: "Partners", to: "/partners" },
-  { label: "Media", to: "/media" },
-  { label: "Transparency", to: "/transparency" },
-  { label: "Careers", to: "/careers" },
-  { label: "Contact", to: "/contact" },
-];
+import { useTranslation } from "react-i18next";
+import "@/lib/i18n";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 export function Header() {
+  const { t } = useTranslation();
+  const nav = [
+    { label: t("nav.home"), to: "/" },
+    { label: t("nav.about"), to: "/about" },
+    { label: t("nav.programs"), to: "/programs" },
+    { label: t("nav.projects"), to: "/projects" },
+    { label: t("nav.partners"), to: "/partners" },
+    { label: t("nav.media"), to: "/media" },
+    { label: t("nav.transparency"), to: "/transparency" },
+    { label: t("nav.careers"), to: "/careers" },
+    { label: t("nav.contact"), to: "/contact" },
+  ] as const;
+
   return (
     <header className="w-full">
       {/* Top utility bar */}
@@ -27,8 +31,11 @@ export function Header() {
               <Phone className="size-3.5" /> +93 (0) 20 250 0312
             </a>
           </div>
-          <div className="hidden md:block text-white/70 text-[11px]">
-            Registered NGO · Ministry of Economy No. 1201
+          <div className="flex items-center gap-5">
+            <div className="hidden md:block text-white/70 text-[11px]">
+              {t("top.registered")}
+            </div>
+            <LanguageSwitcher variant="top" />
           </div>
         </div>
       </div>
@@ -44,9 +51,9 @@ export function Header() {
               </svg>
             </div>
             <div className="leading-tight">
-              <div className="text-brand-blue font-extrabold text-2xl tracking-tight">PYECSO</div>
-              <div className="text-[10px] text-navy-900/70 max-w-[200px] leading-snug">
-                Patriotic Youths Education, Cultural<br />and Social Organization
+              <div className="text-brand-blue font-extrabold text-2xl tracking-tight">{t("brand.short")}</div>
+              <div className="text-[10px] text-navy-900/70 max-w-[220px] leading-snug">
+                {t("brand.full")}
               </div>
             </div>
           </Link>
@@ -69,7 +76,7 @@ export function Header() {
             to="/contact"
             className="bg-brand-blue text-white h-11 px-5 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-hover transition-colors shrink-0"
           >
-            Contact Us
+            {t("nav.contactUs")}
           </Link>
         </div>
       </div>
