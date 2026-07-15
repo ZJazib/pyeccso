@@ -9,11 +9,7 @@ export const Route = createFileRoute("/projects")({
   head: () => ({
     meta: [
       { title: "Implemented Projects — PYECSO" },
-      {
-        name: "description",
-        content:
-          "A public list of projects implemented by PYECSO across Afghanistan since 2006 in cash assistance, food security, livelihoods, agriculture, health and protection.",
-      },
+      { name: "description", content: "A public list of projects implemented by PYECSO across Afghanistan since 2006 in cash assistance, food security, livelihoods, agriculture, health and protection." },
       { property: "og:title", content: "Implemented Projects — PYECSO" },
       { property: "og:url", content: "/projects" },
     ],
@@ -21,193 +17,47 @@ export const Route = createFileRoute("/projects")({
   }),
 });
 
-type Project = {
-  title: string;
-  sector: string;
+type ProjectRow = {
+  key: string;
+  tagKey: string;
   sectorColor: string;
   location: string;
   donor: string;
-  body: string;
 };
 
-const projects: Project[] = [
-  // Cash
-  {
-    title: "Winter Clothes Distribution",
-    sector: "Cash & In-Kind",
-    sectorColor: "bg-sector-emergency",
-    location: "Ghazni",
-    donor: "PRT",
-    body: "Distribution of winter clothing (jackets, gloves, boots) to displaced families and families who lost members.",
-  },
-  {
-    title: "Winter Clothes Distribution to Displaced People",
-    sector: "Cash & In-Kind",
-    sectorColor: "bg-sector-emergency",
-    location: "Paktia",
-    donor: "MoRR",
-    body: "Warm clothing (coats, blankets, boots) for displaced families in rural and remote communities.",
-  },
-  {
-    title: "Community Support for Immigrants — Cash Assistance",
-    sector: "Cash Assistance",
-    sectorColor: "bg-sector-emergency",
-    location: "Logar · Paktia · Paktika",
-    donor: "Private Sector / Board",
-    body: "Urgent cash assistance for undocumented returnees and conflict-affected families.",
-  },
-  {
-    title: "Winter Emergency Cash Distribution",
-    sector: "Cash Assistance",
-    sectorColor: "bg-sector-emergency",
-    location: "Kabul",
-    donor: "Donations / Board",
-    body: "Cash assistance to widows, orphans, street laborers and persons with disabilities.",
-  },
-  // Food
-  {
-    title: "General Food Distribution",
-    sector: "Food Assistance",
-    sectorColor: "bg-sector-food",
-    location: "Ghazni — 5 districts",
-    donor: "WFP / HODKA",
-    body: "Distribution of food packages (wheat, rice, oil) to displaced and remote rural communities.",
-  },
-  {
-    title: "Food & Stationery Distribution",
-    sector: "Food & Education",
-    sectorColor: "bg-sector-food",
-    location: "Ghazni",
-    donor: "PRT",
-    body: "Food materials and stationery for families transitioning to peace and vulnerable children.",
-  },
-  {
-    title: "Food Distribution",
-    sector: "Food Assistance",
-    sectorColor: "bg-sector-food",
-    location: "Jalalabad",
-    donor: "Embassy of Japan",
-    body: "Basic food supplies for families transitioning to peace and displaced households.",
-  },
-  {
-    title: "Food Distribution",
-    sector: "Food Assistance",
-    sectorColor: "bg-sector-food",
-    location: "Laghman",
-    donor: "MoD",
-    body: "Primary food materials (grains, oil) for displaced families and those who lost members.",
-  },
-  {
-    title: "Food & Stationery Distribution",
-    sector: "Food & Education",
-    sectorColor: "bg-sector-food",
-    location: "Logar · Kunar",
-    donor: "PRT",
-    body: "Food and school supplies supporting youth, adolescents and rural communities.",
-  },
-  {
-    title: "Food Distribution — Remote Areas",
-    sector: "Food Assistance",
-    sectorColor: "bg-sector-food",
-    location: "Nooristan",
-    donor: "PRT",
-    body: "Food packages delivered to displaced families and remote rural communities.",
-  },
-  {
-    title: "Food Distribution — 24 Provinces",
-    sector: "Food Assistance",
-    sectorColor: "bg-sector-food",
-    location: "24 Provinces",
-    donor: "PRT",
-    body: "Basic food items delivered to vulnerable populations across 24 provinces.",
-  },
-  // Livelihoods & TVET
-  {
-    title: "Livestock-based Livelihoods Improvement",
-    sector: "Livelihoods",
-    sectorColor: "bg-sector-livelihoods",
-    location: "Logar",
-    donor: "IRD",
-    body: "Training on livestock management and farmer support for families transitioning to peace.",
-  },
-  {
-    title: "Tractor Mechanics & Welder Training",
-    sector: "TVET",
-    sectorColor: "bg-sector-livelihoods",
-    location: "Paktika — Waza Khwa",
-    donor: "DAI / LGCD",
-    body: "Vocational training in tractor mechanics and welding for youth and adolescents.",
-  },
-  {
-    title: "National Reconciliation — Vocational Skills Training",
-    sector: "TVET",
-    sectorColor: "bg-sector-livelihoods",
-    location: "Logar",
-    donor: "DAI / LGCD",
-    body: "Vocational training (carpentry, masonry) for youth and families transitioning to peace.",
-  },
-  {
-    title: "Professional & Vocational Training for Women",
-    sector: "TVET",
-    sectorColor: "bg-sector-livelihoods",
-    location: "Logar",
-    donor: "UNICEF / HODKA",
-    body: "Tailoring and carpentry training for women, girls and adolescents.",
-  },
-  {
-    title: "Small Grant Partnerships — Organizational Capacity Building",
-    sector: "Capacity Building",
-    sectorColor: "bg-sector-education",
-    location: "Kabul",
-    donor: "UN Women",
-    body: "Capacity-building workshops strengthening PYECSO's female staff and organizational systems.",
-  },
-  // Agriculture
-  {
-    title: "Agricultural Practices Survey",
-    sector: "Agriculture",
-    sectorColor: "bg-sector-agriculture",
-    location: "Logar",
-    donor: "DAI / LGCD",
-    body: "Assessment of farmer practices to inform agricultural programming and interventions.",
-  },
-  {
-    title: "Seeds & Plants Distribution to Villagers",
-    sector: "Agriculture",
-    sectorColor: "bg-sector-agriculture",
-    location: "Khost",
-    donor: "PRT",
-    body: "Support to agricultural production through distribution of seeds and plants.",
-  },
-  // Protection / Health
-  {
-    title: "Meat Preservation & Hygiene Training for Butchers",
-    sector: "Protection & Hygiene",
-    sectorColor: "bg-sector-child",
-    location: "Ghazni — Andar",
-    donor: "DAI / LGCD",
-    body: "Hygiene training workshops for butchers on safe meat preservation and handling.",
-  },
-  {
-    title: "Maternal & Child Health Program",
-    sector: "Health & Nutrition",
-    sectorColor: "bg-sector-health",
-    location: "Logar",
-    donor: "DAI / LGCD",
-    body: "Nutrition education, health checks and child immunization for women and children with special needs.",
-  },
-  {
-    title: "Mental Health & Psychosocial Support (MHPSS)",
-    sector: "Health & Protection",
-    sectorColor: "bg-sector-health",
-    location: "Logar",
-    donor: "DAI / LGCD",
-    body: "Counseling and MHPSS workshops for women, girls and survivors of gender-based violence.",
-  },
+const projects: ProjectRow[] = [
+  { key: "p1", tagKey: "cashInKind", sectorColor: "bg-sector-emergency", location: "Ghazni", donor: "PRT" },
+  { key: "p2", tagKey: "cashInKind", sectorColor: "bg-sector-emergency", location: "Paktia", donor: "MoRR" },
+  { key: "p3", tagKey: "cashAssistance", sectorColor: "bg-sector-emergency", location: "Logar · Paktia · Paktika", donor: "Private Sector / Board" },
+  { key: "p4", tagKey: "cashAssistance", sectorColor: "bg-sector-emergency", location: "Kabul", donor: "Donations / Board" },
+  { key: "p5", tagKey: "food", sectorColor: "bg-sector-food", location: "Ghazni — 5 districts", donor: "WFP / HODKA" },
+  { key: "p6", tagKey: "foodEducation", sectorColor: "bg-sector-food", location: "Ghazni", donor: "PRT" },
+  { key: "p7", tagKey: "food", sectorColor: "bg-sector-food", location: "Jalalabad", donor: "Embassy of Japan" },
+  { key: "p8", tagKey: "food", sectorColor: "bg-sector-food", location: "Laghman", donor: "MoD" },
+  { key: "p9", tagKey: "foodEducation", sectorColor: "bg-sector-food", location: "Logar · Kunar", donor: "PRT" },
+  { key: "p10", tagKey: "food", sectorColor: "bg-sector-food", location: "Nooristan", donor: "PRT" },
+  { key: "p11", tagKey: "food", sectorColor: "bg-sector-food", location: "24 Provinces", donor: "PRT" },
+  { key: "p12", tagKey: "livelihoods", sectorColor: "bg-sector-livelihoods", location: "Logar", donor: "IRD" },
+  { key: "p13", tagKey: "tvet", sectorColor: "bg-sector-livelihoods", location: "Paktika — Waza Khwa", donor: "DAI / LGCD" },
+  { key: "p14", tagKey: "tvet", sectorColor: "bg-sector-livelihoods", location: "Logar", donor: "DAI / LGCD" },
+  { key: "p15", tagKey: "tvet", sectorColor: "bg-sector-livelihoods", location: "Logar", donor: "UNICEF / HODKA" },
+  { key: "p16", tagKey: "capacity", sectorColor: "bg-sector-education", location: "Kabul", donor: "UN Women" },
+  { key: "p17", tagKey: "agriculture", sectorColor: "bg-sector-agriculture", location: "Logar", donor: "DAI / LGCD" },
+  { key: "p18", tagKey: "agriculture", sectorColor: "bg-sector-agriculture", location: "Khost", donor: "PRT" },
+  { key: "p19", tagKey: "protectionHygiene", sectorColor: "bg-sector-child", location: "Ghazni — Andar", donor: "DAI / LGCD" },
+  { key: "p20", tagKey: "healthNutrition", sectorColor: "bg-sector-health", location: "Logar", donor: "DAI / LGCD" },
+  { key: "p21", tagKey: "healthProtection", sectorColor: "bg-sector-health", location: "Logar", donor: "DAI / LGCD" },
 ];
 
 function Projects() {
   const { t } = useTranslation();
+
+  const filters = [
+    { label: t("projects.filter.sector"), value: t("projects.filter.allSectors") },
+    { label: t("projects.filter.province"), value: t("projects.filter.allProvinces") },
+    { label: t("projects.filter.donor"), value: t("projects.filter.allDonors") },
+  ];
+
   return (
     <SiteLayout>
       <PageHero
@@ -220,13 +70,9 @@ function Projects() {
         <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-4 gap-8">
           <aside className="space-y-6">
             <div className="bg-white ring-1 ring-border rounded-lg p-6">
-              <h3 className="text-brand-blue font-bold mb-5">Filter Projects</h3>
+              <h3 className="text-brand-blue font-bold mb-5">{t("projects.filter.title")}</h3>
               <div className="space-y-4">
-                {[
-                  { label: "Sector", value: "All Sectors" },
-                  { label: "Province", value: "All Provinces" },
-                  { label: "Donor / Partner", value: "All Donors" },
-                ].map((f) => (
+                {filters.map((f) => (
                   <div key={f.label}>
                     <label className="text-xs text-navy-900/70 block mb-1">{f.label}</label>
                     <div className="relative">
@@ -241,15 +87,10 @@ function Projects() {
             </div>
 
             <div className="bg-brand-blue-wash rounded-lg p-6">
-              <h4 className="text-brand-blue font-bold mb-2">Partnership enquiries</h4>
-              <p className="text-navy-900/70 text-sm mb-4">
-                We welcome partnership and coordination discussions with donors, UN agencies and INGOs.
-              </p>
-              <Link
-                to="/partners"
-                className="inline-flex items-center gap-2 bg-white border border-brand-blue text-brand-blue rounded-md px-4 py-2 text-sm font-semibold"
-              >
-                Partner with us <Handshake className="size-4" />
+              <h4 className="text-brand-blue font-bold mb-2">{t("projects.partnerBox.title")}</h4>
+              <p className="text-navy-900/70 text-sm mb-4">{t("projects.partnerBox.body")}</p>
+              <Link to="/contact" className="inline-flex items-center gap-2 bg-white border border-brand-blue text-brand-blue rounded-md px-4 py-2 text-sm font-semibold">
+                {t("projects.partnerBox.cta")} <Handshake className="size-4" />
               </Link>
             </div>
           </aside>
@@ -258,38 +99,28 @@ function Projects() {
             <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
               <div className="relative flex-1 max-w-md">
                 <Search className="size-4 text-navy-900/40 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input
-                  placeholder="Search projects..."
-                  className="w-full bg-white border border-border rounded-md pl-9 pr-3 py-2.5 text-sm"
-                />
+                <input placeholder={t("projects.searchPlaceholder")} className="w-full bg-white border border-border rounded-md pl-9 pr-3 py-2.5 text-sm" />
               </div>
-              <div className="text-sm text-navy-900/70">
-                {projects.length} projects listed
-              </div>
+              <div className="text-sm text-navy-900/70">{projects.length} {t("projects.listedSuffix")}</div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {projects.map((p) => (
-                <article
-                  key={p.title}
-                  className="bg-white ring-1 ring-border rounded-lg p-5 hover:shadow-md transition-shadow flex flex-col"
-                >
-                  <span
-                    className={`inline-block ${p.sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase mb-3 w-fit`}
-                  >
-                    {p.sector}
+                <article key={p.key} className="bg-white ring-1 ring-border rounded-lg p-5 hover:shadow-md transition-shadow flex flex-col">
+                  <span className={`inline-block ${p.sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase mb-3 w-fit`}>
+                    {t(`projects.sectorTags.${p.tagKey}`)}
                   </span>
-                  <h4 className="text-navy-900 font-bold text-sm mb-2 leading-snug">{p.title}</h4>
-                  <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{p.body}</p>
+                  <h4 className="text-navy-900 font-bold text-sm mb-2 leading-snug">{t(`projects.items.${p.key}.title`)}</h4>
+                  <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{t(`projects.items.${p.key}.body`)}</p>
                   <div className="mt-auto pt-3 border-t border-border grid grid-cols-2 gap-3 text-xs">
                     <div>
-                      <div className="text-navy-900/50">Location</div>
+                      <div className="text-navy-900/50">{t("common.location")}</div>
                       <div className="font-semibold text-navy-900 flex items-center gap-1">
                         <MapPin className="size-3 text-brand-blue" /> {p.location}
                       </div>
                     </div>
                     <div>
-                      <div className="text-navy-900/50">Donor / Partner</div>
+                      <div className="text-navy-900/50">{t("common.donorPartner")}</div>
                       <div className="font-semibold text-navy-900">{p.donor}</div>
                     </div>
                   </div>
@@ -303,16 +134,11 @@ function Projects() {
       <section className="bg-navy-900 py-10">
         <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-white">
-            <div className="text-xl font-bold">Interested in coordinating with PYECSO?</div>
-            <div className="text-white/70 text-sm">
-              For due diligence, capacity statements or partnership discussions, reach out to our team.
-            </div>
+            <div className="text-xl font-bold">{t("projects.footerCta.title")}</div>
+            <div className="text-white/70 text-sm">{t("projects.footerCta.body")}</div>
           </div>
-          <Link
-            to="/contact"
-            className="bg-white text-navy-900 rounded-md px-6 py-3 text-sm font-semibold inline-flex items-center gap-2 hover:bg-brand-blue-wash transition-colors"
-          >
-            Contact us <ArrowRight className="size-4" />
+          <Link to="/contact" className="bg-white text-navy-900 rounded-md px-6 py-3 text-sm font-semibold inline-flex items-center gap-2 hover:bg-brand-blue-wash transition-colors">
+            {t("projects.footerCta.button")} <ArrowRight className="size-4" />
           </Link>
         </div>
       </section>
