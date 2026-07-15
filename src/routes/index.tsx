@@ -118,10 +118,10 @@ function Home() {
                 Our programs <ArrowRight className="size-4" />
               </Link>
               <Link
-                to="/partners"
+                to="/donate"
                 className="bg-white text-navy-900 h-12 px-6 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-wash transition-colors"
               >
-                Partners &amp; donors <UserPlus className="size-4" />
+                Donate <UserPlus className="size-4" />
               </Link>
             </div>
           </div>
@@ -277,56 +277,22 @@ function Home() {
         </div>
       </section>
 
-      {/* Partners */}
-      <section className="py-16 bg-surface-alt">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">
-              Partners &amp; Donors
-            </div>
-            <h2 className="text-navy-900 text-2xl md:text-3xl font-bold tracking-tight">
-              Working with UN agencies, embassies and international partners
-            </h2>
-          </div>
-          <div className="bg-white rounded-lg ring-1 ring-border p-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 items-center">
-              {partners.map((p) => (
-                <div
-                  key={p}
-                  className="text-navy-900/80 text-sm font-bold tracking-tight text-center"
-                >
-                  {p}
-                </div>
-              ))}
-            </div>
-          </div>
-          <div className="text-center mt-8">
-            <Link
-              to="/partners"
-              className="text-brand-blue text-sm font-semibold inline-flex items-center gap-2"
-            >
-              See all partners <ArrowRight className="size-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="bg-navy-900 py-14">
         <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-white">
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight">
-              Coordinate or partner with PYECSO
+              Support PYECSO's work
             </h2>
             <p className="text-white/70 max-w-lg mt-2">
-              For partnership, coordination or due-diligence enquiries, our team is happy to help.
+              Your contribution helps deliver education, protection and humanitarian assistance to families across Afghanistan.
             </p>
           </div>
           <Link
-            to="/contact"
+            to="/donate"
             className="bg-white text-navy-900 h-12 px-6 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-wash transition-colors"
           >
-            Contact us <ArrowRight className="size-4" />
+            Donate now <ArrowRight className="size-4" />
           </Link>
         </div>
       </section>
