@@ -314,8 +314,12 @@ function google_link(array $config): void {
     if ($email !== strtolower($current['email'])) {
         respond(['error' => 'Google email does not match your account email.'], 409);
     }
-    $update = $pdo->prepare('UPDATE users SET google_sub = ?, provider = CASE WHEN provider = "password" THEN "password+google" ELSE provider END WHERE id = ?');
-    $update->execute([$sub, $current['id']]);
+    $providerStmt = $pdo->prepare('SELECT provider FROM users WHERE id = ? LIMIT 1');
+    $providerStmt->execute([$current['id']]);
+    $currentProvider = (string)($providerStmt->fetch()['provider'] ?? 'password');
+    $newProvider = $currentProvider === 'password' ? 'password+google' : $currentProvider;
+    $update = $pdo->prepare('UPDATE users SET google_sub = ?, provider = ? WHERE id = ?');
+    $update->execute([$sub, $newProvider, $current['id']]);
     respond(['ok' => true, 'linked' => true]);
 }
 
