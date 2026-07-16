@@ -290,7 +290,7 @@ function AdminPanel() {
       <AdminLogin
         health={health}
         healthChecking={healthChecking}
-        onRecheck={recheckHealth}
+        onRecheck={runHealthCheck}
         onLogin={setUser}
       />
     );
