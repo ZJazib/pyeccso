@@ -227,10 +227,11 @@ function Learn() {
         <AuthModal
           onClose={() => setAuthOpen(null)}
           onAuthed={handleAuthed}
-          title={authOpen.next === "apply" ? "Sign in to apply" : "PYECSO Learn portal"}
+          initialMode={authOpen.next === "apply" ? "register" : "login"}
+          title={authOpen.next === "apply" ? "Create your student account to apply" : "PYECSO Learn portal"}
           subtitle={
             authOpen.next === "apply"
-              ? "You need a student account to submit your application."
+              ? "Register in seconds — or login if you already have an account — and we'll take you straight to the application form."
               : "Login or create your student account to access the learning portal."
           }
         />
