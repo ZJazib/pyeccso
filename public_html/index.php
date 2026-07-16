@@ -1,4 +1,13 @@
 <?php
+// Serve static assets directly when running under PHP's built-in server (dev)
+if (PHP_SAPI === 'cli-server') {
+    $urlPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $file = __DIR__ . $urlPath;
+    if ($urlPath !== '/' && is_file($file)) {
+        return false; // let the built-in server serve it with correct mime
+    }
+}
+
 require __DIR__ . '/includes/bootstrap.php';
 
 $path = strtok($_SERVER['REQUEST_URI'], '?');
