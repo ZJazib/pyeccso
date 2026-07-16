@@ -151,8 +151,31 @@ function issue_login(array $config, array $user): void {
 }
 
 function health(array $config): void {
-    pdo($config)->query('SELECT 1');
-    respond(['ok' => true, 'database' => $config['db']['driver'], 'time' => gmdate('c')]);
+    $driver = $config['db']['driver'] ?? 'unknown';
+    $started = microtime(true);
+    try {
+        $pdo = pdo($config);
+        $pdo->query('SELECT 1');
+        $server = null;
+        try { $server = (string)$pdo->getAttribute(PDO::ATTR_SERVER_VERSION); } catch (Throwable $e) { $server = null; }
+        respond([
+            'ok' => true,
+            'status' => 'healthy',
+            'message' => sprintf('Connected to %s database in %d ms', strtoupper($driver), (int)round((microtime(true) - $started) * 1000)),
+            'database' => $driver,
+            'server_version' => $server,
+            'latency_ms' => (int)round((microtime(true) - $started) * 1000),
+            'time' => gmdate('c'),
+        ]);
+    } catch (Throwable $error) {
+        respond([
+            'ok' => false,
+            'status' => 'unhealthy',
+            'message' => 'Database connection failed: ' . $error->getMessage(),
+            'database' => $driver,
+            'time' => gmdate('c'),
+        ], 503);
+    }
 }
 
 function setup_admin(array $config): void {

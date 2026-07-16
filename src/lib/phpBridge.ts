@@ -74,8 +74,28 @@ async function bridgeRequest<T>(path: string, options: RequestInit = {}): Promis
   return payload as T;
 }
 
-export async function checkBridgeHealth() {
-  return bridgeRequest<{ ok: boolean; database: string; time: string }>("/health");
+export type BridgeHealth = {
+  ok: boolean;
+  status: "healthy" | "unhealthy";
+  message: string;
+  database: string;
+  server_version?: string | null;
+  latency_ms?: number;
+  time: string;
+};
+
+export async function checkBridgeHealth(): Promise<BridgeHealth> {
+  try {
+    return await bridgeRequest<BridgeHealth>("/health");
+  } catch (error) {
+    return {
+      ok: false,
+      status: "unhealthy",
+      message: error instanceof Error ? error.message : "Unable to reach PHP bridge",
+      database: "unknown",
+      time: new Date().toISOString(),
+    };
+  }
 }
 
 export async function loginToBridge(identifier: string, password: string) {
