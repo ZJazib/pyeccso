@@ -222,6 +222,19 @@ function Learn() {
           </div>
         </div>
       )}
+
+      {authOpen && (
+        <AuthModal
+          onClose={() => setAuthOpen(null)}
+          onAuthed={handleAuthed}
+          title={authOpen.next === "apply" ? "Sign in to apply" : "PYECSO Learn portal"}
+          subtitle={
+            authOpen.next === "apply"
+              ? "You need a student account to submit your application."
+              : "Login or create your student account to access the learning portal."
+          }
+        />
+      )}
     </SiteLayout>
   );
 }
