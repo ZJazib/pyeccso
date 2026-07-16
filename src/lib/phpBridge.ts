@@ -274,3 +274,202 @@ export async function downloadCourseMaterial(material: CourseMaterial) {
   link.remove();
   URL.revokeObjectURL(url);
 }
+
+/* -------------------------------------------------------------------------
+ * Admin extensions: users, campaigns, donations, uploads, site settings
+ * ------------------------------------------------------------------------- */
+
+export type BridgeUserAdmin = BridgeUser & {
+  status: "active" | "suspended";
+  google_linked: boolean;
+  created_at: string;
+};
+
+export async function listUsers() {
+  return bridgeRequest<{ users: BridgeUserAdmin[] }>("/users").then((r) => r.users);
+}
+
+export async function createUser(input: {
+  username: string;
+  email: string;
+  full_name: string;
+  role: UserRole;
+  password: string;
+  status?: "active" | "suspended";
+}) {
+  return bridgeRequest<{ user: BridgeUserAdmin }>("/users", {
+    method: "POST",
+    body: JSON.stringify(input),
+  }).then((r) => r.user);
+}
+
+export async function updateUser(id: number, patch: Partial<Pick<BridgeUserAdmin, "email" | "full_name" | "role" | "status">>) {
+  return bridgeRequest<{ user: BridgeUserAdmin }>(`/users?id=${id}`, {
+    method: "PUT",
+    body: JSON.stringify(patch),
+  }).then((r) => r.user);
+}
+
+export async function deleteUser(id: number) {
+  return bridgeRequest<{ ok: boolean }>(`/users?id=${id}`, { method: "DELETE" });
+}
+
+export async function resetUserPassword(user_id: number, password: string) {
+  return bridgeRequest<{ ok: boolean }>("/users/password", {
+    method: "POST",
+    body: JSON.stringify({ user_id, password }),
+  });
+}
+
+export type DonationCampaign = {
+  id: number;
+  slug: string;
+  language: string;
+  title: string;
+  description: string | null;
+  goal_amount: number;
+  raised_amount: number;
+  currency: string;
+  cover_image: string | null;
+  status: "draft" | "published";
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+};
+
+export async function listCampaigns(language = "en") {
+  return bridgeRequest<{ campaigns: DonationCampaign[] }>(`/campaigns?language=${encodeURIComponent(language)}`).then(
+    (r) => r.campaigns,
+  );
+}
+
+export async function saveCampaign(campaign: Partial<DonationCampaign> & { slug: string; language: string; title: string }) {
+  const params = new URLSearchParams();
+  if (campaign.id) params.set("id", String(campaign.id));
+  const qs = params.toString();
+  return bridgeRequest<{ campaign: DonationCampaign }>(`/campaigns${qs ? `?${qs}` : ""}`, {
+    method: campaign.id ? "PUT" : "POST",
+    body: JSON.stringify(campaign),
+  }).then((r) => r.campaign);
+}
+
+export async function deleteCampaign(id: number) {
+  return bridgeRequest<{ ok: boolean }>(`/campaigns?id=${id}`, { method: "DELETE" });
+}
+
+export type Donation = {
+  id: number;
+  campaign_id: number | null;
+  campaign_title: string | null;
+  method: "hesabpay" | "cash" | "bank_transfer" | "other";
+  amount: number;
+  currency: string;
+  amount_afn: number;
+  status: "pending" | "verified" | "failed" | "refunded";
+  donor_name: string;
+  donor_email: string | null;
+  donor_phone: string | null;
+  reference: string | null;
+  notes: string | null;
+  receipt_path: string | null;
+  created_at: string;
+};
+
+export async function listDonations(filters: { status?: Donation["status"]; method?: Donation["method"] } = {}) {
+  const params = new URLSearchParams();
+  if (filters.status) params.set("status", filters.status);
+  if (filters.method) params.set("method", filters.method);
+  const qs = params.toString();
+  return bridgeRequest<{ donations: Donation[] }>(`/donations${qs ? `?${qs}` : ""}`).then((r) => r.donations);
+}
+
+export async function updateDonationStatus(id: number, status: Donation["status"], notes = "") {
+  return bridgeRequest<{ donation: Donation }>(`/donations?id=${id}`, {
+    method: "PUT",
+    body: JSON.stringify({ status, notes }),
+  }).then((r) => r.donation);
+}
+
+export async function recordManualDonation(input: {
+  donor_name: string;
+  amount: number;
+  currency?: string;
+  amount_afn?: number;
+  method: Donation["method"];
+  campaign_id?: number | null;
+  donor_email?: string;
+  donor_phone?: string;
+  reference?: string;
+  notes?: string;
+  status?: Donation["status"];
+}) {
+  return bridgeRequest<{ donation: Donation }>("/donations/manual", {
+    method: "POST",
+    body: JSON.stringify(input),
+  }).then((r) => r.donation);
+}
+
+export type MediaUpload = {
+  id: number;
+  kind: string;
+  filename: string;
+  original_name: string;
+  mime_type: string;
+  size_bytes: number;
+  url: string;
+  uploaded_by: number;
+  created_at: string;
+};
+
+export async function listUploads(kind?: string) {
+  const qs = kind ? `?kind=${encodeURIComponent(kind)}` : "";
+  return bridgeRequest<{ uploads: MediaUpload[] }>(`/uploads${qs}`).then((r) => r.uploads);
+}
+
+export async function uploadFile(file: File, kind = "general") {
+  const token = getBridgeToken();
+  const form = new FormData();
+  form.append("file", file);
+  form.append("kind", kind);
+  const response = await fetch(`${API_BASE}/uploads`, {
+    method: "POST",
+    body: form,
+    headers: token ? { Authorization: `Bearer ${token}`, Accept: "application/json" } : { Accept: "application/json" },
+  });
+  const text = await response.text();
+  const payload = text ? JSON.parse(text) : null;
+  if (!response.ok) throw new Error(payload?.error || `Upload failed with status ${response.status}`);
+  return (payload as { upload: MediaUpload }).upload;
+}
+
+export async function deleteUpload(id: number) {
+  return bridgeRequest<{ ok: boolean }>(`/uploads?id=${id}`, { method: "DELETE" });
+}
+
+export type SiteSettings = Record<string, Record<string, unknown>>;
+
+export async function getSiteSettings() {
+  return bridgeRequest<{ settings: SiteSettings }>("/site-settings").then((r) => r.settings);
+}
+
+export async function saveSiteSettings(settings: SiteSettings) {
+  return bridgeRequest<{ settings: SiteSettings }>("/site-settings", {
+    method: "PUT",
+    body: JSON.stringify({ settings }),
+  }).then((r) => r.settings);
+}
+
+export type DashboardStats = {
+  users: number;
+  students: number;
+  content_published: number;
+  content_drafts: number;
+  applications_pending: number;
+  campaigns_active: number;
+  donations_verified: number;
+  raised_afn: number;
+};
+
+export async function getDashboardStats() {
+  return bridgeRequest<{ stats: DashboardStats }>("/dashboard").then((r) => r.stats);
+}

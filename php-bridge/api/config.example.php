@@ -24,4 +24,10 @@ return [
     'google' => [
         'client_id' => '',
     ],
+    'uploads' => [
+        // Public URL prefix that maps to the php-bridge/uploads/ folder.
+        // e.g. if uploads/ is served at https://www.pyecso.org.af/pyecso-uploads
+        // set 'public_base' => '/pyecso-uploads' or the full https URL.
+        'public_base' => '/pyecso-api/uploads',
+    ],
 ];
