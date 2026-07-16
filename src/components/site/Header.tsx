@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import "@/lib/i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import pyecsoLogo from "@/assets/pyecso-logo.png.asset.json";
 
 export function Header() {
   const { t } = useTranslation();
@@ -21,11 +22,8 @@ export function Header() {
       <div className="bg-white border-b border-border">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-[90px] flex items-center justify-between gap-6">
           <Link to="/" className="flex items-center gap-3 shrink-0">
-            <div className="size-14 rounded-full bg-brand-blue-wash ring-2 ring-brand-blue/20 flex items-center justify-center">
-              <svg viewBox="0 0 32 32" className="size-8 text-brand-blue" fill="currentColor">
-                <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M16 6 L20 14 L28 15 L22 21 L24 29 L16 25 L8 29 L10 21 L4 15 L12 14 Z" fillOpacity="0.9" />
-              </svg>
+            <div className="size-14 rounded-full bg-white ring-2 ring-brand-blue/20 flex items-center justify-center overflow-hidden">
+              <img src={pyecsoLogo.url} alt="PYECSO logo" className="size-full object-contain" />
             </div>
             <div className="leading-tight">
               <div className="text-brand-blue font-extrabold text-2xl tracking-tight">{t("brand.short")}</div>
