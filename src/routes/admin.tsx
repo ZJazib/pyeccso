@@ -104,12 +104,8 @@ function AdminPanel() {
   useEffect(() => {
     let cancelled = false;
     async function boot() {
-      try {
-        await checkBridgeHealth();
-        if (!cancelled) setHealth("online");
-      } catch {
-        if (!cancelled) setHealth("offline");
-      }
+      await runHealthCheck();
+      if (cancelled) return;
 
       if (!getBridgeToken()) {
         if (!cancelled) setLoading(false);
