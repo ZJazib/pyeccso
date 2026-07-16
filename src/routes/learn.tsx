@@ -1,9 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
-import { GraduationCap, Calendar, MapPin, Clock, Users, ArrowRight, Search } from "lucide-react";
+import { GraduationCap, Calendar, MapPin, Clock, Users, ArrowRight, Search, LogIn, LogOut, UserRoundCheck } from "lucide-react";
 import { useMemo, useState } from "react";
+import { usePortalUser, roleHomePath } from "@/components/portal/PortalShell";
+import { AuthModal } from "@/components/portal/AuthModal";
+import { submitCourseApplication, setBridgeToken, type BridgeUser } from "@/lib/phpBridge";
 
 export const Route = createFileRoute("/learn")({
   component: Learn,
@@ -47,9 +50,41 @@ const kinds: Array<"All" | Kind> = ["All", "Training", "Workshop", "Course"];
 
 function Learn() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const { user, setUser } = usePortalUser();
   const [kind, setKind] = useState<"All" | Kind>("All");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Program | null>(null);
+  const [authOpen, setAuthOpen] = useState<null | { next: "apply" | "portal"; program?: Program }>(null);
+
+  function signOut() {
+    setBridgeToken(null);
+    setUser(null);
+  }
+
+  function handleApplyClick(p: Program) {
+    if (!user) {
+      setAuthOpen({ next: "apply", program: p });
+      return;
+    }
+    if (user.role !== "student") {
+      navigate({ to: roleHomePath(user.role) });
+      return;
+    }
+    setSelected(p);
+  }
+
+  function handleAuthed(u: BridgeUser) {
+    setUser(u);
+    const pending = authOpen;
+    setAuthOpen(null);
+    if (pending?.next === "apply" && pending.program && u.role === "student") {
+      setSelected(pending.program);
+    } else if (pending?.next === "portal") {
+      navigate({ to: roleHomePath(u.role) });
+    }
+  }
+
 
   const localeMap: Record<string, string> = { en: "en", fa: "fa-IR", ps: "ps-AF", ar: "ar", fr: "fr" };
   const fmt = (iso: string) => {
