@@ -122,6 +122,20 @@ export async function getCurrentBridgeUser() {
   return bridgeRequest<{ user: BridgeUser }>("/auth/me").then((result) => result.user);
 }
 
+export async function linkGoogleToBridgeAccount(idToken: string) {
+  return bridgeRequest<{ ok: boolean; linked: boolean }>("/auth/google/link", {
+    method: "POST",
+    body: JSON.stringify({ id_token: idToken }),
+  });
+}
+
+export async function unlinkGoogleFromBridgeAccount() {
+  return bridgeRequest<{ ok: boolean; linked: boolean }>("/auth/google/unlink", {
+    method: "POST",
+    body: "{}",
+  });
+}
+
 export async function listContent(resource: CmsResource, language = "en") {
   const params = new URLSearchParams({ resource, language });
   return bridgeRequest<{ items: CmsItem[] }>(`/content?${params.toString()}`).then((result) => result.items);
