@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "npx --yes http-server public_html -p 8080 -c-1",
+    "dev": "nix run nixpkgs#php -- -S 0.0.0.0:8080 -t public_html public_html/index.php",
     "build": "mkdir -p dist && cp -r public_html/. dist/",
     "build:dev": "mkdir -p dist && cp -r public_html/. dist/",
-    "start": "npx --yes http-server dist -p 8080 -c-1"
+    "start": "nix run nixpkgs#php -- -S 0.0.0.0:8080 -t public_html public_html/index.php"
   }
 }
