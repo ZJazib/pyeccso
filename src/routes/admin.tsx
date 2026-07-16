@@ -286,8 +286,7 @@ function AdminPanel() {
   }
 
   if (!user) {
-    setUser(DEV_ADMIN_USER);
-    return null;
+    return <AdminLogin onSuccess={setUser} />;
   }
 
   if (!allowedResources(user.role).length) {
