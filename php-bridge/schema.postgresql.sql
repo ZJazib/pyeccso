@@ -62,3 +62,19 @@ CREATE TABLE audit_logs (
 );
 
 CREATE INDEX idx_audit_user_created ON audit_logs(user_id, created_at);
+
+CREATE TABLE course_materials (
+  id BIGSERIAL PRIMARY KEY,
+  course_id BIGINT NOT NULL REFERENCES content_items(id) ON DELETE CASCADE,
+  title VARCHAR(255) NOT NULL,
+  description TEXT,
+  original_name VARCHAR(255) NOT NULL,
+  storage_name VARCHAR(255) NOT NULL,
+  mime_type VARCHAR(160) NOT NULL,
+  size_bytes BIGINT NOT NULL,
+  visibility VARCHAR(20) NOT NULL DEFAULT 'enrolled' CHECK (visibility IN ('enrolled', 'public')),
+  uploaded_by BIGINT REFERENCES users(id) ON DELETE SET NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_materials_course ON course_materials(course_id);
