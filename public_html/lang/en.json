@@ -1,0 +1,785 @@
+{
+  "brand": {
+    "short": "PYECSO",
+    "full": "Patriotic Youths Education, Cultural and Social Organization"
+  },
+  "top": {
+    "registered": "Registered NGO · Ministry of Economy No. 1201"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "programs": "Programs",
+    "projects": "Projects",
+    "media": "Media",
+    "careers": "Careers",
+    "contact": "Contact",
+    "contactUs": "Contact Us",
+    "language": "Language",
+    "donate": "Donate",
+    "learn": "PYECSO Learn"
+  },
+  "footer": {
+    "organization": "Organization",
+    "resources": "Resources",
+    "sectors": "Sectors",
+    "contact": "Contact",
+    "clusters": "Cluster Memberships",
+    "tagline": "Empowering Afghan women, children and youth since 2006 through education, humanitarian aid and livelihood programs.",
+    "reg1": "Registered: Ministry of Economy — No. 1201",
+    "reg2": "Ministry of Labor and Social Affairs",
+    "rights": "All rights reserved.",
+    "clustersList": [
+      "Afghanistan Education Cluster",
+      "Gender in Humanitarian Action — Afghanistan",
+      "Afghanistan Food Security & Agriculture Cluster",
+      "Global Protection Cluster"
+    ]
+  },
+  "hero": {
+    "home": {
+      "eyebrow": "Serving Afghanistan since 2006",
+      "title": "A women-led Afghan NGO for education, resilience and dignity",
+      "description": "PYECSO delivers education, livelihoods, protection and humanitarian assistance in partnership with UN agencies and international donors across 24+ provinces."
+    },
+    "about": {
+      "title": "About PYECSO",
+      "description": "A women-led, non-profit Afghan organization established in 2006, working with communities, government partners and the international humanitarian system."
+    },
+    "programs": {
+      "title": "Our Programs",
+      "description": "Seven integrated sectors delivering assistance and long-term development to women, children and vulnerable communities across Afghanistan."
+    },
+    "projects": {
+      "title": "Implemented Projects",
+      "description": "A portfolio of over thirty projects delivered with UN agencies, government ministries and international partners since 2006."
+    },
+    "media": {
+      "title": "Media Center",
+      "description": "Photos, videos and press releases documenting PYECSO's work across Afghanistan."
+    },
+    "careers": {
+      "title": "Careers",
+      "description": "Join a women-led Afghan team delivering education, protection and humanitarian assistance."
+    },
+    "contact": {
+      "title": "Contact PYECSO",
+      "description": "Reach our head office in Kabul or connect with our programs team."
+    },
+    "donate": {
+      "title": "Donate to PYECSO",
+      "description": "Support education, humanitarian aid and livelihoods for Afghan women, children and youth. Donate via HesabPay or in person at our Kabul office."
+    },
+    "learn": {
+      "title": "PYECSO Learn",
+      "description": "Announced trainings, workshops and short courses for youth, women and professionals. Apply online before each deadline."
+    }
+  },
+  "common": {
+    "readMore": "Read more",
+    "learnMore": "Learn more",
+    "viewAll": "View all",
+    "search": "Search",
+    "filter": "Filter",
+    "back": "Back",
+    "location": "Location",
+    "donorPartner": "Donor / Partner"
+  },
+  "sectors": {
+    "cash": "Cash Assistance",
+    "food": "Food Assistance",
+    "livelihoods": "Livelihoods & TVET",
+    "education": "Education & Capacity Building",
+    "agriculture": "Agriculture",
+    "protection": "Protection, Gender & AAP",
+    "health": "Health, Nutrition & MHPSS"
+  },
+  "home": {
+    "stats": {
+      "founded": "Founded",
+      "registered": "Registered NGO",
+      "provinces": "Provinces Reached",
+      "orgType": "Organization",
+      "womenLed": "Women-led"
+    },
+    "cta": {
+      "programs": "Our programs",
+      "donate": "Donate"
+    },
+    "who": {
+      "eyebrow": "Who We Are",
+      "title": "A women-led Afghan NGO delivering programs since 2006",
+      "p1": "Founded in 2006, the Patriotic Youths Education, Cultural and Social Organization (PYECSO) supports Afghan women, children and youth through education, humanitarian aid and livelihood programs.",
+      "p2": "Registered with Afghanistan's Ministry of Economy under No. 1201 and with the Ministry of Labor and Social Affairs, we operate legally and transparently, delivering programs through local staff with deep knowledge of the communities we serve.",
+      "link": "About PYECSO"
+    },
+    "clustersTitle": "Cluster Memberships",
+    "clusters": {
+      "education": "Afghanistan Education Cluster",
+      "gender": "Gender in Humanitarian Action — Afghanistan",
+      "food": "Afghanistan Food Security & Agriculture Cluster",
+      "protection": "Global Protection Cluster"
+    },
+    "sectorsSection": {
+      "eyebrow": "What We Do",
+      "title": "Our sectors of work",
+      "all": "All programs"
+    },
+    "portfolio": {
+      "eyebrow": "From Our Portfolio",
+      "title": "Selected programs",
+      "all": "All projects"
+    },
+    "highlights": {
+      "cash": {
+        "tag": "Cash Assistance",
+        "title": "Winter Emergency Cash for Vulnerable Households",
+        "body": "Cash assistance to widows, orphans, street laborers and persons with disabilities in Kabul."
+      },
+      "livelihoods": {
+        "tag": "Livelihoods",
+        "title": "Vocational Training for Women in Logar",
+        "body": "Professional and vocational training in tailoring and carpentry with UNICEF and HODKA."
+      },
+      "capacity": {
+        "tag": "Capacity Building",
+        "title": "Small Grant Partnership with UN Women",
+        "body": "Organizational capacity building for PYECSO's female staff and internal systems."
+      }
+    },
+    "supportCta": {
+      "title": "Support PYECSO's work",
+      "body": "Your contribution helps deliver education, protection and humanitarian assistance to families across Afghanistan.",
+      "button": "Donate now"
+    }
+  },
+  "about": {
+    "who": {
+      "eyebrow": "Who We Are",
+      "title": "A women-led Afghan NGO serving communities for nearly two decades",
+      "p1": "Founded in 2006, the Patriotic Youths Education, Cultural and Social Organization (PYECSO) began as a grassroots effort and has grown into a trusted national NGO recognized for delivering impactful programs for Afghan women, children and youth.",
+      "p2": "PYECSO is a women-led organization dedicated to supporting communities through education, humanitarian aid and livelihood programs. We operate legally and transparently, registered with Afghanistan's Ministry of Economy under No. 1201 and with the Ministry of Labor and Social Affairs.",
+      "p3": "Our field staff are local professionals with deep insight into the cultural, social and economic contexts of the regions where we work. This expertise allows us to design culturally sensitive programs that build trust and cooperation with the communities we serve.",
+      "cta": "Explore our programs"
+    },
+    "glance": {
+      "title": "Organization at a Glance",
+      "founded": "Founded",
+      "foundedV": "2006",
+      "reg": "Registration",
+      "regV": "Ministry of Economy, No. 1201",
+      "regAlso": "Also Registered With",
+      "regAlsoV": "Ministry of Labor and Social Affairs",
+      "type": "Type",
+      "typeV": "National NGO, women-led",
+      "hq": "Headquarters",
+      "hqV": "Kabul, Afghanistan",
+      "focus": "Focus",
+      "focusV": "Education · Humanitarian Aid · Livelihoods"
+    },
+    "vmost": {
+      "eyebrow": "Our Framework",
+      "title": "Vision, Mission, Objectives, Strategy & Values",
+      "vision": {
+        "title": "Vision",
+        "body": "A peaceful and inclusive Afghanistan where all individuals — especially women and youth — have equal opportunities to thrive and lead."
+      },
+      "mission": {
+        "title": "Mission",
+        "body": "To empower Afghan women, children and youth through education, humanitarian aid and livelihood support, promoting resilience, equality and sustainable development."
+      },
+      "objectives": {
+        "title": "Objectives",
+        "body": "Expand access to education and skills development; provide humanitarian assistance to vulnerable communities; promote gender equality and women's empowerment; strengthen livelihoods and community resilience."
+      },
+      "strategy": {
+        "title": "Strategy",
+        "body": "Community-based, partnership-driven programs that integrate education, livelihoods and humanitarian support, guided by local knowledge and transparency."
+      },
+      "values": {
+        "title": "Values",
+        "body": "Integrity · Equality · Empowerment · Community Focus · Respect · Collaboration."
+      }
+    },
+    "gov": {
+      "eyebrow": "Governance",
+      "title": "How We Are Structured",
+      "p1": "PYECSO is governed by a Board of Trustees, supported by a Board of Management, and led day-to-day by the Director. Operations, Finance and Programs functions are managed by dedicated directorates, with provincial and field teams delivering activities alongside the communities we serve.",
+      "p2": "Our structure keeps decision-making close to the field while maintaining strong internal controls, transparent finance and compliance with donor and regulatory requirements.",
+      "coreTitle": "Core Functions",
+      "core": {
+        "trustees": "Board of Trustees",
+        "management": "Board of Management",
+        "director": "Director",
+        "program": "Program Directorate",
+        "ops": "Operations & Admin",
+        "finance": "Finance & Internal Control",
+        "meal": "MEAL Unit",
+        "fundraising": "Fundraising & Development",
+        "reporting": "Reporting",
+        "field": "Regional & Provincial Offices"
+      }
+    },
+    "clusters": {
+      "eyebrow": "Cluster Memberships",
+      "body": "PYECSO participates in national humanitarian coordination platforms, aligning its work with cluster standards and inter-agency response plans."
+    }
+  },
+  "programs": {
+    "sectorsHead": {
+      "eyebrow": "Sectors of Work",
+      "title": "Program areas",
+      "body": "Our programming is organized around the humanitarian and development needs of Afghan women, children and youth, and aligns with national cluster response frameworks."
+    },
+    "sectorCards": {
+      "cash": {
+        "title": "Cash Assistance",
+        "body": "Emergency cash distribution to displaced families, returnees, widows, orphans and other vulnerable households, including winter response."
+      },
+      "food": {
+        "title": "Food Assistance",
+        "body": "General food distribution and food-for-assets programming to alleviate hunger among displaced and rural families across multiple provinces."
+      },
+      "livelihoods": {
+        "title": "Livelihoods & TVET",
+        "body": "Livestock-based livelihoods, vocational training and skills development in tailoring, carpentry, welding and tractor mechanics."
+      },
+      "education": {
+        "title": "Education & Capacity Building",
+        "body": "Support to schools, distribution of stationery, and organizational and vocational capacity-building for women, youth and CSO staff."
+      },
+      "agriculture": {
+        "title": "Agriculture",
+        "body": "Seed and plant distribution, agricultural practice assessments and support to farming households in rural districts."
+      },
+      "protection": {
+        "title": "Protection, Gender & AAP",
+        "body": "Protection programming with a focus on women, girls and vulnerable groups, including AAP, gender and PSEA mainstreaming."
+      },
+      "health": {
+        "title": "Health, Nutrition & MHPSS",
+        "body": "Maternal and child health, nutrition education, immunization support and mental health and psychosocial support (MHPSS) services."
+      }
+    },
+    "portfolio": {
+      "eyebrow": "Selected Programs",
+      "title": "Examples from our portfolio",
+      "all": "View all projects"
+    },
+    "highlights": {
+      "winter": {
+        "tag": "Cash Assistance",
+        "title": "Winter Emergency Cash Distribution",
+        "body": "Cash assistance to widows, orphans, street laborers and persons with disabilities during winter."
+      },
+      "food24": {
+        "tag": "Food Assistance",
+        "title": "General Food Distribution — 24 Provinces",
+        "body": "Distribution of basic food items to displaced families and rural, remote communities across 24 provinces."
+      },
+      "womenTvet": {
+        "tag": "Livelihoods & TVET",
+        "title": "Professional & Vocational Training for Women",
+        "body": "Training programs in tailoring and carpentry for women and adolescents."
+      },
+      "unwomen": {
+        "tag": "Capacity Building",
+        "title": "Small Grant Partnerships — Organizational Capacity",
+        "body": "Capacity-building workshops strengthening PYECSO's female staff and organizational systems."
+      },
+      "seeds": {
+        "tag": "Agriculture",
+        "title": "Seeds & Plants Distribution to Villagers",
+        "body": "Support to agricultural production through distribution of seeds and plants to rural households."
+      },
+      "mhpss": {
+        "tag": "Health & MHPSS",
+        "title": "Maternal, Child Health & Psychosocial Support",
+        "body": "Nutrition education, health checks, child immunization and MHPSS counseling for women and girls."
+      }
+    },
+    "partnerCta": {
+      "title": "Partner with PYECSO",
+      "body": "Get in touch to coordinate, co-fund or implement programs together.",
+      "button": "Contact us"
+    }
+  },
+  "projects": {
+    "filter": {
+      "title": "Filter Projects",
+      "sector": "Sector",
+      "province": "Province",
+      "donor": "Donor / Partner",
+      "allSectors": "All Sectors",
+      "allProvinces": "All Provinces",
+      "allDonors": "All Donors"
+    },
+    "partnerBox": {
+      "title": "Partnership enquiries",
+      "body": "We welcome partnership and coordination discussions with donors, UN agencies and INGOs.",
+      "cta": "Partner with us"
+    },
+    "searchPlaceholder": "Search projects...",
+    "listedSuffix": "projects listed",
+    "footerCta": {
+      "title": "Interested in coordinating with PYECSO?",
+      "body": "For due diligence, capacity statements or partnership discussions, reach out to our team.",
+      "button": "Contact us"
+    },
+    "sectorTags": {
+      "cashInKind": "Cash & In-Kind",
+      "cashAssistance": "Cash Assistance",
+      "food": "Food Assistance",
+      "foodEducation": "Food & Education",
+      "livelihoods": "Livelihoods",
+      "tvet": "TVET",
+      "capacity": "Capacity Building",
+      "agriculture": "Agriculture",
+      "protectionHygiene": "Protection & Hygiene",
+      "healthNutrition": "Health & Nutrition",
+      "healthProtection": "Health & Protection"
+    },
+    "items": {
+      "p1": {
+        "title": "Winter Clothes Distribution",
+        "body": "Distribution of winter clothing (jackets, gloves, boots) to displaced families and families who lost members."
+      },
+      "p2": {
+        "title": "Winter Clothes Distribution to Displaced People",
+        "body": "Warm clothing (coats, blankets, boots) for displaced families in rural and remote communities."
+      },
+      "p3": {
+        "title": "Community Support for Immigrants — Cash Assistance",
+        "body": "Urgent cash assistance for undocumented returnees and conflict-affected families."
+      },
+      "p4": {
+        "title": "Winter Emergency Cash Distribution",
+        "body": "Cash assistance to widows, orphans, street laborers and persons with disabilities."
+      },
+      "p5": {
+        "title": "General Food Distribution",
+        "body": "Distribution of food packages (wheat, rice, oil) to displaced and remote rural communities."
+      },
+      "p6": {
+        "title": "Food & Stationery Distribution",
+        "body": "Food materials and stationery for families transitioning to peace and vulnerable children."
+      },
+      "p7": {
+        "title": "Food Distribution — Jalalabad",
+        "body": "Basic food supplies for families transitioning to peace and displaced households."
+      },
+      "p8": {
+        "title": "Food Distribution — Laghman",
+        "body": "Primary food materials (grains, oil) for displaced families and those who lost members."
+      },
+      "p9": {
+        "title": "Food & Stationery Distribution — Logar & Kunar",
+        "body": "Food and school supplies supporting youth, adolescents and rural communities."
+      },
+      "p10": {
+        "title": "Food Distribution — Remote Areas",
+        "body": "Food packages delivered to displaced families and remote rural communities."
+      },
+      "p11": {
+        "title": "Food Distribution — 24 Provinces",
+        "body": "Basic food items delivered to vulnerable populations across 24 provinces."
+      },
+      "p12": {
+        "title": "Livestock-based Livelihoods Improvement",
+        "body": "Training on livestock management and farmer support for families transitioning to peace."
+      },
+      "p13": {
+        "title": "Tractor Mechanics & Welder Training",
+        "body": "Vocational training in tractor mechanics and welding for youth and adolescents."
+      },
+      "p14": {
+        "title": "National Reconciliation — Vocational Skills Training",
+        "body": "Vocational training (carpentry, masonry) for youth and families transitioning to peace."
+      },
+      "p15": {
+        "title": "Professional & Vocational Training for Women",
+        "body": "Tailoring and carpentry training for women, girls and adolescents."
+      },
+      "p16": {
+        "title": "Small Grant Partnerships — Organizational Capacity Building",
+        "body": "Capacity-building workshops strengthening PYECSO's female staff and organizational systems."
+      },
+      "p17": {
+        "title": "Agricultural Practices Survey",
+        "body": "Assessment of farmer practices to inform agricultural programming and interventions."
+      },
+      "p18": {
+        "title": "Seeds & Plants Distribution to Villagers",
+        "body": "Support to agricultural production through distribution of seeds and plants."
+      },
+      "p19": {
+        "title": "Meat Preservation & Hygiene Training for Butchers",
+        "body": "Hygiene training workshops for butchers on safe meat preservation and handling."
+      },
+      "p20": {
+        "title": "Maternal & Child Health Program",
+        "body": "Nutrition education, health checks and child immunization for women and children with special needs."
+      },
+      "p21": {
+        "title": "Mental Health & Psychosocial Support (MHPSS)",
+        "body": "Counseling and MHPSS workshops for women, girls and survivors of gender-based violence."
+      }
+    }
+  },
+  "media": {
+    "tabs": {
+      "photos": "Photo Gallery",
+      "videos": "Video Gallery",
+      "press": "Press Releases",
+      "news": "News & Stories",
+      "coverage": "Media Coverage",
+      "publications": "Publications"
+    },
+    "categories": {
+      "title": "Categories",
+      "all": "All",
+      "education": "Education",
+      "livelihoods": "Livelihoods",
+      "health": "Health",
+      "protection": "Protection",
+      "wash": "WASH",
+      "emergency": "Emergency Response",
+      "agriculture": "Agriculture",
+      "women": "Women Empowerment",
+      "youth": "Youth Development",
+      "events": "Events & Workshops"
+    },
+    "downloads": {
+      "title": "Media Downloads",
+      "logo": "PYECSO Logo",
+      "brand": "Brand Guidelines",
+      "photoLib": "Photo Library",
+      "kit": "Media Kit",
+      "viewAll": "View All Downloads"
+    },
+    "sections": {
+      "photos": "Photo Gallery",
+      "videos": "Video Gallery",
+      "press": "Press Releases",
+      "viewAllPhotos": "View All Photos",
+      "viewAllVideos": "View All Videos",
+      "morePress": "More Press Releases",
+      "stories": "Latest Stories",
+      "viewAllStories": "View All Stories",
+      "morePhotos": "More Photos"
+    },
+    "videos": {
+      "v1": {
+        "title": "Improving Access to Quality Education in Remote Communities",
+        "date": "May 10, 2024"
+      },
+      "v2": {
+        "title": "Empowering Women Through Skills Development",
+        "date": "April 28, 2024"
+      },
+      "v3": {
+        "title": "Emergency Assistance to Vulnerable Families",
+        "date": "April 15, 2024"
+      },
+      "v4": {
+        "title": "Clean Water, Better Health for Communities",
+        "date": "March 30, 2024"
+      }
+    },
+    "releases": {
+      "r1": {
+        "date": "May 14, 2024",
+        "title": "PYECSO Expands Education Program to 15 New Districts",
+        "body": "PYECSO is proud to announce the expansion of its education programs to 15 previously underserved districts across Afghanistan."
+      },
+      "r2": {
+        "date": "May 10, 2024",
+        "title": "New Livelihood Project Launched in Herat Province",
+        "body": "The project aims to improve income opportunities and economic resilience for vulnerable families."
+      },
+      "r3": {
+        "date": "May 05, 2024",
+        "title": "PYECSO and Partners Distribute Food Assistance to Flood-Affected Families",
+        "body": "Joint efforts have provided critical food support to more than 3,000 families affected by recent floods."
+      },
+      "r4": {
+        "date": "March 08, 2024",
+        "title": "International Women's Day: Celebrating Resilient Women of Afghanistan",
+        "body": "On this International Women's Day, we celebrate the strength and resilience of women in our communities."
+      }
+    },
+    "stories": {
+      "s1": {
+        "title": "Amina's Story: From Vulnerability to Self-Reliance",
+        "date": "May 12, 2024"
+      },
+      "s2": {
+        "title": "Building a Brighter Future Through Education",
+        "date": "May 10, 2024"
+      },
+      "s3": {
+        "title": "Clean Water Changes Lives in Rural Communities",
+        "date": "April 25, 2024"
+      }
+    },
+    "contact": {
+      "title": "Media Contact",
+      "body": "For media inquiries, interviews, or partnerships, please contact us.",
+      "button": "Contact Media Team"
+    },
+    "share": {
+      "title": "Do you have a story to share?",
+      "body": "We welcome stories, photos, and videos from our partners and communities.",
+      "button": "Share Your Story"
+    },
+    "newsletter": {
+      "title": "Stay Updated",
+      "body": "Subscribe to our newsletter to receive the latest updates and stories from PYECSO.",
+      "placeholder": "Enter your email address",
+      "button": "Subscribe"
+    }
+  },
+  "donate": {
+    "impact": {
+      "d1": {
+        "prefix": "100%",
+        "body": "of donations go directly to programs for women, children and youth."
+      },
+      "d2": "PYECSO is a registered Afghan NGO (Ministry of Economy No. 1201).",
+      "d3": "Operating in 24+ provinces across Afghanistan since 2006."
+    },
+    "amounts": {
+      "eyebrow": "Your contribution matters",
+      "title": "Choose an amount to give",
+      "body": "Every contribution — large or small — helps deliver education, protection and humanitarian assistance to families across Afghanistan.",
+      "currency": "USD"
+    },
+    "hesab": {
+      "title": "HesabPay",
+      "sub": "Afghanistan's mobile wallet",
+      "intro1": "Send your donation directly to PYECSO from the HesabPay app on your phone. Please write",
+      "intro2": "in the reference field so we can send you a receipt.",
+      "refExample": "\"Donation — [your name]\"",
+      "accountLabel": "Account name",
+      "numberLabel": "HesabPay number",
+      "copy": "Copy",
+      "copied": "Copied",
+      "step1": "Open the HesabPay app on your phone.",
+      "step2": "Choose Send Money and enter the number above.",
+      "step3": "Enter your donation amount and confirm.",
+      "step4Prefix": "Take a screenshot of the receipt and email it to",
+      "cta": "Open HesabPay"
+    },
+    "cash": {
+      "title": "Cash by hand",
+      "sub": "In person at our Kabul office",
+      "intro": "You are welcome to visit our head office to donate in person during working hours. An authorised finance officer will issue an official numbered receipt for every contribution.",
+      "office": "PYECSO Head Office",
+      "address": "House # 15, Street 3, Karte Seh, Kabul, Afghanistan",
+      "callTitle": "Call before visiting",
+      "coordTitle": "Coordinate your visit",
+      "hoursLabel": "Working hours:",
+      "hoursBody": "Sunday – Thursday, 08:30 – 16:30. Please schedule your visit at least one day in advance.",
+      "cta": "Schedule a visit"
+    },
+    "trust": {
+      "title": "Every donation is documented",
+      "body": "PYECSO is a women-led Afghan NGO registered with the Ministry of Economy (No. 1201) and audited annually. All donations are recorded in our finance system and reported to donors. For institutional partnerships or major gifts, please contact"
+    },
+    "flow": {
+      "success": "Thank you! Your HesabPay donation was received. We will email a receipt shortly.",
+      "failure": "Your payment was not completed. You can try again or use cash by hand or bank transfer.",
+      "where": {
+        "eyebrow": "Where Your Donation Goes",
+        "title": "Projects supported by your donation",
+        "body": "Every contribution funds one of PYECSO's six program areas. Click \"Donate now\" to give via HesabPay, cash by hand at our Kabul office, or bank transfer."
+      },
+      "card": { "donateNow": "Donate now", "raised": "raised", "goal": "goal", "donors": "donors" },
+      "modal": {
+        "donateTo": "Donate to",
+        "close": "Close",
+        "tabs": { "hesab": "HesabPay", "cash": "Cash by Hand", "bank": "Bank Transfer" },
+        "hesab": {
+          "intro": "Choose an amount, then continue to HesabPay's secure checkout.",
+          "currencyNote": "Amounts shown in {{currency}} — HesabPay processes the payment in Afghani (AFN) at the live exchange rate.",
+          "customLabel": "Custom amount ({{currency}})",
+          "emailLabel": "Email (optional)",
+          "emailPh": "you@example.com",
+          "chargedIn": "You'll be charged in Afghani (AFN):",
+          "continue": "Continue to HesabPay — {{amount}}",
+          "creating": "Creating secure session…",
+          "orSendTo": "Or send directly in HesabPay to",
+          "invalidAmount": "Please choose or enter a valid donation amount.",
+          "ratesLoading": "Currency rates are still loading. Please try again in a moment.",
+          "couldNotStart": "Could not start payment. Please try again.",
+          "networkError": "Network error. Please try again."
+        },
+        "cash": {
+          "intro": "Bring your contribution directly to our Kabul office. You will receive an official receipt.",
+          "officeName": "PYECSO Head Office",
+          "officeAddr": "Sarak-e-Naw, District 4, Kabul, Afghanistan",
+          "callAhead": "Call ahead",
+          "coordVisit": "Coordinate your visit",
+          "hoursLabel": "Office hours:",
+          "hoursValue": "Sunday–Thursday, 8:30 AM – 4:30 PM",
+          "emailBtn": "Email us to arrange a visit"
+        },
+        "bank": {
+          "intro": "Transfer your donation directly to PYECSO's bank account. Please email a copy of the transfer receipt to {{email}} so we can send you an official acknowledgement.",
+          "accountName": "Account Name",
+          "accountNumber": "Account Number",
+          "bankName": "Bank Name",
+          "swift": "SWIFT / BIC",
+          "branch": "Branch",
+          "copy": "Copy",
+          "copied": "Copied",
+          "referenceLabel": "Reference:",
+          "referenceBody": "please add \"{{campaign}}\" as the transfer reference so we can allocate your gift correctly."
+        }
+      }
+    }
+  },
+  "learn": {
+    "intro": {
+      "a": "Announced trainings, workshops and short courses",
+      "b": "Open to youth, women and professionals",
+      "c": "Rolling intakes — apply before each deadline"
+    },
+    "kinds": {
+      "All": "All",
+      "Training": "Training",
+      "Workshop": "Workshop",
+      "Course": "Course"
+    },
+    "modes": {
+      "In-person": "In-person",
+      "Online": "Online",
+      "Hybrid": "Hybrid"
+    },
+    "labels": {
+      "seats": "seats",
+      "language": "Language",
+      "starts": "Starts",
+      "applyBy": "Apply by",
+      "applyNow": "Apply now",
+      "free": "Free"
+    },
+    "searchPh": "Search programs, category, city...",
+    "empty": "No programs match your filters yet. Please check back soon.",
+    "steps": {
+      "s1": {
+        "title": "Choose a program",
+        "body": "Browse announced trainings, workshops and courses and pick the one that fits your goals."
+      },
+      "s2": {
+        "title": "Submit your application",
+        "body": "Click Apply and complete the short form before the announced deadline."
+      },
+      "s3": {
+        "title": "Get selected & attend",
+        "body": "Shortlisted applicants are contacted by our team with the schedule and venue details."
+      }
+    },
+    "apply": {
+      "prefix": "Apply",
+      "deadline": "Deadline",
+      "seatsSuffix": "seats",
+      "received": "Application received",
+      "receivedBody": "Thank you. Our team will review your application and get in touch before the deadline.",
+      "close": "Close",
+      "submit": "Submit application",
+      "cancel": "Cancel",
+      "fullName": "Full name",
+      "fatherName": "Father's name",
+      "email": "Email",
+      "phone": "Phone (WhatsApp)",
+      "province": "Province / City",
+      "gender": "Gender",
+      "female": "Female",
+      "male": "Male",
+      "education": "Highest education",
+      "primary": "Primary",
+      "secondary": "Secondary / High school",
+      "bachelor": "Bachelor",
+      "master": "Master or higher",
+      "why": "Briefly, why do you want to join this program?",
+      "consent": "I confirm the information above is accurate and agree that PYECSO may contact me about this program."
+    },
+    "programs": {
+      "eng-b1": {
+        "title": "English Language — Level B1 (Intermediate)",
+        "summary": "12-week intermediate English course focused on academic reading, writing and workplace communication for youth and professionals.",
+        "category": "Language",
+        "duration": "12 weeks · 3 sessions/week"
+      },
+      "digital-lit": {
+        "title": "Digital Literacy & Microsoft Office",
+        "summary": "Hands-on training in Windows, Word, Excel, PowerPoint and safe internet use. Priority for women returning to the workforce.",
+        "category": "Digital Skills",
+        "duration": "6 weeks · 4 sessions/week"
+      },
+      "tot-protection": {
+        "title": "Training of Trainers — Protection & GBV Referral",
+        "summary": "Advanced ToT for community-based facilitators on protection principles, GBV case identification and safe referral pathways.",
+        "category": "Protection",
+        "duration": "5 days"
+      },
+      "tvet-tailoring": {
+        "title": "Tailoring & Small-Business Basics (TVET)",
+        "summary": "Vocational course combining tailoring skills with basic bookkeeping, pricing and marketing for home-based businesses.",
+        "category": "Livelihoods · TVET",
+        "duration": "10 weeks"
+      },
+      "mhpss-workshop": {
+        "title": "Community MHPSS Awareness Workshop",
+        "summary": "Two-day workshop on psychological first aid, stress management and community-based mental health support.",
+        "category": "Health · MHPSS",
+        "duration": "2 days"
+      },
+      "agri-women": {
+        "title": "Kitchen Gardening & Nutrition for Women Farmers",
+        "summary": "Practical workshop on year-round kitchen gardening, seed selection and household nutrition planning.",
+        "category": "Agriculture",
+        "duration": "3 days"
+      }
+    }
+  },
+  "contact": {
+    "title": "Get in Touch",
+    "address": "House # 15, Street 3, Karte Seh, Kabul, Afghanistan",
+    "form": {
+      "fullName": "Full name",
+      "email": "Email address",
+      "subject": "Subject",
+      "message": "Your message",
+      "send": "Send Message"
+    }
+  },
+  "careers": {
+    "title": "Current Openings",
+    "apply": "Apply Now",
+    "types": {
+      "Full-time": "Full-time",
+      "Contract": "Contract"
+    },
+    "jobs": {
+      "j1": "Program Manager – Education",
+      "j2": "MEAL Officer",
+      "j3": "Field Coordinator – WASH",
+      "j4": "Gender Specialist"
+    }
+  },
+  "app": {
+    "notFound": {
+      "title": "Page not found",
+      "desc": "The page you're looking for doesn't exist or has been moved.",
+      "home": "Go home"
+    },
+    "error": {
+      "title": "This page didn't load",
+      "desc": "Something went wrong on our end. You can try refreshing or head back home.",
+      "retry": "Try again",
+      "home": "Go home"
+    }
+  }
+}
