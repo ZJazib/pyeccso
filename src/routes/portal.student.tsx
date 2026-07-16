@@ -75,6 +75,7 @@ function StudentDashboard({ user }: { user: { full_name: string; email: string }
             >
               <Send className="size-4" /> {applied[course.id] ? "Applied" : "Apply"}
             </button>
+            <CourseMaterialsPanel courseId={course.id} canUpload={false} />
           </article>
         ))}
         {!courses.length && (
