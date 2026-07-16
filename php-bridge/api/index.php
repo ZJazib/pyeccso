@@ -21,6 +21,8 @@ try {
     if ($route === 'setup/admin' && $method === 'POST') setup_admin($config);
     if ($route === 'auth/login' && $method === 'POST') login($config);
     if ($route === 'auth/google' && $method === 'POST') google_login($config);
+    if ($route === 'auth/google/link' && $method === 'POST') google_link($config);
+    if ($route === 'auth/google/unlink' && $method === 'POST') google_unlink($config);
     if ($route === 'auth/me' && $method === 'GET') me($config);
     if ($route === 'content') content($config, $method);
     if ($route === 'applications') applications($config, $method);
