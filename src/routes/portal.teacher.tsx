@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 import { BookOpen, Users } from "lucide-react";
 import { PortalGate } from "@/components/portal/PortalShell";
+import { CourseMaterialsPanel } from "@/components/portal/CourseMaterialsPanel";
 import {
   type CmsItem,
   type CourseApplication,
