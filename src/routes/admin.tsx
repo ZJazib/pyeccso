@@ -352,6 +352,16 @@ function AdminPanel() {
                     <option value="published">Published</option>
                   </select>
                 </label>
+                <label className="block text-sm font-semibold text-navy-900">
+                  Sort order
+                  <input
+                    type="number"
+                    value={draft.sortOrder}
+                    onChange={(event) => setDraft({ ...draft, sortOrder: Number(event.target.value) || 0 })}
+                    className="mt-2 w-full h-11 rounded-md border border-input px-3 bg-white"
+                  />
+                  <span className="mt-1 block text-xs text-navy-900/50 font-normal">Lower numbers appear first.</span>
+                </label>
               </div>
 
               <label className="block text-sm font-semibold text-navy-900 mt-4">
