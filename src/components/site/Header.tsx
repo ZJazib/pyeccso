@@ -35,17 +35,27 @@ export function Header() {
           </Link>
 
           <nav className="hidden lg:flex items-center gap-6 xl:gap-7">
-            {nav.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="text-sm font-medium text-navy-900/80 hover:text-brand-blue transition-colors [&.active]:text-brand-blue [&.active]:border-b-2 [&.active]:border-brand-blue py-2"
-                activeProps={{ className: "active" }}
-                activeOptions={{ exact: item.to === "/" }}
-              >
-                {item.label}
-              </Link>
-            ))}
+            {nav.map((item) =>
+              "href" in item ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className="text-sm font-medium text-navy-900/80 hover:text-brand-blue transition-colors py-2"
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  className="text-sm font-medium text-navy-900/80 hover:text-brand-blue transition-colors [&.active]:text-brand-blue [&.active]:border-b-2 [&.active]:border-brand-blue py-2"
+                  activeProps={{ className: "active" }}
+                  activeOptions={{ exact: item.to === "/" }}
+                >
+                  {item.label}
+                </Link>
+              )
+            )}
           </nav>
 
           <div className="flex items-center gap-4 shrink-0">
