@@ -137,6 +137,9 @@ function AdminPanel() {
   }
 
   function edit(item: CmsItem) {
+    const metadata = (item.metadata ?? {}) as Record<string, unknown>;
+    const { sort_order: _drop, ...rest } = metadata;
+    void _drop;
     setDraft({
       id: item.id,
       title: item.title,
@@ -145,7 +148,8 @@ function AdminPanel() {
       summary: item.summary ?? "",
       body: item.body ?? "",
       status: item.status,
-      metadataText: JSON.stringify(item.metadata ?? {}, null, 2),
+      sortOrder: readSortOrder(item),
+      metadataText: JSON.stringify(rest, null, 2),
     });
   }
 
