@@ -84,6 +84,7 @@ function TeacherDashboard() {
                   ))}
                 </ul>
               )}
+              <CourseMaterialsPanel courseId={course.id} canUpload canDelete />
             </article>
           );
         })}
