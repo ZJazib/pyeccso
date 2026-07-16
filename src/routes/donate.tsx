@@ -142,6 +142,22 @@ function Donate() {
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [currency, setCurrency] = useState<string>("USD");
+  const [rates, setRates] = useState<Record<string, number> | null>(null);
+
+  // Load exchange rates + detect visitor currency once.
+  useEffect(() => {
+    let cancelled = false;
+    Promise.all([getRates(), detectGeo()]).then(([r, geo]) => {
+      if (cancelled) return;
+      setRates(r);
+      // Only use detected currency if we actually have a rate for it.
+      if (geo.currency && r[geo.currency]) setCurrency(geo.currency);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const copy = (value: string, key: string) => {
     navigator.clipboard?.writeText(value);
@@ -149,7 +165,19 @@ function Donate() {
     setTimeout(() => setCopied(null), 1500);
   };
 
-  const amounts = [25, 50, 100, 250, 500];
+  // Preset amounts are defined in USD, then displayed in the visitor's
+  // local currency and converted to AFN when submitting to HesabPay.
+  const usdPresets = [25, 50, 100, 250, 500];
+  const localPresets = useMemo(() => {
+    if (!rates) return usdPresets;
+    return usdPresets.map((u) => {
+      const v = convert(u, "USD", currency, rates);
+      // Round to a nice number in the local currency
+      if (v >= 1000) return Math.round(v / 100) * 100;
+      if (v >= 100) return Math.round(v / 10) * 10;
+      return Math.max(1, Math.round(v));
+    });
+  }, [rates, currency]);
 
   useEffect(() => {
     if (openCampaign) {
@@ -163,12 +191,21 @@ function Donate() {
     };
   }, [openCampaign]);
 
+  const selectedLocal = customAmount ? Number(customAmount) : localPresets[usdPresets.indexOf(amount)] ?? amount;
+  const afnAmount = useMemo(() => {
+    if (!rates || !Number.isFinite(selectedLocal)) return 0;
+    return Math.max(1, Math.round(convert(selectedLocal, currency, "AFN", rates)));
+  }, [rates, selectedLocal, currency]);
+
   const startHesabPay = async () => {
     if (!openCampaign) return;
     setError(null);
-    const finalAmount = customAmount ? Number(customAmount) : amount;
-    if (!Number.isFinite(finalAmount) || finalAmount < 1) {
+    if (!Number.isFinite(selectedLocal) || selectedLocal < 1) {
       setError("Please choose or enter a valid donation amount.");
+      return;
+    }
+    if (!rates || !afnAmount) {
+      setError("Currency rates are still loading. Please try again in a moment.");
       return;
     }
     setLoading(true);
@@ -177,9 +214,9 @@ function Donate() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: finalAmount,
+          amount: afnAmount, // HesabPay only accepts AFN
           email: email || undefined,
-          note: openCampaign.overlayTitle,
+          note: `${openCampaign.overlayTitle} — ${formatMoney(selectedLocal, currency)} ≈ ${afnAmount} AFN`,
         }),
       });
       const data = (await res.json()) as { payment_url?: string; error?: string };
