@@ -48,6 +48,7 @@ export function PageHero({ title, description, breadcrumb, actions }: PageHeroPr
             {description}
           </p>
         )}
+        {actions && <div className="mt-8 flex flex-wrap items-center gap-3">{actions}</div>}
       </div>
     </section>
   );
