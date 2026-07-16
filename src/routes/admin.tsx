@@ -38,6 +38,18 @@ const resources: Array<{ id: CmsResource; label: string; helper: string }> = [
   { id: "careers", label: "Careers", helper: "Vacancies and announcements" },
 ];
 
+// Per-role resource permissions. Admin has full access; Learn managers are
+// scoped to Learn-related content only. Mirrored server-side in
+// php-bridge/api/index.php (see can_manage_resource).
+const RESOURCE_PERMISSIONS: Record<string, CmsResource[]> = {
+  admin: ["pages", "programs", "projects", "courses", "media", "careers"],
+  learn_manager: ["courses", "media", "careers"],
+};
+
+function allowedResources(role: string | undefined): CmsResource[] {
+  return RESOURCE_PERMISSIONS[role ?? ""] ?? [];
+}
+
 type Draft = {
   id?: number;
   title: string;
@@ -96,10 +108,26 @@ function AdminPanel() {
     }
   }
 
-  const activeMeta = useMemo(
-    () => resources.find((resource) => resource.id === activeResource) ?? resources[0],
-    [activeResource],
+  const visibleResources = useMemo(
+    () => resources.filter((r) => allowedResources(user?.role).includes(r.id)),
+    [user?.role],
   );
+
+  const activeMeta = useMemo(
+    () => visibleResources.find((resource) => resource.id === activeResource) ?? visibleResources[0] ?? resources[0],
+    [activeResource, visibleResources],
+  );
+
+  // Clamp active resource to what the current user is allowed to see
+  useEffect(() => {
+    if (!user) return;
+    const allowed = allowedResources(user.role);
+    if (allowed.length && !allowed.includes(activeResource)) {
+      setActiveResource(allowed[0]);
+      setDraft(emptyDraft);
+    }
+  }, [user, activeResource]);
+
 
   useEffect(() => {
     let cancelled = false;
@@ -128,7 +156,7 @@ function AdminPanel() {
   }, []);
 
   useEffect(() => {
-    if (!user || (user.role !== "admin" && user.role !== "learn_manager")) return;
+    if (!user || !allowedResources(user.role).includes(activeResource)) return;
     loadItems(activeResource);
   }, [activeResource, user]);
 
@@ -261,12 +289,14 @@ function AdminPanel() {
     return <AdminLogin health={health} healthChecking={healthChecking} onRecheck={runHealthCheck} onLogin={setUser} />;
   }
 
-  if (user.role !== "admin" && user.role !== "learn_manager") {
+  if (!allowedResources(user.role).length) {
     return (
       <SiteLayout>
         <section className="max-w-3xl mx-auto px-4 md:px-6 py-20">
           <h1 className="text-3xl font-bold text-navy-900">Access restricted</h1>
-          <p className="text-navy-900/70 mt-3">This panel is only for admins and PYECSO Learn managers.</p>
+          <p className="text-navy-900/70 mt-3">
+            Your account role does not have permission to manage website content.
+          </p>
           <button onClick={logout} className="mt-6 h-11 px-5 rounded-md bg-brand-blue text-white font-semibold">
             Sign out
           </button>
@@ -274,6 +304,7 @@ function AdminPanel() {
       </SiteLayout>
     );
   }
+
 
   return (
     <SiteLayout>
@@ -300,7 +331,7 @@ function AdminPanel() {
       <section className="max-w-7xl mx-auto px-4 md:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
           <aside className="space-y-2">
-            {resources.map((resource) => (
+            {visibleResources.map((resource) => (
               <button
                 type="button"
                 key={resource.id}

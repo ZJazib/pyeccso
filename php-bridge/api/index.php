@@ -249,6 +249,22 @@ function valid_resource(string $resource): bool {
     return in_array($resource, ['pages', 'programs', 'projects', 'courses', 'media', 'careers'], true);
 }
 
+// Per-role resource permissions. Mirrored client-side in src/routes/admin.tsx
+// (RESOURCE_PERMISSIONS). Admins may manage everything; Learn managers are
+// scoped to Learn-related content only.
+function resource_permissions(): array {
+    return [
+        'admin' => ['pages', 'programs', 'projects', 'courses', 'media', 'careers'],
+        'learn_manager' => ['courses', 'media', 'careers'],
+    ];
+}
+
+function can_manage_resource(string $role, string $resource): bool {
+    $map = resource_permissions();
+    return isset($map[$role]) && in_array($resource, $map[$role], true);
+}
+
+
 function content(array $config, string $method): void {
     $resource = $_GET['resource'] ?? '';
     if (!valid_resource($resource)) respond(['error' => 'Invalid resource'], 400);
@@ -270,6 +286,10 @@ function content(array $config, string $method): void {
     }
 
     $user = require_manager($config);
+    if (!can_manage_resource((string)$user['role'], $resource)) {
+        respond(['error' => 'Forbidden: your role cannot manage this resource'], 403);
+    }
+
     if ($method === 'POST' || $method === 'PUT') {
         $data = read_json();
         validate_required($data, ['title', 'slug', 'language']);
