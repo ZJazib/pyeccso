@@ -358,3 +358,137 @@ function format_application(array|false $application): array {
     unset($application['student_user_id']);
     return $application;
 }
+
+function materials_storage_dir(): string {
+    $dir = realpath(__DIR__ . '/..');
+    $target = ($dir ?: __DIR__ . '/..') . '/storage/materials';
+    if (!is_dir($target)) @mkdir($target, 0770, true);
+    return $target;
+}
+
+function student_has_access(array $config, int $userId, int $courseId): bool {
+    $stmt = pdo($config)->prepare("SELECT 1 FROM course_applications WHERE student_user_id = ? AND course_id = ? AND status = 'accepted' LIMIT 1");
+    $stmt->execute([$userId, $courseId]);
+    return (bool)$stmt->fetchColumn();
+}
+
+function format_material(array|false $row): array {
+    if (!$row) respond(['error' => 'Material not found'], 404);
+    return [
+        'id' => (int)$row['id'],
+        'course_id' => (int)$row['course_id'],
+        'title' => $row['title'],
+        'description' => $row['description'],
+        'original_name' => $row['original_name'],
+        'mime_type' => $row['mime_type'],
+        'size_bytes' => (int)$row['size_bytes'],
+        'visibility' => $row['visibility'],
+        'uploaded_by' => $row['uploaded_by'] === null ? null : (int)$row['uploaded_by'],
+        'created_at' => $row['created_at'],
+    ];
+}
+
+function materials(array $config, string $method): void {
+    if ($method === 'GET') {
+        $user = require_user($config);
+        $courseId = (int)($_GET['course_id'] ?? 0);
+        if (!$courseId) respond(['error' => 'course_id is required'], 400);
+
+        $isStaff = in_array($user['role'], ['admin', 'teacher', 'learn_manager'], true);
+        if (!$isStaff) {
+            // Students only see materials they have access to
+            $public = "visibility = 'public'";
+            $enrolled = student_has_access($config, (int)$user['id'], $courseId);
+            $sql = "SELECT * FROM course_materials WHERE course_id = ? AND ($public" . ($enrolled ? " OR visibility = 'enrolled'" : "") . ") ORDER BY created_at DESC";
+        } else {
+            $sql = 'SELECT * FROM course_materials WHERE course_id = ? ORDER BY created_at DESC';
+        }
+        $stmt = pdo($config)->prepare($sql);
+        $stmt->execute([$courseId]);
+        respond(['materials' => array_map('format_material', $stmt->fetchAll())]);
+    }
+
+    if ($method === 'POST') {
+        $user = require_user($config);
+        if (!in_array($user['role'], ['admin', 'teacher', 'learn_manager'], true)) respond(['error' => 'Forbidden'], 403);
+
+        $courseId = (int)($_POST['course_id'] ?? 0);
+        $title = trim((string)($_POST['title'] ?? ''));
+        $description = trim((string)($_POST['description'] ?? ''));
+        $visibility = ($_POST['visibility'] ?? 'enrolled') === 'public' ? 'public' : 'enrolled';
+        if (!$courseId || $title === '') respond(['error' => 'course_id and title are required'], 400);
+        if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) respond(['error' => 'File upload failed'], 400);
+
+        $file = $_FILES['file'];
+        $maxBytes = 50 * 1024 * 1024; // 50 MB
+        if ($file['size'] > $maxBytes) respond(['error' => 'File exceeds 50 MB limit'], 413);
+
+        $original = basename((string)$file['name']);
+        $ext = pathinfo($original, PATHINFO_EXTENSION);
+        $safeExt = preg_replace('/[^a-zA-Z0-9]/', '', (string)$ext);
+        $storageName = bin2hex(random_bytes(16)) . ($safeExt ? '.' . $safeExt : '');
+        $dir = materials_storage_dir() . '/' . $courseId;
+        if (!is_dir($dir)) @mkdir($dir, 0770, true);
+        $dest = $dir . '/' . $storageName;
+        if (!move_uploaded_file($file['tmp_name'], $dest)) respond(['error' => 'Could not store file'], 500);
+
+        $finfo = @finfo_open(FILEINFO_MIME_TYPE);
+        $mime = $finfo ? (finfo_file($finfo, $dest) ?: 'application/octet-stream') : 'application/octet-stream';
+        if ($finfo) finfo_close($finfo);
+
+        $stmt = pdo($config)->prepare('INSERT INTO course_materials (course_id, title, description, original_name, storage_name, mime_type, size_bytes, visibility, uploaded_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt->execute([$courseId, $title, $description ?: null, $original, $storageName, $mime, (int)$file['size'], $visibility, (int)$user['id']]);
+        $id = (int)pdo($config)->lastInsertId();
+        $stmt = pdo($config)->prepare('SELECT * FROM course_materials WHERE id = ?');
+        $stmt->execute([$id]);
+        respond(['material' => format_material($stmt->fetch())], 201);
+    }
+
+    if ($method === 'DELETE') {
+        $user = require_user($config);
+        $id = (int)($_GET['id'] ?? 0);
+        if (!$id) respond(['error' => 'Missing id'], 400);
+        $stmt = pdo($config)->prepare('SELECT * FROM course_materials WHERE id = ?');
+        $stmt->execute([$id]);
+        $row = $stmt->fetch();
+        if (!$row) respond(['error' => 'Material not found'], 404);
+        $isOwner = ($row['uploaded_by'] !== null && (int)$row['uploaded_by'] === (int)$user['id']);
+        $isStaff = in_array($user['role'], ['admin', 'learn_manager'], true);
+        if (!$isOwner && !$isStaff) respond(['error' => 'Forbidden'], 403);
+
+        $path = materials_storage_dir() . '/' . (int)$row['course_id'] . '/' . $row['storage_name'];
+        if (is_file($path)) @unlink($path);
+        $stmt = pdo($config)->prepare('DELETE FROM course_materials WHERE id = ?');
+        $stmt->execute([$id]);
+        respond(['ok' => true]);
+    }
+
+    respond(['error' => 'Method not allowed'], 405);
+}
+
+function materials_download(array $config): void {
+    $user = require_user($config);
+    $id = (int)($_GET['id'] ?? 0);
+    if (!$id) respond(['error' => 'Missing id'], 400);
+    $stmt = pdo($config)->prepare('SELECT * FROM course_materials WHERE id = ?');
+    $stmt->execute([$id]);
+    $row = $stmt->fetch();
+    if (!$row) respond(['error' => 'Material not found'], 404);
+
+    $isStaff = in_array($user['role'], ['admin', 'teacher', 'learn_manager'], true);
+    if (!$isStaff) {
+        if ($row['visibility'] !== 'public' && !student_has_access($config, (int)$user['id'], (int)$row['course_id'])) {
+            respond(['error' => 'Access denied'], 403);
+        }
+    }
+
+    $path = materials_storage_dir() . '/' . (int)$row['course_id'] . '/' . $row['storage_name'];
+    if (!is_file($path)) respond(['error' => 'File missing on server'], 410);
+
+    header('Content-Type: ' . ($row['mime_type'] ?: 'application/octet-stream'));
+    header('Content-Length: ' . filesize($path));
+    header('Content-Disposition: attachment; filename="' . addslashes($row['original_name']) . '"');
+    header('Cache-Control: private, no-store');
+    readfile($path);
+    exit;
+}
