@@ -332,8 +332,12 @@ function google_unlink(array $config): void {
     if (!$row || !$row['password_hash']) {
         respond(['error' => 'Set a password before unlinking Google, or you will lose access.'], 400);
     }
-    $update = $pdo->prepare('UPDATE users SET google_sub = NULL, provider = CASE WHEN provider = "password+google" THEN "password" ELSE provider END WHERE id = ?');
-    $update->execute([$current['id']]);
+    $providerStmt = $pdo->prepare('SELECT provider FROM users WHERE id = ? LIMIT 1');
+    $providerStmt->execute([$current['id']]);
+    $currentProvider = (string)($providerStmt->fetch()['provider'] ?? 'password');
+    $newProvider = $currentProvider === 'password+google' ? 'password' : ($currentProvider === 'google' ? 'password' : $currentProvider);
+    $update = $pdo->prepare('UPDATE users SET google_sub = NULL, provider = ? WHERE id = ?');
+    $update->execute([$newProvider, $current['id']]);
     respond(['ok' => true, 'linked' => false]);
 }
 
