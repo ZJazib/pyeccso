@@ -6,6 +6,8 @@ export type BridgeUser = {
   email: string;
   full_name: string;
   role: UserRole;
+  provider?: string;
+  google_linked?: boolean;
 };
 
 export type CmsResource = "pages" | "programs" | "projects" | "courses" | "media" | "careers";
