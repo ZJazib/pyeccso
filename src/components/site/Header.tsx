@@ -1,5 +1,4 @@
 import { Link } from "@tanstack/react-router";
-import { Mail, Phone } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import "@/lib/i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -19,27 +18,6 @@ export function Header() {
 
   return (
     <header className="w-full">
-      {/* Top utility bar */}
-      <div className="bg-navy-950 text-white/90 text-xs">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 h-10 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-5">
-            <a href="mailto:info@pyecso.org.af" className="flex items-center gap-2 hover:text-white">
-              <Mail className="size-3.5" /> info@pyecso.org.af
-            </a>
-            <a href="tel:+93202500312" className="hidden sm:flex items-center gap-2 hover:text-white">
-              <Phone className="size-3.5" /> +93 (0) 20 250 0312
-            </a>
-          </div>
-          <div className="flex items-center gap-5">
-            <div className="hidden md:block text-white/70 text-[11px]">
-              {t("top.registered")}
-            </div>
-            <LanguageSwitcher variant="top" />
-          </div>
-        </div>
-      </div>
-
-      {/* Main nav */}
       <div className="bg-white border-b border-border">
         <div className="max-w-7xl mx-auto px-4 md:px-6 h-[90px] flex items-center justify-between gap-6">
           <Link to="/" className="flex items-center gap-3 shrink-0">
@@ -71,12 +49,15 @@ export function Header() {
             ))}
           </nav>
 
-          <Link
-            to="/donate"
-            className="bg-brand-blue text-white h-11 px-5 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-hover transition-colors shrink-0"
-          >
-            {t("nav.donate")}
-          </Link>
+          <div className="flex items-center gap-4 shrink-0">
+            <LanguageSwitcher variant="inline" />
+            <Link
+              to="/donate"
+              className="bg-brand-blue text-white h-11 px-5 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-hover transition-colors"
+            >
+              {t("nav.donate")}
+            </Link>
+          </div>
         </div>
       </div>
     </header>

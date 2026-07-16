@@ -47,6 +47,20 @@ function Contact() {
             <button type="submit" className="w-full bg-brand-blue text-white rounded-md py-3 text-sm font-semibold">{t("contact.form.send")}</button>
           </form>
         </div>
+        <div className="max-w-6xl mx-auto px-4 md:px-6 mt-12">
+          <div className="rounded-lg overflow-hidden ring-1 ring-border shadow-sm">
+            <iframe
+              title="PYECSO Office Location — Kabul, Afghanistan"
+              src="https://www.google.com/maps?q=Kabul,+Afghanistan&output=embed"
+              width="100%"
+              height="420"
+              style={{ border: 0 }}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
+          </div>
+        </div>
       </section>
     </SiteLayout>
   );

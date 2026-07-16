@@ -18,6 +18,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CareersRouteImport } from './routes/careers'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiPublicHesabSessionRouteImport } from './routes/api/public/hesab-session'
 
 const ProjectsRoute = ProjectsRouteImport.update({
   id: '/projects',
@@ -64,6 +65,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHesabSessionRoute = ApiPublicHesabSessionRouteImport.update({
+  id: '/api/public/hesab-session',
+  path: '/api/public/hesab-session',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -75,6 +81,7 @@ export interface FileRoutesByFullPath {
   '/media': typeof MediaRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -86,6 +93,7 @@ export interface FileRoutesByTo {
   '/media': typeof MediaRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   '/media': typeof MediaRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -111,6 +120,7 @@ export interface FileRouteTypes {
     | '/media'
     | '/programs'
     | '/projects'
+    | '/api/public/hesab-session'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -122,6 +132,7 @@ export interface FileRouteTypes {
     | '/media'
     | '/programs'
     | '/projects'
+    | '/api/public/hesab-session'
   id:
     | '__root__'
     | '/'
@@ -133,6 +144,7 @@ export interface FileRouteTypes {
     | '/media'
     | '/programs'
     | '/projects'
+    | '/api/public/hesab-session'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -145,6 +157,7 @@ export interface RootRouteChildren {
   MediaRoute: typeof MediaRoute
   ProgramsRoute: typeof ProgramsRoute
   ProjectsRoute: typeof ProjectsRoute
+  ApiPublicHesabSessionRoute: typeof ApiPublicHesabSessionRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -212,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hesab-session': {
+      id: '/api/public/hesab-session'
+      path: '/api/public/hesab-session'
+      fullPath: '/api/public/hesab-session'
+      preLoaderRoute: typeof ApiPublicHesabSessionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -225,17 +245,8 @@ const rootRouteChildren: RootRouteChildren = {
   MediaRoute: MediaRoute,
   ProgramsRoute: ProgramsRoute,
   ProjectsRoute: ProjectsRoute,
+  ApiPublicHesabSessionRoute: ApiPublicHesabSessionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
