@@ -3,7 +3,7 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import { GraduationCap, Calendar, MapPin, Clock, Users, ArrowRight, Search, LogIn, LogOut, UserRoundCheck } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePortalUser, roleHomePath } from "@/components/portal/PortalShell";
 import { AuthModal } from "@/components/portal/AuthModal";
 import { submitCourseApplication, setBridgeToken, type BridgeUser } from "@/lib/phpBridge";
@@ -57,6 +57,8 @@ function Learn() {
   const [selected, setSelected] = useState<Program | null>(null);
   const [authOpen, setAuthOpen] = useState<null | { next: "apply" | "portal"; program?: Program }>(null);
 
+  const PENDING_KEY = "pyecso.pendingApplyId";
+
   function signOut() {
     setBridgeToken(null);
     setUser(null);
@@ -64,6 +66,7 @@ function Learn() {
 
   function handleApplyClick(p: Program) {
     if (!user) {
+      try { sessionStorage.setItem(PENDING_KEY, p.id); } catch {}
       setAuthOpen({ next: "apply", program: p });
       return;
     }
@@ -79,11 +82,25 @@ function Learn() {
     const pending = authOpen;
     setAuthOpen(null);
     if (pending?.next === "apply" && pending.program && u.role === "student") {
+      try { sessionStorage.removeItem(PENDING_KEY); } catch {}
       setSelected(pending.program);
     } else if (pending?.next === "portal") {
       navigate({ to: roleHomePath(u.role) });
     }
   }
+
+  // Resume a pending Apply after a full-page auth redirect (e.g. Google OAuth).
+  useEffect(() => {
+    if (!user || user.role !== "student") return;
+    let pendingId: string | null = null;
+    try { pendingId = sessionStorage.getItem(PENDING_KEY); } catch {}
+    if (!pendingId) return;
+    const program = programs.find((p) => p.id === pendingId);
+    try { sessionStorage.removeItem(PENDING_KEY); } catch {}
+    if (program) setSelected(program);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
+
 
 
   const localeMap: Record<string, string> = { en: "en", fa: "fa-IR", ps: "ps-AF", ar: "ar", fr: "fr" };
