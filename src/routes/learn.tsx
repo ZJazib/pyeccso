@@ -1,9 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
-import { GraduationCap, Calendar, MapPin, Clock, Users, ArrowRight, Search } from "lucide-react";
+import { GraduationCap, Calendar, MapPin, Clock, Users, ArrowRight, Search, LogIn, LogOut, UserRoundCheck } from "lucide-react";
 import { useMemo, useState } from "react";
+import { usePortalUser, roleHomePath } from "@/components/portal/PortalShell";
+import { AuthModal } from "@/components/portal/AuthModal";
+import { submitCourseApplication, setBridgeToken, type BridgeUser } from "@/lib/phpBridge";
 
 export const Route = createFileRoute("/learn")({
   component: Learn,
@@ -47,9 +50,41 @@ const kinds: Array<"All" | Kind> = ["All", "Training", "Workshop", "Course"];
 
 function Learn() {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
+  const { user, setUser } = usePortalUser();
   const [kind, setKind] = useState<"All" | Kind>("All");
   const [query, setQuery] = useState("");
   const [selected, setSelected] = useState<Program | null>(null);
+  const [authOpen, setAuthOpen] = useState<null | { next: "apply" | "portal"; program?: Program }>(null);
+
+  function signOut() {
+    setBridgeToken(null);
+    setUser(null);
+  }
+
+  function handleApplyClick(p: Program) {
+    if (!user) {
+      setAuthOpen({ next: "apply", program: p });
+      return;
+    }
+    if (user.role !== "student") {
+      navigate({ to: roleHomePath(user.role) });
+      return;
+    }
+    setSelected(p);
+  }
+
+  function handleAuthed(u: BridgeUser) {
+    setUser(u);
+    const pending = authOpen;
+    setAuthOpen(null);
+    if (pending?.next === "apply" && pending.program && u.role === "student") {
+      setSelected(pending.program);
+    } else if (pending?.next === "portal") {
+      navigate({ to: roleHomePath(u.role) });
+    }
+  }
+
 
   const localeMap: Record<string, string> = { en: "en", fa: "fa-IR", ps: "ps-AF", ar: "ar", fr: "fr" };
   const fmt = (iso: string) => {
@@ -77,7 +112,33 @@ function Learn() {
         title={t("hero.learn.title")}
         description={t("hero.learn.description")}
         breadcrumb={[{ label: t("nav.home"), to: "/" }, { label: t("hero.learn.title") }]}
+        actions={
+          user ? (
+            <>
+              <Link
+                to={roleHomePath(user.role)}
+                className="h-11 px-5 rounded-md bg-white text-navy-900 font-semibold text-sm inline-flex items-center gap-2 hover:bg-white/90"
+              >
+                <UserRoundCheck className="size-4" /> My Portal ({user.full_name})
+              </Link>
+              <button
+                onClick={signOut}
+                className="h-11 px-4 rounded-md bg-white/10 text-white font-semibold text-sm inline-flex items-center gap-2 ring-1 ring-white/30 hover:bg-white/20"
+              >
+                <LogOut className="size-4" /> Sign out
+              </button>
+            </>
+          ) : (
+            <button
+              onClick={() => setAuthOpen({ next: "portal" })}
+              className="h-11 px-5 rounded-md bg-brand-blue text-white font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-hover"
+            >
+              <LogIn className="size-4" /> Student login / Register
+            </button>
+          )
+        }
       />
+
 
       <section className="bg-brand-blue-wash border-b border-border">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 flex flex-wrap items-center gap-6 text-sm">
@@ -121,7 +182,7 @@ function Learn() {
                 </ul>
                 <div className="mt-auto flex items-center justify-between pt-4 border-t border-border">
                   <span className="text-xs text-navy-900/60">{t("learn.labels.applyBy")} <strong className="text-navy-900">{fmt(p.deadline)}</strong></span>
-                  <button onClick={() => setSelected(p)} className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5 hover:underline">
+                  <button onClick={() => handleApplyClick(p)} className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5 hover:underline">
                     {t("learn.labels.applyNow")} <ArrowRight className="size-4" />
                   </button>
                 </div>
@@ -160,6 +221,19 @@ function Learn() {
             <ApplyForm programId={selected.id} programTitle={t(`learn.programs.${selected.id}.title`)} onClose={() => setSelected(null)} />
           </div>
         </div>
+      )}
+
+      {authOpen && (
+        <AuthModal
+          onClose={() => setAuthOpen(null)}
+          onAuthed={handleAuthed}
+          title={authOpen.next === "apply" ? "Sign in to apply" : "PYECSO Learn portal"}
+          subtitle={
+            authOpen.next === "apply"
+              ? "You need a student account to submit your application."
+              : "Login or create your student account to access the learning portal."
+          }
+        />
       )}
     </SiteLayout>
   );

@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ChevronRight } from "lucide-react";
+import type { ReactNode } from "react";
 import heroImage from "@/assets/hero-schoolgirl.jpg";
 
 interface PageHeroProps {
@@ -7,9 +8,10 @@ interface PageHeroProps {
   title: string;
   description?: string;
   breadcrumb?: { label: string; to?: string }[];
+  actions?: ReactNode;
 }
 
-export function PageHero({ title, description, breadcrumb }: PageHeroProps) {
+export function PageHero({ title, description, breadcrumb, actions }: PageHeroProps) {
   return (
     <section className="relative bg-navy-900 text-white overflow-hidden">
       <div className="absolute inset-0">
@@ -46,6 +48,7 @@ export function PageHero({ title, description, breadcrumb }: PageHeroProps) {
             {description}
           </p>
         )}
+        {actions && <div className="mt-8 flex flex-wrap items-center gap-3">{actions}</div>}
       </div>
     </section>
   );

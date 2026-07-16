@@ -109,6 +109,20 @@ export async function loginToBridge(identifier: string, password: string) {
   return result.user;
 }
 
+export async function registerStudentOnBridge(input: {
+  full_name: string;
+  email: string;
+  password: string;
+  username?: string;
+}) {
+  const result = await bridgeRequest<LoginResponse>("/auth/register", {
+    method: "POST",
+    body: JSON.stringify(input),
+  });
+  setBridgeToken(result.token);
+  return result.user;
+}
+
 export async function loginToBridgeWithGoogle(idToken: string) {
   const result = await bridgeRequest<LoginResponse>("/auth/google", {
     method: "POST",

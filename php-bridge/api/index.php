@@ -20,6 +20,7 @@ try {
     if ($route === 'health' && $method === 'GET') health($config);
     if ($route === 'setup/admin' && $method === 'POST') setup_admin($config);
     if ($route === 'auth/login' && $method === 'POST') login($config);
+    if ($route === 'auth/register' && $method === 'POST') register_student($config);
     if ($route === 'auth/google' && $method === 'POST') google_login($config);
     if ($route === 'auth/google/link' && $method === 'POST') google_link($config);
     if ($route === 'auth/google/unlink' && $method === 'POST') google_unlink($config);
@@ -213,6 +214,30 @@ function login(array $config): void {
     if (!$user || $user['status'] !== 'active' || !$user['password_hash'] || !password_verify($data['password'], $user['password_hash'])) {
         respond(['error' => 'Invalid username or password'], 401);
     }
+    issue_login($config, $user);
+}
+
+function register_student(array $config): void {
+    $data = read_json();
+    validate_required($data, ['full_name', 'email', 'password']);
+    $email = strtolower(trim($data['email']));
+    $fullName = trim($data['full_name']);
+    $password = (string) $data['password'];
+    if (strlen($password) < 8) respond(['error' => 'Password must be at least 8 characters'], 422);
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) respond(['error' => 'Invalid email'], 422);
+    $username = isset($data['username']) && $data['username'] !== ''
+        ? strtolower(trim($data['username']))
+        : preg_replace('/[^a-z0-9]+/', '.', strtolower(explode('@', $email)[0])) . '.' . substr(bin2hex(random_bytes(2)), 0, 4);
+    $pdo = pdo($config);
+    $exists = $pdo->prepare('SELECT id FROM users WHERE email = ? OR username = ? LIMIT 1');
+    $exists->execute([$email, $username]);
+    if ($exists->fetch()) respond(['error' => 'An account with this email or username already exists'], 409);
+    $insert = $pdo->prepare('INSERT INTO users (username, email, password_hash, full_name, role, provider) VALUES (?, ?, ?, ?, ?, ?)');
+    $insert->execute([$username, $email, password_hash($password, PASSWORD_DEFAULT), $fullName, 'student', 'local']);
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE id = ? LIMIT 1');
+    $stmt->execute([(int) $pdo->lastInsertId()]);
+    $user = $stmt->fetch();
+    if (!$user) respond(['error' => 'Registration failed'], 500);
     issue_login($config, $user);
 }
 
