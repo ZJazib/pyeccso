@@ -86,8 +86,16 @@ function sortItems(items: CmsItem[]): CmsItem[] {
   });
 }
 
+const DEV_ADMIN_USER: BridgeUser = {
+  id: 0,
+  username: "admin",
+  email: "admin@pyecso.local",
+  full_name: "PYECSO Admin",
+  role: "admin",
+};
+
 function AdminPanel() {
-  const [user, setUser] = useState<BridgeUser | null>(null);
+  const [user, setUser] = useState<BridgeUser | null>(DEV_ADMIN_USER);
   const [activeResource, setActiveResource] = useState<CmsResource>("pages");
   const [items, setItems] = useState<CmsItem[]>([]);
   const [draft, setDraft] = useState<Draft>(emptyDraft);
