@@ -13,13 +13,14 @@ import {
   ShieldCheck,
   Heart,
   Loader2,
-  GraduationCap,
-  Utensils,
-  Sprout,
-  Stethoscope,
-  Shield,
-  Briefcase,
+  Users,
 } from "lucide-react";
+import cardEducation from "@/assets/card-education.jpg";
+import cardEmergency from "@/assets/card-emergency.jpg";
+import cardLivelihoods from "@/assets/card-livelihoods.jpg";
+import cardHealth from "@/assets/card-health.jpg";
+import cardAgriculture from "@/assets/card-agriculture.jpg";
+import cardWomen from "@/assets/card-women.jpg";
 import { useState } from "react";
 
 export const Route = createFileRoute("/donate")({
@@ -50,44 +51,71 @@ export const Route = createFileRoute("/donate")({
 const HESAB_PAY_NUMBER = "+93 700 000 000";
 const HESAB_PAY_ACCOUNT = "PYECSO";
 
-const SUPPORTED_PROJECTS = [
+const CAMPAIGNS = [
   {
-    icon: GraduationCap,
-    title: "Education for Girls & Youth",
-    body: "School supplies, teacher stipends and safe learning spaces for girls in underserved districts.",
-    impact: "$50 supplies a child for a full school year",
+    slug: "education",
+    image: cardEducation,
+    tag: "ongoing campaign",
+    overlayTitle: "Education for Girls & Youth",
+    title: "Every Girl in School — Education Campaign",
+    goal: 20000,
+    raised: 11132,
+    donors: 384,
   },
   {
-    icon: Utensils,
-    title: "Emergency Food & Cash Assistance",
-    body: "Food packages and winter cash for displaced families, widows, orphans and returnees.",
-    impact: "$100 feeds a family of six for one month",
+    slug: "food",
+    image: cardEmergency,
+    tag: "urgent appeal",
+    overlayTitle: "Loaf of bread",
+    overlayLine: "For orphans and displaced families",
+    title: "A Loaf of Dignity — Emergency Food Aid",
+    goal: 5000,
+    raised: 1852,
+    donors: 72,
   },
   {
-    icon: Briefcase,
-    title: "Women's Livelihoods & TVET",
-    body: "Vocational training in tailoring, carpentry and small-business skills for women and youth.",
-    impact: "$250 sponsors one woman through a 3-month TVET course",
+    slug: "livelihoods",
+    image: cardLivelihoods,
+    tag: "sustained support",
+    overlayTitle: "Women's Livelihoods & TVET",
+    title: "Skills That Change a Life — TVET for Women",
+    goal: 20000,
+    raised: 3646,
+    donors: 106,
   },
   {
-    icon: Stethoscope,
-    title: "Maternal Health, Nutrition & MHPSS",
-    body: "Maternal and child health, nutrition education, immunization and psychosocial support.",
-    impact: "$75 funds MHPSS counseling for a survivor of GBV",
+    slug: "health",
+    image: cardHealth,
+    tag: "ongoing campaign",
+    overlayTitle: "Maternal Health & MHPSS",
+    title: "Care for Mothers & Children",
+    goal: 15000,
+    raised: 5429,
+    donors: 86,
   },
   {
-    icon: Sprout,
-    title: "Agriculture & Rural Livelihoods",
-    body: "Seeds, plants and livestock support for farming households in rural provinces.",
-    impact: "$120 provides seeds and tools for one farming household",
+    slug: "agriculture",
+    image: cardAgriculture,
+    tag: "seasonal appeal",
+    overlayTitle: "Seeds, Livestock & Rural Livelihoods",
+    title: "Farming Families — Seeds for a Season",
+    goal: 12000,
+    raised: 4210,
+    donors: 118,
   },
   {
-    icon: Shield,
-    title: "Protection, Gender & AAP",
-    body: "Protection programming for women, girls and vulnerable groups with PSEA safeguards.",
-    impact: "$500 supports protection outreach in one community",
+    slug: "protection",
+    image: cardWomen,
+    tag: "ongoing campaign",
+    overlayTitle: "Protection & Gender",
+    title: "Safe Spaces — Protection for Women & Girls",
+    goal: 18000,
+    raised: 6890,
+    donors: 154,
   },
 ];
+
+const fmt = (n: number) => `$${n.toLocaleString("en-US")}`;
 
 function Donate() {
   const { t } = useTranslation();
@@ -192,30 +220,86 @@ function Donate() {
               below to direct your gift to a specific project.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {SUPPORTED_PROJECTS.map((p) => {
-              const Icon = p.icon;
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {CAMPAIGNS.map((c) => {
+              const pct = Math.min(100, Math.round((c.raised / c.goal) * 100));
               return (
-                <div
-                  key={p.title}
-                  className="bg-white ring-1 ring-border rounded-lg p-6 hover:ring-brand-blue hover:shadow-md transition-all flex flex-col"
+                <article
+                  key={c.slug}
+                  className="bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-lg hover:ring-brand-blue transition-all flex flex-col"
                 >
-                  <div className="size-11 rounded-md bg-brand-blue-wash text-brand-blue flex items-center justify-center mb-4">
-                    <Icon className="size-5" />
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <img
+                      src={c.image}
+                      alt={c.overlayTitle}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/40" />
+                    <div className="absolute top-4 left-4 right-4 text-white">
+                      <div className="text-xl md:text-2xl font-extrabold leading-tight drop-shadow-md">
+                        {c.overlayTitle}
+                      </div>
+                      {c.overlayLine && (
+                        <div className="text-sm text-white/90 mt-1 drop-shadow">{c.overlayLine}</div>
+                      )}
+                      <span className="inline-block mt-3 bg-white/90 text-navy-900 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded">
+                        {c.tag}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNote(c.overlayTitle);
+                        document.getElementById("donate-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }}
+                      className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-brand-red hover:bg-brand-red/90 text-white text-xs font-bold uppercase tracking-wide px-4 py-2 rounded shadow-md"
+                    >
+                      Donate now
+                    </button>
                   </div>
-                  <h3 className="text-navy-900 font-bold text-lg mb-2">{p.title}</h3>
-                  <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{p.body}</p>
-                  <div className="mt-auto text-xs font-semibold text-brand-blue bg-brand-blue-wash rounded px-3 py-2">
-                    {p.impact}
+                  <div className="p-5 flex flex-col flex-1">
+                    <h3 className="text-navy-900 font-bold text-base leading-snug mb-4 min-h-[3rem]">
+                      {c.title}
+                    </h3>
+                    <div className="flex items-baseline justify-between mb-2">
+                      <div className="text-brand-blue text-xl font-extrabold">
+                        {fmt(c.raised)} <span className="text-xs font-semibold text-navy-900/60">raised</span>
+                      </div>
+                      <div className="text-xs text-navy-900/60 font-semibold">{fmt(c.goal)} goal</div>
+                    </div>
+                    <div className="relative h-3 bg-brand-blue-wash rounded-full overflow-hidden ring-1 ring-border mb-3">
+                      <div
+                        className="h-full bg-brand-blue rounded-full transition-all"
+                        style={{ width: `${pct}%` }}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white mix-blend-difference">
+                        {pct}%
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs text-navy-900/60 mb-4">
+                      <Users className="size-3.5" />
+                      {c.donors} donors
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNote(c.overlayTitle);
+                        document.getElementById("donate-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }}
+                      className="mt-auto w-full inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white h-10 rounded-md font-semibold text-sm transition-colors"
+                    >
+                      <Heart className="size-4" /> Donate now
+                    </button>
                   </div>
-                </div>
+                </article>
               );
             })}
           </div>
         </div>
       </section>
 
-      <section className="py-16">
+      <section id="donate-form" className="py-16 scroll-mt-20">
         <div className="max-w-6xl mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">
