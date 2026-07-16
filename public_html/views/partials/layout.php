@@ -19,7 +19,10 @@ $fullTitle = ($meta['title'] ? $meta['title'] . ' — ' : '') . t('brand.short')
 <?php endif; ?>
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/assets/img/pyecso-favicon.png" type="image/png">
-<link rel="stylesheet" href="/assets/css/site.css?v=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Roboto+Serif:opsz,wght@8..144,400;8..144,600&display=swap">
+<link rel="stylesheet" href="/assets/css/site.css?v=2">
 <?php if (i18n_is_rtl($lang)): ?>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap">
 <?php endif; ?>
