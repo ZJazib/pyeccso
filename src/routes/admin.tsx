@@ -156,7 +156,7 @@ function AdminPanel() {
   }, []);
 
   useEffect(() => {
-    if (!user || (user.role !== "admin" && user.role !== "learn_manager")) return;
+    if (!user || !allowedResources(user.role).includes(activeResource)) return;
     loadItems(activeResource);
   }, [activeResource, user]);
 
