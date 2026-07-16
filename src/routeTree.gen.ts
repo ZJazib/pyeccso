@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ProgramsRouteImport } from './routes/programs'
-import { Route as PortalRouteImport } from './routes/portal'
 import { Route as MediaRouteImport } from './routes/media'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as DonateRouteImport } from './routes/donate'
@@ -20,6 +19,7 @@ import { Route as CareersRouteImport } from './routes/careers'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as ApiPublicHesabSessionRouteImport } from './routes/api/public/hesab-session'
 
 const ProjectsRoute = ProjectsRouteImport.update({
@@ -30,11 +30,6 @@ const ProjectsRoute = ProjectsRouteImport.update({
 const ProgramsRoute = ProgramsRouteImport.update({
   id: '/programs',
   path: '/programs',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PortalRoute = PortalRouteImport.update({
-  id: '/portal',
-  path: '/portal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MediaRoute = MediaRouteImport.update({
@@ -77,6 +72,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortalIndexRoute = PortalIndexRouteImport.update({
+  id: '/portal/',
+  path: '/portal/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiPublicHesabSessionRoute = ApiPublicHesabSessionRouteImport.update({
   id: '/api/public/hesab-session',
   path: '/api/public/hesab-session',
@@ -92,9 +92,9 @@ export interface FileRoutesByFullPath {
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
-  '/portal': typeof PortalRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/portal/': typeof PortalIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
 export interface FileRoutesByTo {
@@ -106,9 +106,9 @@ export interface FileRoutesByTo {
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
-  '/portal': typeof PortalRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/portal': typeof PortalIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
 export interface FileRoutesById {
@@ -121,9 +121,9 @@ export interface FileRoutesById {
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
-  '/portal': typeof PortalRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/portal/': typeof PortalIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
 export interface FileRouteTypes {
@@ -137,9 +137,9 @@ export interface FileRouteTypes {
     | '/donate'
     | '/learn'
     | '/media'
-    | '/portal'
     | '/programs'
     | '/projects'
+    | '/portal/'
     | '/api/public/hesab-session'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -151,9 +151,9 @@ export interface FileRouteTypes {
     | '/donate'
     | '/learn'
     | '/media'
-    | '/portal'
     | '/programs'
     | '/projects'
+    | '/portal'
     | '/api/public/hesab-session'
   id:
     | '__root__'
@@ -165,9 +165,9 @@ export interface FileRouteTypes {
     | '/donate'
     | '/learn'
     | '/media'
-    | '/portal'
     | '/programs'
     | '/projects'
+    | '/portal/'
     | '/api/public/hesab-session'
   fileRoutesById: FileRoutesById
 }
@@ -180,9 +180,9 @@ export interface RootRouteChildren {
   DonateRoute: typeof DonateRoute
   LearnRoute: typeof LearnRoute
   MediaRoute: typeof MediaRoute
-  PortalRoute: typeof PortalRoute
   ProgramsRoute: typeof ProgramsRoute
   ProjectsRoute: typeof ProjectsRoute
+  PortalIndexRoute: typeof PortalIndexRoute
   ApiPublicHesabSessionRoute: typeof ApiPublicHesabSessionRoute
 }
 
@@ -200,13 +200,6 @@ declare module '@tanstack/react-router' {
       path: '/programs'
       fullPath: '/programs'
       preLoaderRoute: typeof ProgramsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/portal': {
-      id: '/portal'
-      path: '/portal'
-      fullPath: '/portal'
-      preLoaderRoute: typeof PortalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/media': {
@@ -265,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portal/': {
+      id: '/portal/'
+      path: '/portal'
+      fullPath: '/portal/'
+      preLoaderRoute: typeof PortalIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hesab-session': {
       id: '/api/public/hesab-session'
       path: '/api/public/hesab-session'
@@ -284,9 +284,9 @@ const rootRouteChildren: RootRouteChildren = {
   DonateRoute: DonateRoute,
   LearnRoute: LearnRoute,
   MediaRoute: MediaRoute,
-  PortalRoute: PortalRoute,
   ProgramsRoute: ProgramsRoute,
   ProjectsRoute: ProjectsRoute,
+  PortalIndexRoute: PortalIndexRoute,
   ApiPublicHesabSessionRoute: ApiPublicHesabSessionRoute,
 }
 export const routeTree = rootRouteImport

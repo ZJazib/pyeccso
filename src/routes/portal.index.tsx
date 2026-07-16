@@ -3,7 +3,7 @@ import { PortalLoginCard, roleHomePath, usePortalUser } from "@/components/porta
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { Loader2 } from "lucide-react";
 
-export const Route = createFileRoute("/portal")({
+export const Route = createFileRoute("/portal/")({
   component: PortalIndex,
   head: () => ({
     meta: [
