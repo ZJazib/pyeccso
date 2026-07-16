@@ -286,7 +286,14 @@ function AdminPanel() {
   }
 
   if (!user) {
-    return <AdminLogin onSuccess={setUser} />;
+    return (
+      <AdminLogin
+        health={health}
+        healthChecking={healthChecking}
+        onRecheck={recheckHealth}
+        onLogin={setUser}
+      />
+    );
   }
 
   if (!allowedResources(user.role).length) {
