@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Info, Loader2 } from "lucide-react";
+
 import { loginToBridgeWithGoogle, type BridgeUser } from "@/lib/phpBridge";
 
 declare global {
@@ -79,11 +80,23 @@ export function GoogleBridgeButton(props: Props) {
 
   if (!GOOGLE_CLIENT_ID) {
     return (
-      <div className="rounded-md border border-dashed border-border p-3 text-xs text-navy-900/60">
-        Google login is ready. Add <span className="font-mono">VITE_GOOGLE_CLIENT_ID</span> to enable the button.
+      <div className="rounded-lg border border-dashed border-accent-blue/40 bg-accent-blue/5 p-4">
+        <div className="flex items-start gap-3">
+          <div className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-accent-blue/15 text-accent-blue">
+            <Info className="size-4" />
+          </div>
+          <div className="space-y-1 text-sm">
+            <p className="font-semibold text-navy-900">Google sign-in not configured</p>
+            <p className="text-navy-900/70">
+              Set <span className="rounded bg-navy-900/5 px-1.5 py-0.5 font-mono text-xs text-navy-900">VITE_GOOGLE_CLIENT_ID</span>{" "}
+              in your environment to enable one-tap Google login. You can still continue with email and password below.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }
+
 
   return (
     <div className="space-y-2">
