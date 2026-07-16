@@ -3,6 +3,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Loader2, LogOut, UserRoundCheck } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { GoogleBridgeButton } from "@/components/auth/GoogleBridgeButton";
+import { GoogleLinkCard } from "@/components/auth/GoogleLinkCard";
 import {
   type BridgeUser,
   type UserRole,
