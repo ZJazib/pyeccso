@@ -38,6 +38,18 @@ const resources: Array<{ id: CmsResource; label: string; helper: string }> = [
   { id: "careers", label: "Careers", helper: "Vacancies and announcements" },
 ];
 
+// Per-role resource permissions. Admin has full access; Learn managers are
+// scoped to Learn-related content only. Mirrored server-side in
+// php-bridge/api/index.php (see can_manage_resource).
+const RESOURCE_PERMISSIONS: Record<string, CmsResource[]> = {
+  admin: ["pages", "programs", "projects", "courses", "media", "careers"],
+  learn_manager: ["courses", "media", "careers"],
+};
+
+function allowedResources(role: string | undefined): CmsResource[] {
+  return RESOURCE_PERMISSIONS[role ?? ""] ?? [];
+}
+
 type Draft = {
   id?: number;
   title: string;
