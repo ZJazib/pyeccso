@@ -116,11 +116,13 @@ function verify_token(array $config): ?array {
 function require_user(array $config): array {
     $claims = verify_token($config);
     if (!$claims) respond(['error' => 'Unauthorized'], 401);
-    $stmt = pdo($config)->prepare('SELECT id, username, email, full_name, role, status FROM users WHERE id = ? LIMIT 1');
+    $stmt = pdo($config)->prepare('SELECT id, username, email, full_name, role, status, provider, google_sub FROM users WHERE id = ? LIMIT 1');
     $stmt->execute([$claims['sub']]);
     $user = $stmt->fetch();
     if (!$user || $user['status'] !== 'active') respond(['error' => 'Unauthorized'], 401);
     $user['id'] = (int)$user['id'];
+    $user['google_linked'] = !empty($user['google_sub']);
+    unset($user['google_sub']);
     return $user;
 }
 
