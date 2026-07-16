@@ -45,6 +45,7 @@ type Draft = {
   summary: string;
   body: string;
   status: "draft" | "published";
+  sortOrder: number;
   metadataText: string;
 };
 
@@ -55,8 +56,22 @@ const emptyDraft: Draft = {
   summary: "",
   body: "",
   status: "draft",
+  sortOrder: 100,
   metadataText: "{}",
 };
+
+function readSortOrder(item: CmsItem): number {
+  const raw = (item.metadata as { sort_order?: unknown } | null)?.sort_order;
+  const n = typeof raw === "number" ? raw : Number(raw);
+  return Number.isFinite(n) ? n : 999;
+}
+
+function sortItems(items: CmsItem[]): CmsItem[] {
+  return [...items].sort((a, b) => {
+    const diff = readSortOrder(a) - readSortOrder(b);
+    return diff !== 0 ? diff : a.id - b.id;
+  });
+}
 
 function AdminPanel() {
   const [user, setUser] = useState<BridgeUser | null>(null);
