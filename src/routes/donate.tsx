@@ -23,7 +23,9 @@ import cardLivelihoods from "@/assets/card-livelihoods.jpg";
 import cardHealth from "@/assets/card-health.jpg";
 import cardAgriculture from "@/assets/card-agriculture.jpg";
 import cardWomen from "@/assets/card-women.jpg";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { getRates, convert, formatMoney } from "@/lib/currency";
+import { detectGeo } from "@/lib/geo";
 
 export const Route = createFileRoute("/donate")({
   component: Donate,
