@@ -101,7 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/__l5e/assets-v1/06aa98eb-9121-4fbc-b520-1ec040a924ba/pyecso-logo-official.png", type: "image/png" },
+      { rel: "icon", href: "/__l5e/assets-v1/e9aa506b-f556-4fa7-b16e-3152461172a1/pyecso-logo-primary.png", type: "image/png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
