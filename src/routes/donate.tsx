@@ -13,13 +13,14 @@ import {
   ShieldCheck,
   Heart,
   Loader2,
-  GraduationCap,
-  Utensils,
-  Sprout,
-  Stethoscope,
-  Shield,
-  Briefcase,
+  Users,
 } from "lucide-react";
+import cardEducation from "@/assets/card-education.jpg";
+import cardEmergency from "@/assets/card-emergency.jpg";
+import cardLivelihoods from "@/assets/card-livelihoods.jpg";
+import cardHealth from "@/assets/card-health.jpg";
+import cardAgriculture from "@/assets/card-agriculture.jpg";
+import cardWomen from "@/assets/card-women.jpg";
 import { useState } from "react";
 
 export const Route = createFileRoute("/donate")({
