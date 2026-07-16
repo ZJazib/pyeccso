@@ -1,1 +1,7 @@
-deny from all
+# Allow serving files, but never execute PHP or other scripts uploaded here.
+Options -Indexes -ExecCGI
+<FilesMatch "\.(php|phtml|phar|pl|py|jsp|asp|sh|cgi)$">
+  Require all denied
+</FilesMatch>
+# Also prevent .htaccess overrides inside uploads
+AllowOverride None
