@@ -33,10 +33,12 @@ function ManagerPortal() {
 
 function ManagerDashboard() {
   const [apps, setApps] = useState<CourseApplication[]>([]);
+  const [courses, setCourses] = useState<CmsItem[]>([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
     listApplications().then(setApps).catch((e) => setError(e instanceof Error ? e.message : "Failed to load"));
+    listContent("courses", "en").then(setCourses).catch(() => setCourses([]));
   }, []);
 
   async function updateStatus(id: number, status: CourseApplication["status"]) {
