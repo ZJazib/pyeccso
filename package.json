@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "npx --yes http-server public_html -p 8080 -c-1",
-    "build": "echo 'PHP site — no build needed'",
-    "build:dev": "echo 'PHP site — no build needed'",
-    "start": "npx --yes http-server public_html -p 8080 -c-1"
+    "build": "mkdir -p dist && cp -r public_html/. dist/",
+    "build:dev": "mkdir -p dist && cp -r public_html/. dist/",
+    "start": "npx --yes http-server dist -p 8080 -c-1"
   }
 }
