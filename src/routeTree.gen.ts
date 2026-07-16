@@ -23,6 +23,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as PortalTeacherRouteImport } from './routes/portal.teacher'
 import { Route as PortalStudentRouteImport } from './routes/portal.student'
+import { Route as PortalManagerRouteImport } from './routes/portal.manager'
 import { Route as ApiPublicHesabSessionRouteImport } from './routes/api/public/hesab-session'
 
 const ProjectsRoute = ProjectsRouteImport.update({
@@ -95,6 +96,11 @@ const PortalStudentRoute = PortalStudentRouteImport.update({
   path: '/student',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalManagerRoute = PortalManagerRouteImport.update({
+  id: '/manager',
+  path: '/manager',
+  getParentRoute: () => PortalRoute,
+} as any)
 const ApiPublicHesabSessionRoute = ApiPublicHesabSessionRouteImport.update({
   id: '/api/public/hesab-session',
   path: '/api/public/hesab-session',
@@ -113,6 +119,7 @@ export interface FileRoutesByFullPath {
   '/portal': typeof PortalRouteWithChildren
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/portal/manager': typeof PortalManagerRoute
   '/portal/student': typeof PortalStudentRoute
   '/portal/teacher': typeof PortalTeacherRoute
   '/portal/': typeof PortalIndexRoute
@@ -129,6 +136,7 @@ export interface FileRoutesByTo {
   '/media': typeof MediaRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/portal/manager': typeof PortalManagerRoute
   '/portal/student': typeof PortalStudentRoute
   '/portal/teacher': typeof PortalTeacherRoute
   '/portal': typeof PortalIndexRoute
@@ -147,6 +155,7 @@ export interface FileRoutesById {
   '/portal': typeof PortalRouteWithChildren
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/portal/manager': typeof PortalManagerRoute
   '/portal/student': typeof PortalStudentRoute
   '/portal/teacher': typeof PortalTeacherRoute
   '/portal/': typeof PortalIndexRoute
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/programs'
     | '/projects'
+    | '/portal/manager'
     | '/portal/student'
     | '/portal/teacher'
     | '/portal/'
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/media'
     | '/programs'
     | '/projects'
+    | '/portal/manager'
     | '/portal/student'
     | '/portal/teacher'
     | '/portal'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/programs'
     | '/projects'
+    | '/portal/manager'
     | '/portal/student'
     | '/portal/teacher'
     | '/portal/'
@@ -320,6 +332,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalStudentRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/manager': {
+      id: '/portal/manager'
+      path: '/manager'
+      fullPath: '/portal/manager'
+      preLoaderRoute: typeof PortalManagerRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/api/public/hesab-session': {
       id: '/api/public/hesab-session'
       path: '/api/public/hesab-session'
@@ -331,12 +350,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface PortalRouteChildren {
+  PortalManagerRoute: typeof PortalManagerRoute
   PortalStudentRoute: typeof PortalStudentRoute
   PortalTeacherRoute: typeof PortalTeacherRoute
   PortalIndexRoute: typeof PortalIndexRoute
 }
 
 const PortalRouteChildren: PortalRouteChildren = {
+  PortalManagerRoute: PortalManagerRoute,
   PortalStudentRoute: PortalStudentRoute,
   PortalTeacherRoute: PortalTeacherRoute,
   PortalIndexRoute: PortalIndexRoute,
