@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { Edit3, Loader2, LogOut, Plus, RefreshCw, Save, ShieldCheck, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, Edit3, Eye, EyeOff, Loader2, LogOut, Plus, RefreshCw, Save, ShieldCheck, Trash2 } from "lucide-react";
 import { GoogleBridgeButton } from "@/components/auth/GoogleBridgeButton";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import {
@@ -45,6 +45,7 @@ type Draft = {
   summary: string;
   body: string;
   status: "draft" | "published";
+  sortOrder: number;
   metadataText: string;
 };
 
@@ -55,8 +56,22 @@ const emptyDraft: Draft = {
   summary: "",
   body: "",
   status: "draft",
+  sortOrder: 100,
   metadataText: "{}",
 };
+
+function readSortOrder(item: CmsItem): number {
+  const raw = (item.metadata as { sort_order?: unknown } | null)?.sort_order;
+  const n = typeof raw === "number" ? raw : Number(raw);
+  return Number.isFinite(n) ? n : 999;
+}
+
+function sortItems(items: CmsItem[]): CmsItem[] {
+  return [...items].sort((a, b) => {
+    const diff = readSortOrder(a) - readSortOrder(b);
+    return diff !== 0 ? diff : a.id - b.id;
+  });
+}
 
 function AdminPanel() {
   const [user, setUser] = useState<BridgeUser | null>(null);
@@ -113,7 +128,7 @@ function AdminPanel() {
     setLoading(true);
     try {
       const nextItems = await listContent(resource, draft.language || "en");
-      setItems(nextItems);
+      setItems(sortItems(nextItems));
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Unable to load content.");
     } finally {
@@ -122,6 +137,9 @@ function AdminPanel() {
   }
 
   function edit(item: CmsItem) {
+    const metadata = (item.metadata ?? {}) as Record<string, unknown>;
+    const { sort_order: _drop, ...rest } = metadata;
+    void _drop;
     setDraft({
       id: item.id,
       title: item.title,
@@ -130,7 +148,8 @@ function AdminPanel() {
       summary: item.summary ?? "",
       body: item.body ?? "",
       status: item.status,
-      metadataText: JSON.stringify(item.metadata ?? {}, null, 2),
+      sortOrder: readSortOrder(item),
+      metadataText: JSON.stringify(rest, null, 2),
     });
   }
 
@@ -138,7 +157,8 @@ function AdminPanel() {
     setSaving(true);
     setMessage("");
     try {
-      const metadata = JSON.parse(draft.metadataText || "{}");
+      const extra = JSON.parse(draft.metadataText || "{}");
+      const metadata = { ...extra, sort_order: draft.sortOrder };
       await saveContent(activeResource, {
         id: draft.id,
         title: draft.title.trim(),
@@ -158,6 +178,47 @@ function AdminPanel() {
       setSaving(false);
     }
   }
+
+  async function persistItem(item: CmsItem, patch: Partial<{ status: CmsItem["status"]; sort_order: number }>) {
+    const metadata = { ...((item.metadata ?? {}) as Record<string, unknown>) };
+    if (patch.sort_order != null) metadata.sort_order = patch.sort_order;
+    try {
+      await saveContent(activeResource, {
+        id: item.id,
+        title: item.title,
+        slug: item.slug,
+        language: item.language,
+        summary: item.summary ?? "",
+        body: item.body ?? "",
+        status: patch.status ?? item.status,
+        metadata,
+      });
+      await loadItems(activeResource);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Update failed.");
+    }
+  }
+
+  async function togglePublish(item: CmsItem) {
+    await persistItem(item, { status: item.status === "published" ? "draft" : "published" });
+  }
+
+  async function move(item: CmsItem, direction: -1 | 1) {
+    const ordered = sortItems(items);
+    const index = ordered.findIndex((x) => x.id === item.id);
+    const neighbour = ordered[index + direction];
+    if (!neighbour) return;
+    const a = readSortOrder(item);
+    const b = readSortOrder(neighbour);
+    // if equal, bump to distinct values around it
+    const nextA = a === b ? b + direction : b;
+    const nextB = a === b ? a : a;
+    await Promise.all([
+      persistItem(item, { sort_order: nextA }),
+      persistItem(neighbour, { sort_order: nextB }),
+    ]);
+  }
+
 
   async function remove(item: CmsItem) {
     if (!window.confirm(`Delete “${item.title}”?`)) return;
@@ -291,6 +352,16 @@ function AdminPanel() {
                     <option value="published">Published</option>
                   </select>
                 </label>
+                <label className="block text-sm font-semibold text-navy-900">
+                  Sort order
+                  <input
+                    type="number"
+                    value={draft.sortOrder}
+                    onChange={(event) => setDraft({ ...draft, sortOrder: Number(event.target.value) || 0 })}
+                    className="mt-2 w-full h-11 rounded-md border border-input px-3 bg-white"
+                  />
+                  <span className="mt-1 block text-xs text-navy-900/50 font-normal">Lower numbers appear first.</span>
+                </label>
               </div>
 
               <label className="block text-sm font-semibold text-navy-900 mt-4">
@@ -339,17 +410,48 @@ function AdminPanel() {
                 </button>
               </div>
               <div className="divide-y divide-border">
-                {items.map((item) => (
+                {items.map((item, index) => (
                   <article key={item.id} className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2 mb-1">
-                        <h3 className="font-bold text-navy-900">{item.title}</h3>
-                        <span className="text-[11px] uppercase tracking-wide bg-surface-alt px-2 py-1 rounded">{item.language}</span>
-                        <span className="text-[11px] uppercase tracking-wide bg-brand-blue-wash text-brand-blue px-2 py-1 rounded">{item.status}</span>
+                    <div className="flex items-start gap-3">
+                      <div className="flex flex-col gap-1">
+                        <button
+                          type="button"
+                          disabled={index === 0}
+                          onClick={() => move(item, -1)}
+                          title="Move up"
+                          className="size-7 rounded border border-border text-navy-900 disabled:opacity-30 inline-flex items-center justify-center"
+                        >
+                          <ArrowUp className="size-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          disabled={index === items.length - 1}
+                          onClick={() => move(item, 1)}
+                          title="Move down"
+                          className="size-7 rounded border border-border text-navy-900 disabled:opacity-30 inline-flex items-center justify-center"
+                        >
+                          <ArrowDown className="size-3.5" />
+                        </button>
                       </div>
-                      <p className="text-sm text-navy-900/60">/{item.slug}</p>
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2 mb-1">
+                          <h3 className="font-bold text-navy-900">{item.title}</h3>
+                          <span className="text-[11px] uppercase tracking-wide bg-surface-alt px-2 py-1 rounded">{item.language}</span>
+                          <span className={`text-[11px] uppercase tracking-wide px-2 py-1 rounded ${item.status === "published" ? "bg-brand-blue-wash text-brand-blue" : "bg-amber-100 text-amber-800"}`}>{item.status}</span>
+                          <span className="text-[11px] text-navy-900/50">order {readSortOrder(item)}</span>
+                        </div>
+                        <p className="text-sm text-navy-900/60">/{item.slug}</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={() => togglePublish(item)}
+                        className="h-10 px-4 rounded-md border border-border text-sm font-semibold inline-flex items-center gap-2"
+                        title={item.status === "published" ? "Unpublish" : "Publish"}
+                      >
+                        {item.status === "published" ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                        {item.status === "published" ? "Unpublish" : "Publish"}
+                      </button>
                       <button onClick={() => edit(item)} className="h-10 px-4 rounded-md border border-border text-sm font-semibold inline-flex items-center gap-2">
                         <Edit3 className="size-4" /> Edit
                       </button>
