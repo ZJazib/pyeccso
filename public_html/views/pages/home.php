@@ -36,28 +36,30 @@ $sectors = [
 </section>
 
 <section class="slab alt">
-  <div class="container grid grid-2" style="align-items:center;">
+  <div class="container grid grid-2" style="align-items:center; gap:3.5rem;">
     <div>
       <span class="eyebrow-small"><?= h(t('home.who.eyebrow')) ?></span>
       <h2><?= h(t('home.who.title')) ?></h2>
-      <p><?= h(t('home.who.p1')) ?></p>
+      <p class="serif" style="font-size:1.15rem;color:var(--navy-800);"><?= h(t('home.who.p1')) ?></p>
       <p><?= h(t('home.who.p2')) ?></p>
-      <a class="btn btn-outline" href="/about"><?= h(t('home.who.link')) ?></a>
+      <a class="btn btn-outline mt-2" href="/about"><?= h(t('home.who.link')) ?> <span class="arrow">→</span></a>
     </div>
-    <div><img src="/assets/img/hero-schoolgirl.jpg" alt="" style="border-radius:var(--radius);"></div>
+    <div class="frame"><img src="/assets/img/hero-schoolgirl.jpg" alt=""></div>
   </div>
 </section>
 
 <section class="slab">
   <div class="container">
-    <span class="eyebrow-small"><?= h(t('home.sectorsSection.eyebrow')) ?></span>
-    <h2><?= h(t('home.sectorsSection.title')) ?></h2>
-    <div class="grid grid-3 mt-2">
+    <div class="section-head">
+      <span class="eyebrow-small"><?= h(t('home.sectorsSection.eyebrow')) ?></span>
+      <h2><?= h(t('home.sectorsSection.title')) ?></h2>
+    </div>
+    <div class="grid grid-3">
       <?php foreach ($sectors as $s): ?>
         <div class="card">
           <div class="card-image"><img src="<?= h($s['img']) ?>" alt=""></div>
           <h3><?= h(t('sectors.'.$s['key'])) ?></h3>
-          <a href="/programs" class="btn btn-outline btn-sm"><?= h(t('common.learnMore')) ?></a>
+          <a href="/programs" class="btn btn-outline btn-sm"><?= h(t('common.learnMore')) ?> <span class="arrow">→</span></a>
         </div>
       <?php endforeach; ?>
     </div>
@@ -66,9 +68,11 @@ $sectors = [
 
 <section class="slab alt">
   <div class="container">
-    <span class="eyebrow-small"><?= h(t('home.portfolio.eyebrow')) ?></span>
-    <h2><?= h(t('home.portfolio.title')) ?></h2>
-    <div class="grid grid-3 mt-2">
+    <div class="section-head">
+      <span class="eyebrow-small"><?= h(t('home.portfolio.eyebrow')) ?></span>
+      <h2><?= h(t('home.portfolio.title')) ?></h2>
+    </div>
+    <div class="grid grid-3">
       <?php foreach ($highlights as $h): ?>
         <div class="card">
           <div class="card-image"><img src="<?= h($h['img']) ?>" alt=""></div>
@@ -78,15 +82,15 @@ $sectors = [
         </div>
       <?php endforeach; ?>
     </div>
-    <div class="center mt-3"><a class="btn btn-outline" href="/projects"><?= h(t('home.portfolio.all')) ?></a></div>
+    <div class="center mt-4"><a class="btn btn-outline" href="/projects"><?= h(t('home.portfolio.all')) ?> <span class="arrow">→</span></a></div>
   </div>
 </section>
 
-<section class="slab">
+<section class="slab dark">
   <div class="container center">
-    <h2><?= h(t('home.supportCta.title')) ?></h2>
-    <p class="muted" style="max-width:640px;margin:0 auto 1.5rem;"><?= h(t('home.supportCta.body')) ?></p>
-    <a href="/donate" class="btn btn-accent"><?= h(t('home.supportCta.button')) ?></a>
+    <h2 style="max-width:720px;margin:0 auto .75rem;"><?= h(t('home.supportCta.title')) ?></h2>
+    <p style="max-width:640px;margin:0 auto 2rem;font-size:1.05rem;"><?= h(t('home.supportCta.body')) ?></p>
+    <a href="/donate" class="btn btn-accent btn-lg"><?= h(t('home.supportCta.button')) ?> <span class="arrow">→</span></a>
   </div>
 </section>
 
