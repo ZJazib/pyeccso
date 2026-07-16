@@ -4,6 +4,7 @@ import { AlertTriangle, ArrowDown, ArrowUp, CheckCircle2, Edit3, Eye, EyeOff, Lo
 import { GoogleBridgeButton } from "@/components/auth/GoogleBridgeButton";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import {
+  type BridgeHealth,
   type BridgeUser,
   type CmsItem,
   type CmsResource,
