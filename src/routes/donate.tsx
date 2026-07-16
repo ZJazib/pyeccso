@@ -299,7 +299,7 @@ function Donate() {
         </div>
       </section>
 
-      <section className="py-16">
+      <section id="donate-form" className="py-16 scroll-mt-20">
         <div className="max-w-6xl mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">
