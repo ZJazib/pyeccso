@@ -201,11 +201,11 @@ function Donate() {
     if (!openCampaign) return;
     setError(null);
     if (!Number.isFinite(selectedLocal) || selectedLocal < 1) {
-      setError("Please choose or enter a valid donation amount.");
+      setError(t("donate.flow.modal.hesab.invalidAmount"));
       return;
     }
     if (!rates || !afnAmount) {
-      setError("Currency rates are still loading. Please try again in a moment.");
+      setError(t("donate.flow.modal.hesab.ratesLoading"));
       return;
     }
     setLoading(true);
@@ -221,16 +221,17 @@ function Donate() {
       });
       const data = (await res.json()) as { payment_url?: string; error?: string };
       if (!res.ok || !data.payment_url) {
-        setError(data.error ?? "Could not start payment. Please try again.");
+        setError(data.error ?? t("donate.flow.modal.hesab.couldNotStart"));
         setLoading(false);
         return;
       }
       window.location.href = data.payment_url;
     } catch {
-      setError("Network error. Please try again.");
+      setError(t("donate.flow.modal.hesab.networkError"));
       setLoading(false);
     }
   };
+
 
   const openDonate = (c: (typeof CAMPAIGNS)[number]) => {
     setOpenCampaign(c);
