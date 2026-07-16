@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import "../lib/i18n";
 import { applyLanguageSideEffects } from "../lib/i18n";
+import { detectGeo, hasUserLanguageChoice, shouldApplyGeoLanguage } from "../lib/geo";
 
 function NotFoundComponent() {
   return (
@@ -136,6 +137,22 @@ function RootComponent() {
     const handler = (lng: string) => applyLanguageSideEffects(lng);
     i18n.on("languageChanged", handler);
     return () => i18n.off("languageChanged", handler);
+  }, [i18n]);
+
+  // Auto-detect country on first visit and switch language for visitors
+  // outside Afghanistan (unless they've already picked a language).
+  useEffect(() => {
+    if (hasUserLanguageChoice()) return;
+    let cancelled = false;
+    detectGeo().then((geo) => {
+      if (cancelled) return;
+      if (shouldApplyGeoLanguage(geo) && geo.language !== i18n.language) {
+        i18n.changeLanguage(geo.language);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
   }, [i18n]);
 
   return (
