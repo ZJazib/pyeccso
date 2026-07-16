@@ -56,6 +56,7 @@ export function LanguageSwitcher({ variant = "top" }: Props) {
                 <button
                   type="button"
                   onClick={() => {
+                    markUserLanguageChoice();
                     i18n.changeLanguage(l.code);
                     applyLanguageSideEffects(l.code);
                     setOpen(false);
