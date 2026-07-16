@@ -289,12 +289,14 @@ function AdminPanel() {
     return <AdminLogin health={health} healthChecking={healthChecking} onRecheck={runHealthCheck} onLogin={setUser} />;
   }
 
-  if (user.role !== "admin" && user.role !== "learn_manager") {
+  if (!allowedResources(user.role).length) {
     return (
       <SiteLayout>
         <section className="max-w-3xl mx-auto px-4 md:px-6 py-20">
           <h1 className="text-3xl font-bold text-navy-900">Access restricted</h1>
-          <p className="text-navy-900/70 mt-3">This panel is only for admins and PYECSO Learn managers.</p>
+          <p className="text-navy-900/70 mt-3">
+            Your account role does not have permission to manage website content.
+          </p>
           <button onClick={logout} className="mt-6 h-11 px-5 rounded-md bg-brand-blue text-white font-semibold">
             Sign out
           </button>
@@ -302,6 +304,7 @@ function AdminPanel() {
       </SiteLayout>
     );
   }
+
 
   return (
     <SiteLayout>
