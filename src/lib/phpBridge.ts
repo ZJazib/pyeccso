@@ -6,6 +6,8 @@ export type BridgeUser = {
   email: string;
   full_name: string;
   role: UserRole;
+  provider?: string;
+  google_linked?: boolean;
 };
 
 export type CmsResource = "pages" | "programs" | "projects" | "courses" | "media" | "careers";
@@ -118,6 +120,20 @@ export async function loginToBridgeWithGoogle(idToken: string) {
 
 export async function getCurrentBridgeUser() {
   return bridgeRequest<{ user: BridgeUser }>("/auth/me").then((result) => result.user);
+}
+
+export async function linkGoogleToBridgeAccount(idToken: string) {
+  return bridgeRequest<{ ok: boolean; linked: boolean }>("/auth/google/link", {
+    method: "POST",
+    body: JSON.stringify({ id_token: idToken }),
+  });
+}
+
+export async function unlinkGoogleFromBridgeAccount() {
+  return bridgeRequest<{ ok: boolean; linked: boolean }>("/auth/google/unlink", {
+    method: "POST",
+    body: "{}",
+  });
 }
 
 export async function listContent(resource: CmsResource, language = "en") {
