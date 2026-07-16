@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { Edit3, Loader2, LogOut, Plus, RefreshCw, Save, ShieldCheck, Trash2 } from "lucide-react";
+import { GoogleBridgeButton } from "@/components/auth/GoogleBridgeButton";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import {
   type BridgeUser,
@@ -378,7 +379,7 @@ function AdminLogin({ health, onLogin }: { health: "checking" | "online" | "offl
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  async function submit(event: React.FormEvent) {
+  async function submit(event: FormEvent) {
     event.preventDefault();
     setLoading(true);
     setError("");
@@ -408,6 +409,10 @@ function AdminLogin({ health, onLogin }: { health: "checking" | "online" | "offl
               {loading && <Loader2 className="size-4 animate-spin" />} Login
             </button>
           </form>
+          <div className="my-5 flex items-center gap-3 text-xs uppercase tracking-wider text-navy-900/40">
+            <span className="h-px flex-1 bg-border" /> or <span className="h-px flex-1 bg-border" />
+          </div>
+          <GoogleBridgeButton onLogin={onLogin} />
         </div>
       </section>
     </SiteLayout>

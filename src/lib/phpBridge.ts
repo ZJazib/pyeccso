@@ -87,6 +87,15 @@ export async function loginToBridge(identifier: string, password: string) {
   return result.user;
 }
 
+export async function loginToBridgeWithGoogle(idToken: string) {
+  const result = await bridgeRequest<LoginResponse>("/auth/google", {
+    method: "POST",
+    body: JSON.stringify({ id_token: idToken }),
+  });
+  setBridgeToken(result.token);
+  return result.user;
+}
+
 export async function getCurrentBridgeUser() {
   return bridgeRequest<{ user: BridgeUser }>("/auth/me").then((result) => result.user);
 }
