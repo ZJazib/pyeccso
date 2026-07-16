@@ -14,6 +14,8 @@ import {
   Heart,
   Loader2,
   Users,
+  Landmark,
+  X,
 } from "lucide-react";
 import cardEducation from "@/assets/card-education.jpg";
 import cardEmergency from "@/assets/card-emergency.jpg";
@@ -21,7 +23,7 @@ import cardLivelihoods from "@/assets/card-livelihoods.jpg";
 import cardHealth from "@/assets/card-health.jpg";
 import cardAgriculture from "@/assets/card-agriculture.jpg";
 import cardWomen from "@/assets/card-women.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const Route = createFileRoute("/donate")({
   component: Donate,
@@ -34,13 +36,13 @@ export const Route = createFileRoute("/donate")({
       {
         name: "description",
         content:
-          "Support PYECSO's education, humanitarian and livelihood programs for Afghan women, children and youth. Donate via HesabPay or cash by hand at our Kabul office.",
+          "Support PYECSO's education, humanitarian and livelihood programs for Afghan women, children and youth. Donate via HesabPay, cash by hand, or bank transfer.",
       },
       { property: "og:title", content: "Donate to PYECSO" },
       {
         property: "og:description",
         content:
-          "Donate securely via HesabPay or in person at our Kabul office to support Afghan women, children and youth.",
+          "Donate securely via HesabPay, in person at our Kabul office, or by bank transfer to support Afghan women, children and youth.",
       },
       { property: "og:type", content: "website" },
     ],
@@ -50,6 +52,14 @@ export const Route = createFileRoute("/donate")({
 
 const HESAB_PAY_NUMBER = "+93 700 000 000";
 const HESAB_PAY_ACCOUNT = "PYECSO";
+
+const BANK = {
+  accountName: "Pamir Youth and Elderly Care Social Organization (PYECSO)",
+  accountNumber: "0000 0000 0000 0000",
+  bankName: "Afghanistan International Bank (AIB)",
+  swift: "AFIBAFKA",
+  branch: "Shahr-e-Naw, Kabul",
+};
 
 const CAMPAIGNS = [
   {
@@ -117,14 +127,17 @@ const CAMPAIGNS = [
 
 const fmt = (n: number) => `$${n.toLocaleString("en-US")}`;
 
+type Method = "hesab" | "cash" | "bank";
+
 function Donate() {
   const { t } = useTranslation();
   const search = Route.useSearch();
   const [copied, setCopied] = useState<string | null>(null);
+  const [openCampaign, setOpenCampaign] = useState<(typeof CAMPAIGNS)[number] | null>(null);
+  const [method, setMethod] = useState<Method>("hesab");
   const [amount, setAmount] = useState<number>(50);
   const [customAmount, setCustomAmount] = useState<string>("");
   const [email, setEmail] = useState<string>("");
-  const [note, setNote] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -136,7 +149,20 @@ function Donate() {
 
   const amounts = [25, 50, 100, 250, 500];
 
+  useEffect(() => {
+    if (openCampaign) {
+      document.body.style.overflow = "hidden";
+      setError(null);
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [openCampaign]);
+
   const startHesabPay = async () => {
+    if (!openCampaign) return;
     setError(null);
     const finalAmount = customAmount ? Number(customAmount) : amount;
     if (!Number.isFinite(finalAmount) || finalAmount < 1) {
@@ -148,7 +174,11 @@ function Donate() {
       const res = await fetch("/api/public/hesab-session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: finalAmount, email: email || undefined, note: note || undefined }),
+        body: JSON.stringify({
+          amount: finalAmount,
+          email: email || undefined,
+          note: openCampaign.overlayTitle,
+        }),
       });
       const data = (await res.json()) as { payment_url?: string; error?: string };
       if (!res.ok || !data.payment_url) {
@@ -161,6 +191,14 @@ function Donate() {
       setError("Network error. Please try again.");
       setLoading(false);
     }
+  };
+
+  const openDonate = (c: (typeof CAMPAIGNS)[number]) => {
+    setOpenCampaign(c);
+    setMethod("hesab");
+    setAmount(50);
+    setCustomAmount("");
+    setError(null);
   };
 
   return (
@@ -181,7 +219,7 @@ function Donate() {
       {search.status === "failure" && (
         <div className="bg-red-50 border-b border-red-200">
           <div className="max-w-6xl mx-auto px-4 md:px-6 py-4 text-red-900 text-sm font-medium">
-            Your payment was not completed. You can try again below or use cash by hand at our Kabul office.
+            Your payment was not completed. You can try again or use cash by hand / bank transfer.
           </div>
         </div>
       )}
@@ -216,8 +254,8 @@ function Donate() {
               Projects supported by your donation
             </h2>
             <p className="text-navy-900/70">
-              Every contribution funds one of PYECSO's six program areas. Choose to give unrestricted, or add a note
-              below to direct your gift to a specific project.
+              Every contribution funds one of PYECSO's six program areas. Click "Donate now" to give via HesabPay,
+              cash by hand at our Kabul office, or bank transfer.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -249,10 +287,7 @@ function Donate() {
                     </div>
                     <button
                       type="button"
-                      onClick={() => {
-                        setNote(c.overlayTitle);
-                        document.getElementById("donate-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                      }}
+                      onClick={() => openDonate(c)}
                       className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-brand-red hover:bg-brand-red/90 text-white text-xs font-bold uppercase tracking-wide px-4 py-2 rounded shadow-md"
                     >
                       Donate now
@@ -283,10 +318,7 @@ function Donate() {
                     </div>
                     <button
                       type="button"
-                      onClick={() => {
-                        setNote(c.overlayTitle);
-                        document.getElementById("donate-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                      }}
+                      onClick={() => openDonate(c)}
                       className="mt-auto w-full inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white h-10 rounded-md font-semibold text-sm transition-colors"
                     >
                       <Heart className="size-4" /> Donate now
@@ -295,196 +327,6 @@ function Donate() {
                 </article>
               );
             })}
-          </div>
-        </div>
-      </section>
-
-      <section id="donate-form" className="py-16 scroll-mt-20">
-        <div className="max-w-6xl mx-auto px-4 md:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">
-              {t("donate.amounts.eyebrow")}
-            </div>
-            <h2 className="text-navy-900 text-2xl md:text-3xl font-bold tracking-tight mb-3">
-              {t("donate.amounts.title")}
-            </h2>
-            <p className="text-navy-900/70">{t("donate.amounts.body")}</p>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 max-w-3xl mx-auto">
-            {amounts.map((a) => {
-              const active = amount === a && !customAmount;
-              return (
-                <button
-                  key={a}
-                  type="button"
-                  onClick={() => {
-                    setAmount(a);
-                    setCustomAmount("");
-                  }}
-                  className={`bg-white ring-1 rounded-lg py-6 text-center transition-all ${
-                    active ? "ring-brand-blue ring-2 shadow-md" : "ring-border hover:ring-brand-blue"
-                  }`}
-                >
-                  <div className="text-navy-900 text-2xl font-bold">${a}</div>
-                  <div className="text-xs text-navy-900/60 mt-1">{t("donate.amounts.currency")}</div>
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      <section className="pb-20">
-        <div className="max-w-6xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* HesabPay */}
-          <div className="bg-white ring-1 ring-border rounded-lg p-8 flex flex-col">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="size-11 rounded-md bg-brand-blue-wash text-brand-blue flex items-center justify-center">
-                <Smartphone className="size-5" />
-              </div>
-              <div>
-                <h3 className="text-navy-900 text-xl font-bold">Donate with HesabPay</h3>
-                <p className="text-xs text-navy-900/60">Secure online payment — pay as guest or with your HesabPay account</p>
-              </div>
-            </div>
-            <p className="text-navy-900/75 text-sm leading-relaxed mb-6">
-              Choose an amount above (or enter a custom amount), then continue to HesabPay's secure checkout. You will be
-              redirected back to PYECSO once your payment is complete.
-            </p>
-
-            <div className="space-y-3 mb-4">
-              <div>
-                <label className="text-[11px] uppercase tracking-wider text-navy-900/60 font-semibold block mb-1">
-                  Custom amount (USD)
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  step={1}
-                  value={customAmount}
-                  onChange={(e) => setCustomAmount(e.target.value)}
-                  placeholder={`Or use selected: $${amount}`}
-                  className="w-full border border-border rounded-md px-3 py-2.5 text-sm"
-                />
-              </div>
-              <div>
-                <label className="text-[11px] uppercase tracking-wider text-navy-900/60 font-semibold block mb-1">
-                  Email (optional — for receipt)
-                </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className="w-full border border-border rounded-md px-3 py-2.5 text-sm"
-                />
-              </div>
-              <div>
-                <label className="text-[11px] uppercase tracking-wider text-navy-900/60 font-semibold block mb-1">
-                  Direct my gift to (optional)
-                </label>
-                <input
-                  type="text"
-                  value={note}
-                  onChange={(e) => setNote(e.target.value)}
-                  placeholder="e.g. Education for Girls"
-                  className="w-full border border-border rounded-md px-3 py-2.5 text-sm"
-                />
-              </div>
-            </div>
-
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-800 text-xs rounded-md px-3 py-2 mb-3">
-                {error}
-              </div>
-            )}
-
-            <div className="bg-surface rounded-md px-4 py-3 ring-1 ring-border mb-4 text-xs text-navy-900/70">
-              Or send directly in the HesabPay app to account{" "}
-              <button
-                onClick={() => copy(HESAB_PAY_ACCOUNT, "acc")}
-                className="font-semibold text-navy-900 hover:text-brand-blue inline-flex items-center gap-1"
-              >
-                {HESAB_PAY_ACCOUNT}{" "}
-                {copied === "acc" ? <Check className="size-3" /> : <Copy className="size-3" />}
-              </button>{" "}
-              ·{" "}
-              <button
-                onClick={() => copy(HESAB_PAY_NUMBER, "num")}
-                className="font-semibold text-navy-900 hover:text-brand-blue inline-flex items-center gap-1"
-              >
-                {HESAB_PAY_NUMBER}{" "}
-                {copied === "num" ? <Check className="size-3" /> : <Copy className="size-3" />}
-              </button>
-              . Then email a screenshot to{" "}
-              <a href="mailto:donations@pyecso.org.af" className="text-brand-blue hover:underline">
-                donations@pyecso.org.af
-              </a>
-              .
-            </div>
-
-            <button
-              onClick={startHesabPay}
-              disabled={loading}
-              className="mt-auto inline-flex items-center justify-center bg-brand-blue text-white h-11 px-5 rounded-md font-semibold text-sm hover:bg-brand-blue-hover transition-colors disabled:opacity-60 disabled:cursor-not-allowed gap-2"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="size-4 animate-spin" /> Creating secure session…
-                </>
-              ) : (
-                <>Continue to HesabPay — ${customAmount || amount}</>
-              )}
-            </button>
-          </div>
-
-          {/* Cash by hand */}
-          <div className="bg-white ring-1 ring-border rounded-lg p-8 flex flex-col">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="size-11 rounded-md bg-brand-blue-wash text-brand-blue flex items-center justify-center">
-                <HandCoins className="size-5" />
-              </div>
-              <div>
-                <h3 className="text-navy-900 text-xl font-bold">{t("donate.cash.title")}</h3>
-                <p className="text-xs text-navy-900/60">{t("donate.cash.sub")}</p>
-              </div>
-            </div>
-            <p className="text-navy-900/75 text-sm leading-relaxed mb-6">{t("donate.cash.intro")}</p>
-
-            <ul className="space-y-4 mb-6 text-sm">
-              <li className="flex items-start gap-3">
-                <MapPin className="size-4 text-brand-blue mt-0.5 shrink-0" />
-                <div>
-                  <div className="font-semibold text-navy-900">{t("donate.cash.office")}</div>
-                  <div className="text-navy-900/70">{t("donate.cash.address")}</div>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <Phone className="size-4 text-brand-blue mt-0.5 shrink-0" />
-                <div>
-                  <div className="font-semibold text-navy-900">{t("donate.cash.callTitle")}</div>
-                  <div className="text-navy-900/70">+93 (0) 20 250 0312</div>
-                </div>
-              </li>
-              <li className="flex items-start gap-3">
-                <Mail className="size-4 text-brand-blue mt-0.5 shrink-0" />
-                <div>
-                  <div className="font-semibold text-navy-900">{t("donate.cash.coordTitle")}</div>
-                  <div className="text-navy-900/70">donations@pyecso.org.af</div>
-                </div>
-              </li>
-            </ul>
-
-            <div className="bg-brand-blue-wash text-navy-900/80 text-xs rounded-md px-4 py-3 mb-6">
-              <strong className="text-navy-900">{t("donate.cash.hoursLabel")}</strong> {t("donate.cash.hoursBody")}
-            </div>
-
-            <a
-              href="mailto:donations@pyecso.org.af?subject=In-person%20donation%20visit"
-              className="mt-auto inline-flex items-center justify-center bg-brand-blue text-white h-11 px-5 rounded-md font-semibold text-sm hover:bg-brand-blue-hover transition-colors"
-            >
-              {t("donate.cash.cta")}
-            </a>
           </div>
         </div>
       </section>
@@ -501,6 +343,255 @@ function Donate() {
           </p>
         </div>
       </section>
+
+      {/* Donate modal */}
+      {openCampaign && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/70 backdrop-blur-sm"
+          onClick={() => setOpenCampaign(null)}
+        >
+          <div
+            className="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between p-6 border-b border-border">
+              <div>
+                <div className="text-[11px] uppercase tracking-wider text-brand-blue font-bold mb-1">
+                  Donate to
+                </div>
+                <h3 className="text-navy-900 text-xl font-bold leading-snug">{openCampaign.overlayTitle}</h3>
+                <p className="text-navy-900/60 text-sm mt-1">{openCampaign.title}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpenCampaign(null)}
+                aria-label="Close"
+                className="text-navy-900/60 hover:text-navy-900 p-1"
+              >
+                <X className="size-5" />
+              </button>
+            </div>
+
+            {/* Method tabs */}
+            <div className="grid grid-cols-3 border-b border-border">
+              {[
+                { k: "hesab", label: "HesabPay", icon: Smartphone },
+                { k: "cash", label: "Cash by Hand", icon: HandCoins },
+                { k: "bank", label: "Bank Transfer", icon: Landmark },
+              ].map((m) => {
+                const Icon = m.icon;
+                const active = method === m.k;
+                return (
+                  <button
+                    key={m.k}
+                    type="button"
+                    onClick={() => setMethod(m.k as Method)}
+                    className={`flex flex-col items-center gap-1.5 py-4 text-xs font-semibold transition-colors ${
+                      active
+                        ? "text-brand-blue border-b-2 border-brand-blue bg-brand-blue-wash/50"
+                        : "text-navy-900/70 hover:text-navy-900 border-b-2 border-transparent"
+                    }`}
+                  >
+                    <Icon className="size-5" />
+                    {m.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div className="p-6">
+              {method === "hesab" && (
+                <div>
+                  <p className="text-navy-900/75 text-sm mb-4">
+                    Choose an amount, then continue to HesabPay's secure checkout.
+                  </p>
+                  <div className="grid grid-cols-5 gap-2 mb-4">
+                    {amounts.map((a) => {
+                      const active = amount === a && !customAmount;
+                      return (
+                        <button
+                          key={a}
+                          type="button"
+                          onClick={() => {
+                            setAmount(a);
+                            setCustomAmount("");
+                          }}
+                          className={`ring-1 rounded-md py-3 text-center transition-all ${
+                            active ? "ring-brand-blue ring-2 bg-brand-blue-wash" : "ring-border hover:ring-brand-blue"
+                          }`}
+                        >
+                          <div className="text-navy-900 text-base font-bold">${a}</div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
+                    <div>
+                      <label className="text-[11px] uppercase tracking-wider text-navy-900/60 font-semibold block mb-1">
+                        Custom amount (USD)
+                      </label>
+                      <input
+                        type="number"
+                        min={1}
+                        step={1}
+                        value={customAmount}
+                        onChange={(e) => setCustomAmount(e.target.value)}
+                        placeholder={`Or use $${amount}`}
+                        className="w-full border border-border rounded-md px-3 py-2.5 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[11px] uppercase tracking-wider text-navy-900/60 font-semibold block mb-1">
+                        Email (optional)
+                      </label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="you@example.com"
+                        className="w-full border border-border rounded-md px-3 py-2.5 text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  {error && (
+                    <div className="bg-red-50 border border-red-200 text-red-800 text-xs rounded-md px-3 py-2 mb-3">
+                      {error}
+                    </div>
+                  )}
+
+                  <button
+                    onClick={startHesabPay}
+                    disabled={loading}
+                    className="w-full inline-flex items-center justify-center bg-brand-blue text-white h-11 rounded-md font-semibold text-sm hover:bg-brand-blue-hover transition-colors disabled:opacity-60 gap-2"
+                  >
+                    {loading ? (
+                      <>
+                        <Loader2 className="size-4 animate-spin" /> Creating secure session…
+                      </>
+                    ) : (
+                      <>Continue to HesabPay — ${customAmount || amount}</>
+                    )}
+                  </button>
+
+                  <p className="text-[11px] text-navy-900/60 mt-3 text-center">
+                    Or send directly in HesabPay to{" "}
+                    <button
+                      onClick={() => copy(HESAB_PAY_ACCOUNT, "hacc")}
+                      className="font-semibold text-navy-900 hover:text-brand-blue inline-flex items-center gap-1"
+                    >
+                      {HESAB_PAY_ACCOUNT} {copied === "hacc" ? <Check className="size-3" /> : <Copy className="size-3" />}
+                    </button>{" "}
+                    ·{" "}
+                    <button
+                      onClick={() => copy(HESAB_PAY_NUMBER, "hnum")}
+                      className="font-semibold text-navy-900 hover:text-brand-blue inline-flex items-center gap-1"
+                    >
+                      {HESAB_PAY_NUMBER} {copied === "hnum" ? <Check className="size-3" /> : <Copy className="size-3" />}
+                    </button>
+                  </p>
+                </div>
+              )}
+
+              {method === "cash" && (
+                <div>
+                  <p className="text-navy-900/75 text-sm mb-4">
+                    Bring your contribution directly to our Kabul office. You will receive an official receipt.
+                  </p>
+                  <ul className="space-y-4 text-sm">
+                    <li className="flex items-start gap-3">
+                      <MapPin className="size-4 text-brand-blue mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-semibold text-navy-900">PYECSO Head Office</div>
+                        <div className="text-navy-900/70">
+                          Sarak-e-Naw, District 4, Kabul, Afghanistan
+                        </div>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <Phone className="size-4 text-brand-blue mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-semibold text-navy-900">Call ahead</div>
+                        <div className="text-navy-900/70" dir="ltr">+93 (0) 20 250 0312</div>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <Mail className="size-4 text-brand-blue mt-0.5 shrink-0" />
+                      <div>
+                        <div className="font-semibold text-navy-900">Coordinate your visit</div>
+                        <div className="text-navy-900/70">donations@pyecso.org.af</div>
+                      </div>
+                    </li>
+                  </ul>
+                  <div className="bg-brand-blue-wash text-navy-900/80 text-xs rounded-md px-4 py-3 mt-5">
+                    <strong className="text-navy-900">Office hours:</strong> Sunday–Thursday, 8:30 AM – 4:30 PM
+                  </div>
+                  <a
+                    href={`mailto:donations@pyecso.org.af?subject=In-person%20donation%20-%20${encodeURIComponent(openCampaign.overlayTitle)}`}
+                    className="mt-5 w-full inline-flex items-center justify-center bg-brand-blue text-white h-11 rounded-md font-semibold text-sm hover:bg-brand-blue-hover transition-colors"
+                  >
+                    Email us to arrange a visit
+                  </a>
+                </div>
+              )}
+
+              {method === "bank" && (
+                <div>
+                  <p className="text-navy-900/75 text-sm mb-4">
+                    Transfer your donation directly to PYECSO's bank account. Please email a copy of the transfer
+                    receipt to{" "}
+                    <a href="mailto:donations@pyecso.org.af" className="text-brand-blue hover:underline">
+                      donations@pyecso.org.af
+                    </a>{" "}
+                    so we can send you an official acknowledgement.
+                  </p>
+                  <div className="ring-1 ring-border rounded-md divide-y divide-border">
+                    {[
+                      { label: "Account Name", value: BANK.accountName, key: "bacc" },
+                      { label: "Account Number", value: BANK.accountNumber, key: "bnum", ltr: true },
+                      { label: "Bank Name", value: BANK.bankName, key: "bname" },
+                      { label: "SWIFT / BIC", value: BANK.swift, key: "bswift", ltr: true },
+                      { label: "Branch", value: BANK.branch, key: "bbr" },
+                    ].map((row) => (
+                      <div key={row.key} className="flex items-center justify-between gap-3 px-4 py-3">
+                        <div className="min-w-0">
+                          <div className="text-[11px] uppercase tracking-wider text-navy-900/60 font-semibold">
+                            {row.label}
+                          </div>
+                          <div
+                            className="text-sm font-semibold text-navy-900 break-words"
+                            dir={row.ltr ? "ltr" : undefined}
+                          >
+                            {row.value}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => copy(row.value, row.key)}
+                          className="shrink-0 inline-flex items-center gap-1 text-xs font-semibold text-brand-blue hover:text-brand-blue-hover"
+                        >
+                          {copied === row.key ? (
+                            <>
+                              <Check className="size-3.5" /> Copied
+                            </>
+                          ) : (
+                            <>
+                              <Copy className="size-3.5" /> Copy
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="bg-brand-blue-wash text-navy-900/80 text-xs rounded-md px-4 py-3 mt-4">
+                    <strong className="text-navy-900">Reference:</strong> please add "{openCampaign.overlayTitle}"
+                    as the transfer reference so we can allocate your gift correctly.
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </SiteLayout>
   );
 }
