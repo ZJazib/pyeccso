@@ -24,6 +24,8 @@ try {
     if ($route === 'auth/me' && $method === 'GET') me($config);
     if ($route === 'content') content($config, $method);
     if ($route === 'applications') applications($config, $method);
+    if ($route === 'materials') materials($config, $method);
+    if ($route === 'materials/download' && $method === 'GET') materials_download($config);
 
     respond(['error' => 'Route not found'], 404);
 } catch (Throwable $error) {
