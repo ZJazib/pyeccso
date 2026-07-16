@@ -6,12 +6,13 @@ import pyecsoLogo from "@/assets/pyecso-logo-official.png.asset.json";
 
 export function Header() {
   const { t } = useTranslation();
+  const LEARN_URL = "https://learn.pyecso.org.af";
   const nav = [
     { label: t("nav.home"), to: "/" },
     { label: t("nav.about"), to: "/about" },
     { label: t("nav.programs"), to: "/programs" },
     { label: t("nav.projects"), to: "/projects" },
-    { label: t("nav.learn"), to: "/learn" },
+    { label: t("nav.learn"), href: LEARN_URL },
     { label: t("nav.media"), to: "/media" },
     { label: t("nav.careers"), to: "/careers" },
     { label: t("nav.contact"), to: "/contact" },
