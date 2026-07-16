@@ -441,25 +441,32 @@ function Donate() {
             <div className="p-6">
               {method === "hesab" && (
                 <div>
-                  <p className="text-navy-900/75 text-sm mb-4">
+                  <p className="text-navy-900/75 text-sm mb-2">
                     Choose an amount, then continue to HesabPay's secure checkout.
                   </p>
+                  <p className="text-[11px] text-navy-900/60 mb-4">
+                    Amounts shown in <strong className="text-navy-900">{currency}</strong> — HesabPay processes
+                    the payment in Afghani (AFN) at the live exchange rate.
+                  </p>
                   <div className="grid grid-cols-5 gap-2 mb-4">
-                    {amounts.map((a) => {
-                      const active = amount === a && !customAmount;
+                    {usdPresets.map((u, i) => {
+                      const localValue = localPresets[i];
+                      const active = amount === u && !customAmount;
                       return (
                         <button
-                          key={a}
+                          key={u}
                           type="button"
                           onClick={() => {
-                            setAmount(a);
+                            setAmount(u);
                             setCustomAmount("");
                           }}
                           className={`ring-1 rounded-md py-3 text-center transition-all ${
                             active ? "ring-brand-blue ring-2 bg-brand-blue-wash" : "ring-border hover:ring-brand-blue"
                           }`}
                         >
-                          <div className="text-navy-900 text-base font-bold">${a}</div>
+                          <div className="text-navy-900 text-sm font-bold">
+                            {rates ? formatMoney(localValue, currency) : `$${u}`}
+                          </div>
                         </button>
                       );
                     })}
@@ -467,7 +474,7 @@ function Donate() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                     <div>
                       <label className="text-[11px] uppercase tracking-wider text-navy-900/60 font-semibold block mb-1">
-                        Custom amount (USD)
+                        Custom amount ({currency})
                       </label>
                       <input
                         type="number"
@@ -475,7 +482,7 @@ function Donate() {
                         step={1}
                         value={customAmount}
                         onChange={(e) => setCustomAmount(e.target.value)}
-                        placeholder={`Or use $${amount}`}
+                        placeholder={rates ? String(localPresets[usdPresets.indexOf(amount)]) : String(amount)}
                         className="w-full border border-border rounded-md px-3 py-2.5 text-sm"
                       />
                     </div>
@@ -493,6 +500,13 @@ function Donate() {
                     </div>
                   </div>
 
+                  {rates && afnAmount > 0 && (
+                    <div className="bg-brand-blue-wash text-navy-900 text-xs rounded-md px-3 py-2 mb-3 flex items-center justify-between">
+                      <span>You'll be charged in Afghani (AFN):</span>
+                      <strong dir="ltr">≈ {afnAmount.toLocaleString("en-US")} AFN</strong>
+                    </div>
+                  )}
+
                   {error && (
                     <div className="bg-red-50 border border-red-200 text-red-800 text-xs rounded-md px-3 py-2 mb-3">
                       {error}
@@ -501,7 +515,7 @@ function Donate() {
 
                   <button
                     onClick={startHesabPay}
-                    disabled={loading}
+                    disabled={loading || !rates}
                     className="w-full inline-flex items-center justify-center bg-brand-blue text-white h-11 rounded-md font-semibold text-sm hover:bg-brand-blue-hover transition-colors disabled:opacity-60 gap-2"
                   >
                     {loading ? (
@@ -509,9 +523,13 @@ function Donate() {
                         <Loader2 className="size-4 animate-spin" /> Creating secure session…
                       </>
                     ) : (
-                      <>Continue to HesabPay — ${customAmount || amount}</>
+                      <>
+                        Continue to HesabPay —{" "}
+                        {rates ? formatMoney(selectedLocal, currency) : `$${customAmount || amount}`}
+                      </>
                     )}
                   </button>
+
 
                   <p className="text-[11px] text-navy-900/60 mt-3 text-center">
                     Or send directly in HesabPay to{" "}
