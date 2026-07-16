@@ -123,10 +123,9 @@ export function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-4">{t("footer.clusters")}</h4>
             <ul className="space-y-2 text-white/70">
-              <li>Afghanistan Education Cluster</li>
-              <li>Gender in Humanitarian Action — Afghanistan</li>
-              <li>Afghanistan Food Security & Agriculture Cluster</li>
-              <li>Global Protection Cluster</li>
+              {(t("footer.clustersList", { returnObjects: true }) as string[]).map((c) => (
+                <li key={c}>{c}</li>
+              ))}
             </ul>
           </div>
         </div>
