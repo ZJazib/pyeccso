@@ -220,23 +220,79 @@ function Donate() {
               below to direct your gift to a specific project.
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {SUPPORTED_PROJECTS.map((p) => {
-              const Icon = p.icon;
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {CAMPAIGNS.map((c) => {
+              const pct = Math.min(100, Math.round((c.raised / c.goal) * 100));
               return (
-                <div
-                  key={p.title}
-                  className="bg-white ring-1 ring-border rounded-lg p-6 hover:ring-brand-blue hover:shadow-md transition-all flex flex-col"
+                <article
+                  key={c.slug}
+                  className="bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-lg hover:ring-brand-blue transition-all flex flex-col"
                 >
-                  <div className="size-11 rounded-md bg-brand-blue-wash text-brand-blue flex items-center justify-center mb-4">
-                    <Icon className="size-5" />
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    <img
+                      src={c.image}
+                      alt={c.overlayTitle}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/40" />
+                    <div className="absolute top-4 left-4 right-4 text-white">
+                      <div className="text-xl md:text-2xl font-extrabold leading-tight drop-shadow-md">
+                        {c.overlayTitle}
+                      </div>
+                      {c.overlayLine && (
+                        <div className="text-sm text-white/90 mt-1 drop-shadow">{c.overlayLine}</div>
+                      )}
+                      <span className="inline-block mt-3 bg-white/90 text-navy-900 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded">
+                        {c.tag}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNote(c.overlayTitle);
+                        document.getElementById("donate-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }}
+                      className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-brand-red hover:bg-brand-red/90 text-white text-xs font-bold uppercase tracking-wide px-4 py-2 rounded shadow-md"
+                    >
+                      Donate now
+                    </button>
                   </div>
-                  <h3 className="text-navy-900 font-bold text-lg mb-2">{p.title}</h3>
-                  <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{p.body}</p>
-                  <div className="mt-auto text-xs font-semibold text-brand-blue bg-brand-blue-wash rounded px-3 py-2">
-                    {p.impact}
+                  <div className="p-5 flex flex-col flex-1">
+                    <h3 className="text-navy-900 font-bold text-base leading-snug mb-4 min-h-[3rem]">
+                      {c.title}
+                    </h3>
+                    <div className="flex items-baseline justify-between mb-2">
+                      <div className="text-brand-blue text-xl font-extrabold">
+                        {fmt(c.raised)} <span className="text-xs font-semibold text-navy-900/60">raised</span>
+                      </div>
+                      <div className="text-xs text-navy-900/60 font-semibold">{fmt(c.goal)} goal</div>
+                    </div>
+                    <div className="relative h-3 bg-brand-blue-wash rounded-full overflow-hidden ring-1 ring-border mb-3">
+                      <div
+                        className="h-full bg-brand-blue rounded-full transition-all"
+                        style={{ width: `${pct}%` }}
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white mix-blend-difference">
+                        {pct}%
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-xs text-navy-900/60 mb-4">
+                      <Users className="size-3.5" />
+                      {c.donors} donors
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setNote(c.overlayTitle);
+                        document.getElementById("donate-form")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                      }}
+                      className="mt-auto w-full inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white h-10 rounded-md font-semibold text-sm transition-colors"
+                    >
+                      <Heart className="size-4" /> Donate now
+                    </button>
                   </div>
-                </div>
+                </article>
               );
             })}
           </div>
