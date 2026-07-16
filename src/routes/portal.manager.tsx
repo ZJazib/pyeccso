@@ -1,10 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ClipboardList, Settings2 } from "lucide-react";
+import { ClipboardList, FolderOpen, Settings2 } from "lucide-react";
 import { PortalGate } from "@/components/portal/PortalShell";
+import { CourseMaterialsPanel } from "@/components/portal/CourseMaterialsPanel";
 import {
+  type CmsItem,
   type CourseApplication,
   listApplications,
+  listContent,
   updateApplicationStatus,
 } from "@/lib/phpBridge";
 
