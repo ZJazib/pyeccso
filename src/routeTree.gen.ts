@@ -21,6 +21,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
+import { Route as PortalStudentRouteImport } from './routes/portal.student'
 import { Route as ApiPublicHesabSessionRouteImport } from './routes/api/public/hesab-session'
 
 const ProjectsRoute = ProjectsRouteImport.update({
@@ -83,6 +84,11 @@ const PortalIndexRoute = PortalIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PortalRoute,
 } as any)
+const PortalStudentRoute = PortalStudentRouteImport.update({
+  id: '/student',
+  path: '/student',
+  getParentRoute: () => PortalRoute,
+} as any)
 const ApiPublicHesabSessionRoute = ApiPublicHesabSessionRouteImport.update({
   id: '/api/public/hesab-session',
   path: '/api/public/hesab-session',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/portal': typeof PortalRouteWithChildren
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/portal/student': typeof PortalStudentRoute
   '/portal/': typeof PortalIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
@@ -115,6 +122,7 @@ export interface FileRoutesByTo {
   '/media': typeof MediaRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/portal/student': typeof PortalStudentRoute
   '/portal': typeof PortalIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
@@ -131,6 +139,7 @@ export interface FileRoutesById {
   '/portal': typeof PortalRouteWithChildren
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/portal/student': typeof PortalStudentRoute
   '/portal/': typeof PortalIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/programs'
     | '/projects'
+    | '/portal/student'
     | '/portal/'
     | '/api/public/hesab-session'
   fileRoutesByTo: FileRoutesByTo
@@ -162,6 +172,7 @@ export interface FileRouteTypes {
     | '/media'
     | '/programs'
     | '/projects'
+    | '/portal/student'
     | '/portal'
     | '/api/public/hesab-session'
   id:
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/programs'
     | '/projects'
+    | '/portal/student'
     | '/portal/'
     | '/api/public/hesab-session'
   fileRoutesById: FileRoutesById
@@ -282,6 +294,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalIndexRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/portal/student': {
+      id: '/portal/student'
+      path: '/student'
+      fullPath: '/portal/student'
+      preLoaderRoute: typeof PortalStudentRouteImport
+      parentRoute: typeof PortalRoute
+    }
     '/api/public/hesab-session': {
       id: '/api/public/hesab-session'
       path: '/api/public/hesab-session'
@@ -293,10 +312,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface PortalRouteChildren {
+  PortalStudentRoute: typeof PortalStudentRoute
   PortalIndexRoute: typeof PortalIndexRoute
 }
 
 const PortalRouteChildren: PortalRouteChildren = {
+  PortalStudentRoute: PortalStudentRoute,
   PortalIndexRoute: PortalIndexRoute,
 }
 
