@@ -487,7 +487,17 @@ function AdminPanel() {
   );
 }
 
-function AdminLogin({ health, onLogin }: { health: "checking" | "online" | "offline"; onLogin: (user: BridgeUser) => void }) {
+function AdminLogin({
+  health,
+  healthChecking,
+  onRecheck,
+  onLogin,
+}: {
+  health: BridgeHealth | null;
+  healthChecking: boolean;
+  onRecheck: () => Promise<BridgeHealth>;
+  onLogin: (user: BridgeUser) => void;
+}) {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -512,9 +522,9 @@ function AdminLogin({ health, onLogin }: { health: "checking" | "online" | "offl
         <div className="bg-white border border-border rounded-lg p-6 shadow-sm">
           <div className="text-sm text-navy-900/60 mb-2">API: {getBridgeApiBase()}</div>
           <h1 className="text-2xl font-bold text-navy-900">Admin login</h1>
-          <p className="text-sm text-navy-900/70 mt-2">
-            Status: {health === "online" ? "PHP bridge connected" : health === "checking" ? "Checking bridge" : "Upload and configure the PHP bridge"}
-          </p>
+          <div className="mt-4">
+            <HealthStatusCard health={health} checking={healthChecking} onRecheck={onRecheck} variant="light" />
+          </div>
           <form onSubmit={submit} className="mt-6 space-y-4">
             <Field label="Username or email" value={identifier} onChange={setIdentifier} />
             <Field label="Password" value={password} onChange={setPassword} type="password" />
@@ -532,6 +542,78 @@ function AdminLogin({ health, onLogin }: { health: "checking" | "online" | "offl
     </SiteLayout>
   );
 }
+
+function HealthStatusCard({
+  health,
+  checking,
+  onRecheck,
+  variant = "dark",
+}: {
+  health: BridgeHealth | null;
+  checking: boolean;
+  onRecheck: () => Promise<BridgeHealth>;
+  variant?: "dark" | "light";
+}) {
+  const isDark = variant === "dark";
+  const state: "checking" | "healthy" | "unhealthy" = checking && !health ? "checking" : health?.ok ? "healthy" : "unhealthy";
+
+  const tone =
+    state === "healthy"
+      ? isDark
+        ? "border-emerald-400/40 bg-emerald-400/10 text-emerald-100"
+        : "border-emerald-300 bg-emerald-50 text-emerald-800"
+      : state === "unhealthy"
+      ? isDark
+        ? "border-red-400/40 bg-red-400/10 text-red-100"
+        : "border-red-300 bg-red-50 text-red-800"
+      : isDark
+      ? "border-white/20 bg-white/5 text-white/80"
+      : "border-border bg-surface-alt text-navy-900/70";
+
+  const Icon = state === "healthy" ? CheckCircle2 : state === "unhealthy" ? AlertTriangle : Loader2;
+  const label =
+    state === "checking"
+      ? "Checking PHP bridge…"
+      : state === "healthy"
+      ? "PHP bridge & database online"
+      : "PHP bridge or database unreachable";
+
+  const detail =
+    state === "checking"
+      ? "Contacting the health endpoint."
+      : health?.message ??
+        (state === "healthy" ? "Connection confirmed." : "Confirm config.php credentials and that MySQL/PostgreSQL is reachable.");
+
+  return (
+    <div className={`rounded-md border px-4 py-3 text-sm ${tone}`}>
+      <div className="flex items-center justify-between gap-3">
+        <div className="inline-flex items-center gap-2 font-semibold">
+          <Icon className={`size-4 ${state === "checking" ? "animate-spin" : ""}`} />
+          {label}
+        </div>
+        <button
+          type="button"
+          onClick={() => onRecheck()}
+          disabled={checking}
+          className={`inline-flex items-center gap-1 rounded-md border px-2 py-1 text-xs font-semibold ${
+            isDark ? "border-white/30 hover:bg-white/10" : "border-border bg-white hover:bg-surface-alt"
+          } disabled:opacity-60`}
+        >
+          <RefreshCw className={`size-3 ${checking ? "animate-spin" : ""}`} /> Re-check
+        </button>
+      </div>
+      <p className="mt-1 opacity-90">{detail}</p>
+      {health && (
+        <div className={`mt-2 grid grid-cols-2 gap-2 text-xs ${isDark ? "text-white/70" : "text-navy-900/60"}`}>
+          <span>Database: {health.database?.toUpperCase() || "—"}</span>
+          <span>Latency: {typeof health.latency_ms === "number" ? `${health.latency_ms} ms` : "—"}</span>
+          {health.server_version && <span className="col-span-2 truncate">Server: {health.server_version}</span>}
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 function Field({
   label,
