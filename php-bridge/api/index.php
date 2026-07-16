@@ -1,0 +1,335 @@
+<?php
+declare(strict_types=1);
+
+$configFile = __DIR__ . '/config.php';
+if (!file_exists($configFile)) {
+    respond(['error' => 'Missing config.php. Copy config.example.php to config.php and edit it.'], 500);
+}
+$config = require $configFile;
+
+send_cors($config);
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(204);
+    exit;
+}
+
+try {
+    $route = current_route();
+    $method = $_SERVER['REQUEST_METHOD'];
+
+    if ($route === 'health' && $method === 'GET') health($config);
+    if ($route === 'setup/admin' && $method === 'POST') setup_admin($config);
+    if ($route === 'auth/login' && $method === 'POST') login($config);
+    if ($route === 'auth/google' && $method === 'POST') google_login($config);
+    if ($route === 'auth/me' && $method === 'GET') me($config);
+    if ($route === 'content') content($config, $method);
+    if ($route === 'applications') applications($config, $method);
+
+    respond(['error' => 'Route not found'], 404);
+} catch (Throwable $error) {
+    respond(['error' => $error->getMessage()], 500);
+}
+
+function send_cors(array $config): void {
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+    $allowed = $config['security']['allowed_origins'] ?? [];
+    if ($origin && in_array($origin, $allowed, true)) {
+        header('Access-Control-Allow-Origin: ' . $origin);
+        header('Vary: Origin');
+    }
+    header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Setup-Token');
+    header('Access-Control-Max-Age: 86400');
+}
+
+function current_route(): string {
+    if (isset($_GET['route'])) return trim((string)$_GET['route'], '/');
+    $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+    $scriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+    if ($scriptDir && strpos($path, $scriptDir) === 0) $path = substr($path, strlen($scriptDir));
+    $path = preg_replace('#^/index\.php/?#', '/', $path) ?: '/';
+    return trim($path, '/');
+}
+
+function pdo(array $config): PDO {
+    static $pdo = null;
+    if ($pdo instanceof PDO) return $pdo;
+    $db = $config['db'];
+    if ($db['driver'] === 'pgsql') {
+        $dsn = sprintf('pgsql:host=%s;port=%s;dbname=%s', $db['host'], $db['port'], $db['database']);
+    } else {
+        $dsn = sprintf('mysql:host=%s;port=%s;dbname=%s;charset=%s', $db['host'], $db['port'], $db['database'], $db['charset'] ?? 'utf8mb4');
+    }
+    $pdo = new PDO($dsn, $db['username'], $db['password'], [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
+    return $pdo;
+}
+
+function read_json(): array {
+    $raw = file_get_contents('php://input') ?: '';
+    $data = json_decode($raw, true);
+    if (!is_array($data)) respond(['error' => 'Invalid JSON body'], 400);
+    return $data;
+}
+
+function respond(array $payload, int $status = 200): void {
+    http_response_code($status);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    exit;
+}
+
+function base64url_encode(string $value): string {
+    return rtrim(strtr(base64_encode($value), '+/', '-_'), '=');
+}
+
+function base64url_decode(string $value): string|false {
+    return base64_decode(strtr($value, '-_', '+/'));
+}
+
+function sign_token(array $config, array $claims): string {
+    $header = base64url_encode(json_encode(['alg' => 'HS256', 'typ' => 'JWT']));
+    $payload = base64url_encode(json_encode($claims));
+    $signature = hash_hmac('sha256', $header . '.' . $payload, $config['security']['jwt_secret'], true);
+    return $header . '.' . $payload . '.' . base64url_encode($signature);
+}
+
+function verify_token(array $config): ?array {
+    $auth = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
+    if (!preg_match('/Bearer\s+(.+)/', $auth, $matches)) return null;
+    $parts = explode('.', $matches[1]);
+    if (count($parts) !== 3) return null;
+    [$header, $payload, $signature] = $parts;
+    $expected = base64url_encode(hash_hmac('sha256', $header . '.' . $payload, $config['security']['jwt_secret'], true));
+    if (!hash_equals($expected, $signature)) return null;
+    $claims = json_decode((string) base64url_decode($payload), true);
+    if (!is_array($claims) || ($claims['exp'] ?? 0) < time()) return null;
+    return $claims;
+}
+
+function require_user(array $config): array {
+    $claims = verify_token($config);
+    if (!$claims) respond(['error' => 'Unauthorized'], 401);
+    $stmt = pdo($config)->prepare('SELECT id, username, email, full_name, role, status FROM users WHERE id = ? LIMIT 1');
+    $stmt->execute([$claims['sub']]);
+    $user = $stmt->fetch();
+    if (!$user || $user['status'] !== 'active') respond(['error' => 'Unauthorized'], 401);
+    $user['id'] = (int)$user['id'];
+    return $user;
+}
+
+function require_manager(array $config): array {
+    $user = require_user($config);
+    if (!in_array($user['role'], ['admin', 'learn_manager'], true)) respond(['error' => 'Forbidden'], 403);
+    return $user;
+}
+
+function public_user(array $config): ?array {
+    $claims = verify_token($config);
+    if (!$claims) return null;
+    $stmt = pdo($config)->prepare('SELECT id, username, email, full_name, role, status FROM users WHERE id = ? LIMIT 1');
+    $stmt->execute([$claims['sub']]);
+    $user = $stmt->fetch();
+    if (!$user || $user['status'] !== 'active') return null;
+    $user['id'] = (int)$user['id'];
+    return $user;
+}
+
+function issue_login(array $config, array $user): void {
+    $now = time();
+    $token = sign_token($config, [
+        'sub' => (int)$user['id'],
+        'role' => $user['role'],
+        'iat' => $now,
+        'exp' => $now + (int)$config['security']['token_ttl_seconds'],
+    ]);
+    unset($user['password_hash'], $user['status']);
+    $user['id'] = (int)$user['id'];
+    respond(['token' => $token, 'user' => $user]);
+}
+
+function health(array $config): void {
+    pdo($config)->query('SELECT 1');
+    respond(['ok' => true, 'database' => $config['db']['driver'], 'time' => gmdate('c')]);
+}
+
+function setup_admin(array $config): void {
+    $setupToken = $_SERVER['HTTP_X_SETUP_TOKEN'] ?? '';
+    if (!$setupToken || !hash_equals($config['security']['setup_token'], $setupToken)) respond(['error' => 'Invalid setup token'], 401);
+    $data = read_json();
+    validate_required($data, ['username', 'email', 'full_name', 'password']);
+    if (strlen($data['password']) < 10) respond(['error' => 'Password must be at least 10 characters'], 400);
+
+    $stmt = pdo($config)->prepare('INSERT INTO users (username, email, password_hash, full_name, role) VALUES (?, ?, ?, ?, ?)');
+    $stmt->execute([
+        trim($data['username']),
+        strtolower(trim($data['email'])),
+        password_hash($data['password'], PASSWORD_DEFAULT),
+        trim($data['full_name']),
+        'admin',
+    ]);
+    respond(['ok' => true, 'id' => (int)pdo($config)->lastInsertId()], 201);
+}
+
+function login(array $config): void {
+    $data = read_json();
+    validate_required($data, ['identifier', 'password']);
+    $identifier = strtolower(trim($data['identifier']));
+    $stmt = pdo($config)->prepare('SELECT * FROM users WHERE email = ? OR username = ? LIMIT 1');
+    $stmt->execute([$identifier, $identifier]);
+    $user = $stmt->fetch();
+    if (!$user || $user['status'] !== 'active' || !$user['password_hash'] || !password_verify($data['password'], $user['password_hash'])) {
+        respond(['error' => 'Invalid username or password'], 401);
+    }
+    issue_login($config, $user);
+}
+
+function google_login(array $config): void {
+    $clientId = $config['google']['client_id'] ?? '';
+    if (!$clientId) respond(['error' => 'Google login is not configured'], 400);
+    $data = read_json();
+    validate_required($data, ['id_token']);
+    $tokenInfo = json_decode(file_get_contents('https://oauth2.googleapis.com/tokeninfo?id_token=' . urlencode($data['id_token'])) ?: '', true);
+    if (!is_array($tokenInfo) || ($tokenInfo['aud'] ?? '') !== $clientId || ($tokenInfo['email_verified'] ?? '') !== 'true') {
+        respond(['error' => 'Google token is invalid'], 401);
+    }
+
+    $email = strtolower($tokenInfo['email']);
+    $stmt = pdo($config)->prepare('SELECT * FROM users WHERE email = ? LIMIT 1');
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
+    if (!$user) {
+        $username = preg_replace('/[^a-z0-9_\-]/i', '', explode('@', $email)[0]) . random_int(100, 999);
+        $insert = pdo($config)->prepare('INSERT INTO users (username, email, full_name, role, provider, google_sub) VALUES (?, ?, ?, ?, ?, ?)');
+        $insert->execute([$username, $email, $tokenInfo['name'] ?? $email, 'student', 'google', $tokenInfo['sub']]);
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
+    }
+    issue_login($config, $user);
+}
+
+function me(array $config): void {
+    respond(['user' => require_user($config)]);
+}
+
+function validate_required(array $data, array $fields): void {
+    foreach ($fields as $field) {
+        if (!isset($data[$field]) || trim((string)$data[$field]) === '') respond(['error' => $field . ' is required'], 400);
+    }
+}
+
+function valid_resource(string $resource): bool {
+    return in_array($resource, ['pages', 'programs', 'projects', 'courses', 'media', 'careers'], true);
+}
+
+function content(array $config, string $method): void {
+    $resource = $_GET['resource'] ?? '';
+    if (!valid_resource($resource)) respond(['error' => 'Invalid resource'], 400);
+    if ($method === 'GET') {
+        $language = $_GET['language'] ?? 'en';
+        $user = public_user($config);
+        $manager = $user && in_array($user['role'], ['admin', 'learn_manager'], true);
+        $sql = 'SELECT * FROM content_items WHERE resource = ? AND language = ?';
+        $params = [$resource, $language];
+        if (!$manager) {
+            $sql .= ' AND status = ?';
+            $params[] = 'published';
+        }
+        $sql .= ' ORDER BY updated_at DESC';
+        $stmt = pdo($config)->prepare($sql);
+        $stmt->execute($params);
+        $items = array_map('format_content_item', $stmt->fetchAll());
+        respond(['items' => $items]);
+    }
+
+    $user = require_manager($config);
+    if ($method === 'POST' || $method === 'PUT') {
+        $data = read_json();
+        validate_required($data, ['title', 'slug', 'language']);
+        $metadata = isset($data['metadata']) ? json_encode($data['metadata'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : null;
+        if ($method === 'POST') {
+            $stmt = pdo($config)->prepare('INSERT INTO content_items (resource, slug, language, title, summary, body, status, metadata_json, created_by, updated_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+            $stmt->execute([$resource, $data['slug'], $data['language'], $data['title'], $data['summary'] ?? null, $data['body'] ?? null, $data['status'] ?? 'draft', $metadata, $user['id'], $user['id']]);
+            $id = (int)pdo($config)->lastInsertId();
+        } else {
+            $id = (int)($_GET['id'] ?? 0);
+            if (!$id) respond(['error' => 'Missing id'], 400);
+            $stmt = pdo($config)->prepare('UPDATE content_items SET slug = ?, language = ?, title = ?, summary = ?, body = ?, status = ?, metadata_json = ?, updated_by = ? WHERE id = ? AND resource = ?');
+            $stmt->execute([$data['slug'], $data['language'], $data['title'], $data['summary'] ?? null, $data['body'] ?? null, $data['status'] ?? 'draft', $metadata, $user['id'], $id, $resource]);
+        }
+        $stmt = pdo($config)->prepare('SELECT * FROM content_items WHERE id = ? LIMIT 1');
+        $stmt->execute([$id]);
+        respond(['item' => format_content_item($stmt->fetch())]);
+    }
+
+    if ($method === 'DELETE') {
+        $id = (int)($_GET['id'] ?? 0);
+        if (!$id) respond(['error' => 'Missing id'], 400);
+        $stmt = pdo($config)->prepare('DELETE FROM content_items WHERE id = ? AND resource = ?');
+        $stmt->execute([$id, $resource]);
+        respond(['ok' => true]);
+    }
+    respond(['error' => 'Method not allowed'], 405);
+}
+
+function format_content_item(array|false $item): array {
+    if (!$item) respond(['error' => 'Content not found'], 404);
+    $item['id'] = (int)$item['id'];
+    $item['metadata'] = $item['metadata_json'] ? json_decode($item['metadata_json'], true) : null;
+    unset($item['metadata_json'], $item['created_by'], $item['updated_by']);
+    return $item;
+}
+
+function applications(array $config, string $method): void {
+    if ($method === 'GET') {
+        $user = require_user($config);
+        $sql = 'SELECT a.*, c.title AS course_title FROM course_applications a LEFT JOIN content_items c ON c.id = a.course_id';
+        $params = [];
+        if ($user['role'] === 'student') {
+            $sql .= ' WHERE a.student_user_id = ?';
+            $params[] = $user['id'];
+        } elseif (!in_array($user['role'], ['admin', 'teacher', 'learn_manager'], true)) {
+            respond(['error' => 'Forbidden'], 403);
+        }
+        $sql .= ' ORDER BY a.created_at DESC';
+        $stmt = pdo($config)->prepare($sql);
+        $stmt->execute($params);
+        respond(['applications' => array_map('format_application', $stmt->fetchAll())]);
+    }
+
+    if ($method === 'POST') {
+        $user = require_user($config);
+        $data = read_json();
+        validate_required($data, ['applicant_name', 'email']);
+        $stmt = pdo($config)->prepare('INSERT INTO course_applications (course_id, student_user_id, applicant_name, email, phone, message) VALUES (?, ?, ?, ?, ?, ?)');
+        $stmt->execute([$data['course_id'] ?? null, $user['id'], $data['applicant_name'], $data['email'], $data['phone'] ?? null, $data['message'] ?? null]);
+        $id = (int)pdo($config)->lastInsertId();
+        $stmt = pdo($config)->prepare('SELECT a.*, c.title AS course_title FROM course_applications a LEFT JOIN content_items c ON c.id = a.course_id WHERE a.id = ?');
+        $stmt->execute([$id]);
+        respond(['application' => format_application($stmt->fetch())], 201);
+    }
+
+    if ($method === 'PUT') {
+        $user = require_user($config);
+        if (!in_array($user['role'], ['admin', 'teacher', 'learn_manager'], true)) respond(['error' => 'Forbidden'], 403);
+        $id = (int)($_GET['id'] ?? 0);
+        $data = read_json();
+        if (!$id || !in_array($data['status'] ?? '', ['submitted', 'reviewing', 'accepted', 'rejected'], true)) respond(['error' => 'Invalid application update'], 400);
+        $stmt = pdo($config)->prepare('UPDATE course_applications SET status = ?, manager_notes = ? WHERE id = ?');
+        $stmt->execute([$data['status'], $data['manager_notes'] ?? null, $id]);
+        $stmt = pdo($config)->prepare('SELECT a.*, c.title AS course_title FROM course_applications a LEFT JOIN content_items c ON c.id = a.course_id WHERE a.id = ?');
+        $stmt->execute([$id]);
+        respond(['application' => format_application($stmt->fetch())]);
+    }
+    respond(['error' => 'Method not allowed'], 405);
+}
+
+function format_application(array|false $application): array {
+    if (!$application) respond(['error' => 'Application not found'], 404);
+    $application['id'] = (int)$application['id'];
+    $application['course_id'] = $application['course_id'] === null ? null : (int)$application['course_id'];
+    unset($application['student_user_id']);
+    return $application;
+}

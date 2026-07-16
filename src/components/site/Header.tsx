@@ -13,6 +13,8 @@ export function Header() {
     { label: t("nav.learn"), to: "/learn" },
     { label: t("nav.media"), to: "/media" },
     { label: t("nav.careers"), to: "/careers" },
+    { label: "Portal", to: "/portal" },
+    { label: "Admin", to: "/admin" },
     { label: t("nav.contact"), to: "/contact" },
   ] as const;
 

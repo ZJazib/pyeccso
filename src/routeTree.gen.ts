@@ -11,11 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ProgramsRouteImport } from './routes/programs'
+import { Route as PortalRouteImport } from './routes/portal'
 import { Route as MediaRouteImport } from './routes/media'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as DonateRouteImport } from './routes/donate'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CareersRouteImport } from './routes/careers'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiPublicHesabSessionRouteImport } from './routes/api/public/hesab-session'
@@ -28,6 +30,11 @@ const ProjectsRoute = ProjectsRouteImport.update({
 const ProgramsRoute = ProgramsRouteImport.update({
   id: '/programs',
   path: '/programs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MediaRoute = MediaRouteImport.update({
@@ -55,6 +62,11 @@ const CareersRoute = CareersRouteImport.update({
   path: '/careers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -74,11 +86,13 @@ const ApiPublicHesabSessionRoute = ApiPublicHesabSessionRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
+  '/portal': typeof PortalRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
@@ -86,11 +100,13 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
+  '/portal': typeof PortalRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
@@ -99,11 +115,13 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
+  '/portal': typeof PortalRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
@@ -113,11 +131,13 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/careers'
     | '/contact'
     | '/donate'
     | '/learn'
     | '/media'
+    | '/portal'
     | '/programs'
     | '/projects'
     | '/api/public/hesab-session'
@@ -125,11 +145,13 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/admin'
     | '/careers'
     | '/contact'
     | '/donate'
     | '/learn'
     | '/media'
+    | '/portal'
     | '/programs'
     | '/projects'
     | '/api/public/hesab-session'
@@ -137,11 +159,13 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/careers'
     | '/contact'
     | '/donate'
     | '/learn'
     | '/media'
+    | '/portal'
     | '/programs'
     | '/projects'
     | '/api/public/hesab-session'
@@ -150,11 +174,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRoute
   CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
   DonateRoute: typeof DonateRoute
   LearnRoute: typeof LearnRoute
   MediaRoute: typeof MediaRoute
+  PortalRoute: typeof PortalRoute
   ProgramsRoute: typeof ProgramsRoute
   ProjectsRoute: typeof ProjectsRoute
   ApiPublicHesabSessionRoute: typeof ApiPublicHesabSessionRoute
@@ -174,6 +200,13 @@ declare module '@tanstack/react-router' {
       path: '/programs'
       fullPath: '/programs'
       preLoaderRoute: typeof ProgramsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/media': {
@@ -211,6 +244,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CareersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -238,11 +278,13 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRoute,
   CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,
   DonateRoute: DonateRoute,
   LearnRoute: LearnRoute,
   MediaRoute: MediaRoute,
+  PortalRoute: PortalRoute,
   ProgramsRoute: ProgramsRoute,
   ProjectsRoute: ProjectsRoute,
   ApiPublicHesabSessionRoute: ApiPublicHesabSessionRoute,
