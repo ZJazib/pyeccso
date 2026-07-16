@@ -251,14 +251,14 @@ function Donate() {
       {search.status === "success" && (
         <div className="bg-emerald-50 border-b border-emerald-200">
           <div className="max-w-6xl mx-auto px-4 md:px-6 py-4 text-emerald-900 text-sm font-medium flex items-center gap-2">
-            <Check className="size-5" /> Thank you! Your HesabPay donation was received. We will email a receipt shortly.
+            <Check className="size-5" /> {t("donate.flow.success")}
           </div>
         </div>
       )}
       {search.status === "failure" && (
         <div className="bg-red-50 border-b border-red-200">
           <div className="max-w-6xl mx-auto px-4 md:px-6 py-4 text-red-900 text-sm font-medium">
-            Your payment was not completed. You can try again or use cash by hand / bank transfer.
+            {t("donate.flow.failure")}
           </div>
         </div>
       )}
@@ -287,15 +287,12 @@ function Donate() {
         <div className="max-w-6xl mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">
-              Where Your Donation Goes
+              {t("donate.flow.where.eyebrow")}
             </div>
             <h2 className="text-navy-900 text-2xl md:text-3xl font-bold tracking-tight mb-3">
-              Projects supported by your donation
+              {t("donate.flow.where.title")}
             </h2>
-            <p className="text-navy-900/70">
-              Every contribution funds one of PYECSO's six program areas. Click "Donate now" to give via HesabPay,
-              cash by hand at our Kabul office, or bank transfer.
-            </p>
+            <p className="text-navy-900/70">{t("donate.flow.where.body")}</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {CAMPAIGNS.map((c) => {
@@ -329,7 +326,7 @@ function Donate() {
                       onClick={() => openDonate(c)}
                       className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-brand-red hover:bg-brand-red/90 text-white text-xs font-bold uppercase tracking-wide px-4 py-2 rounded shadow-md"
                     >
-                      Donate now
+                      {t("donate.flow.card.donateNow")}
                     </button>
                   </div>
                   <div className="p-5 flex flex-col flex-1">
@@ -338,9 +335,9 @@ function Donate() {
                     </h3>
                     <div className="flex items-baseline justify-between mb-2">
                       <div className="text-brand-blue text-xl font-extrabold">
-                        {fmt(c.raised)} <span className="text-xs font-semibold text-navy-900/60">raised</span>
+                        {fmt(c.raised)} <span className="text-xs font-semibold text-navy-900/60">{t("donate.flow.card.raised")}</span>
                       </div>
-                      <div className="text-xs text-navy-900/60 font-semibold">{fmt(c.goal)} goal</div>
+                      <div className="text-xs text-navy-900/60 font-semibold">{fmt(c.goal)} {t("donate.flow.card.goal")}</div>
                     </div>
                     <div className="relative h-3 bg-brand-blue-wash rounded-full overflow-hidden ring-1 ring-border mb-3">
                       <div
@@ -353,14 +350,14 @@ function Donate() {
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-navy-900/60 mb-4">
                       <Users className="size-3.5" />
-                      {c.donors} donors
+                      {c.donors} {t("donate.flow.card.donors")}
                     </div>
                     <button
                       type="button"
                       onClick={() => openDonate(c)}
                       className="mt-auto w-full inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white h-10 rounded-md font-semibold text-sm transition-colors"
                     >
-                      <Heart className="size-4" /> Donate now
+                      <Heart className="size-4" /> {t("donate.flow.card.donateNow")}
                     </button>
                   </div>
                 </article>
@@ -369,6 +366,7 @@ function Donate() {
           </div>
         </div>
       </section>
+
 
       <section className="bg-navy-950 text-white py-12">
         <div className="max-w-4xl mx-auto px-4 md:px-6 text-center">
