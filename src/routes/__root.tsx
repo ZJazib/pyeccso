@@ -79,21 +79,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "PYECSO — Patriotic Youths Education Cultural and Social Organization" },
+      { title: "PYECSO — Empowering Afghan Communities Since 2006" },
       {
         name: "description",
         content:
-          "PYECSO is a women-led Afghan NGO empowering youth, women, and children through education, healthcare, and community development across 14 provinces since 2006.",
+          "PYECSO is a women-led Afghan NGO founded in 2006, delivering education, humanitarian aid and livelihood programs in partnership with UN agencies and international donors.",
       },
       { name: "author", content: "PYECSO" },
-      { property: "og:title", content: "PYECSO — Empowering Afghan Communities" },
+      { property: "og:title", content: "PYECSO — Empowering Afghan Communities Since 2006" },
       {
         property: "og:description",
         content:
-          "Women-led Afghan NGO delivering education, healthcare, and humanitarian aid across 14 provinces since 2006.",
+          "PYECSO is a women-led Afghan NGO founded in 2006, delivering education, humanitarian aid and livelihood programs in partnership with UN agencies and international donors.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "PYECSO — Empowering Afghan Communities Since 2006" },
+      { name: "twitter:description", content: "PYECSO is a women-led Afghan NGO founded in 2006, delivering education, humanitarian aid and livelihood programs in partnership with UN agencies and international donors." },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/391a8c70-3799-423b-b503-a75451fd7103" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/391a8c70-3799-423b-b503-a75451fd7103" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
