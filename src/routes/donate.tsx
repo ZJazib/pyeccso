@@ -201,11 +201,11 @@ function Donate() {
     if (!openCampaign) return;
     setError(null);
     if (!Number.isFinite(selectedLocal) || selectedLocal < 1) {
-      setError("Please choose or enter a valid donation amount.");
+      setError(t("donate.flow.modal.hesab.invalidAmount"));
       return;
     }
     if (!rates || !afnAmount) {
-      setError("Currency rates are still loading. Please try again in a moment.");
+      setError(t("donate.flow.modal.hesab.ratesLoading"));
       return;
     }
     setLoading(true);
@@ -221,16 +221,17 @@ function Donate() {
       });
       const data = (await res.json()) as { payment_url?: string; error?: string };
       if (!res.ok || !data.payment_url) {
-        setError(data.error ?? "Could not start payment. Please try again.");
+        setError(data.error ?? t("donate.flow.modal.hesab.couldNotStart"));
         setLoading(false);
         return;
       }
       window.location.href = data.payment_url;
     } catch {
-      setError("Network error. Please try again.");
+      setError(t("donate.flow.modal.hesab.networkError"));
       setLoading(false);
     }
   };
+
 
   const openDonate = (c: (typeof CAMPAIGNS)[number]) => {
     setOpenCampaign(c);
@@ -251,14 +252,14 @@ function Donate() {
       {search.status === "success" && (
         <div className="bg-emerald-50 border-b border-emerald-200">
           <div className="max-w-6xl mx-auto px-4 md:px-6 py-4 text-emerald-900 text-sm font-medium flex items-center gap-2">
-            <Check className="size-5" /> Thank you! Your HesabPay donation was received. We will email a receipt shortly.
+            <Check className="size-5" /> {t("donate.flow.success")}
           </div>
         </div>
       )}
       {search.status === "failure" && (
         <div className="bg-red-50 border-b border-red-200">
           <div className="max-w-6xl mx-auto px-4 md:px-6 py-4 text-red-900 text-sm font-medium">
-            Your payment was not completed. You can try again or use cash by hand / bank transfer.
+            {t("donate.flow.failure")}
           </div>
         </div>
       )}
@@ -287,15 +288,12 @@ function Donate() {
         <div className="max-w-6xl mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
             <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">
-              Where Your Donation Goes
+              {t("donate.flow.where.eyebrow")}
             </div>
             <h2 className="text-navy-900 text-2xl md:text-3xl font-bold tracking-tight mb-3">
-              Projects supported by your donation
+              {t("donate.flow.where.title")}
             </h2>
-            <p className="text-navy-900/70">
-              Every contribution funds one of PYECSO's six program areas. Click "Donate now" to give via HesabPay,
-              cash by hand at our Kabul office, or bank transfer.
-            </p>
+            <p className="text-navy-900/70">{t("donate.flow.where.body")}</p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {CAMPAIGNS.map((c) => {
@@ -329,7 +327,7 @@ function Donate() {
                       onClick={() => openDonate(c)}
                       className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-brand-red hover:bg-brand-red/90 text-white text-xs font-bold uppercase tracking-wide px-4 py-2 rounded shadow-md"
                     >
-                      Donate now
+                      {t("donate.flow.card.donateNow")}
                     </button>
                   </div>
                   <div className="p-5 flex flex-col flex-1">
@@ -338,9 +336,9 @@ function Donate() {
                     </h3>
                     <div className="flex items-baseline justify-between mb-2">
                       <div className="text-brand-blue text-xl font-extrabold">
-                        {fmt(c.raised)} <span className="text-xs font-semibold text-navy-900/60">raised</span>
+                        {fmt(c.raised)} <span className="text-xs font-semibold text-navy-900/60">{t("donate.flow.card.raised")}</span>
                       </div>
-                      <div className="text-xs text-navy-900/60 font-semibold">{fmt(c.goal)} goal</div>
+                      <div className="text-xs text-navy-900/60 font-semibold">{fmt(c.goal)} {t("donate.flow.card.goal")}</div>
                     </div>
                     <div className="relative h-3 bg-brand-blue-wash rounded-full overflow-hidden ring-1 ring-border mb-3">
                       <div
@@ -353,14 +351,14 @@ function Donate() {
                     </div>
                     <div className="flex items-center gap-1.5 text-xs text-navy-900/60 mb-4">
                       <Users className="size-3.5" />
-                      {c.donors} donors
+                      {c.donors} {t("donate.flow.card.donors")}
                     </div>
                     <button
                       type="button"
                       onClick={() => openDonate(c)}
                       className="mt-auto w-full inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white h-10 rounded-md font-semibold text-sm transition-colors"
                     >
-                      <Heart className="size-4" /> Donate now
+                      <Heart className="size-4" /> {t("donate.flow.card.donateNow")}
                     </button>
                   </div>
                 </article>
@@ -369,6 +367,7 @@ function Donate() {
           </div>
         </div>
       </section>
+
 
       <section className="bg-navy-950 text-white py-12">
         <div className="max-w-4xl mx-auto px-4 md:px-6 text-center">
@@ -396,7 +395,7 @@ function Donate() {
             <div className="flex items-start justify-between p-6 border-b border-border">
               <div>
                 <div className="text-[11px] uppercase tracking-wider text-brand-blue font-bold mb-1">
-                  Donate to
+                  {t("donate.flow.modal.donateTo")}
                 </div>
                 <h3 className="text-navy-900 text-xl font-bold leading-snug">{openCampaign.overlayTitle}</h3>
                 <p className="text-navy-900/60 text-sm mt-1">{openCampaign.title}</p>
@@ -404,7 +403,7 @@ function Donate() {
               <button
                 type="button"
                 onClick={() => setOpenCampaign(null)}
-                aria-label="Close"
+                aria-label={t("donate.flow.modal.close")}
                 className="text-navy-900/60 hover:text-navy-900 p-1"
               >
                 <X className="size-5" />
@@ -414,9 +413,9 @@ function Donate() {
             {/* Method tabs */}
             <div className="grid grid-cols-3 border-b border-border">
               {[
-                { k: "hesab", label: "HesabPay", icon: Smartphone },
-                { k: "cash", label: "Cash by Hand", icon: HandCoins },
-                { k: "bank", label: "Bank Transfer", icon: Landmark },
+                { k: "hesab", label: t("donate.flow.modal.tabs.hesab"), icon: Smartphone },
+                { k: "cash", label: t("donate.flow.modal.tabs.cash"), icon: HandCoins },
+                { k: "bank", label: t("donate.flow.modal.tabs.bank"), icon: Landmark },
               ].map((m) => {
                 const Icon = m.icon;
                 const active = method === m.k;
@@ -441,12 +440,9 @@ function Donate() {
             <div className="p-6">
               {method === "hesab" && (
                 <div>
-                  <p className="text-navy-900/75 text-sm mb-2">
-                    Choose an amount, then continue to HesabPay's secure checkout.
-                  </p>
+                  <p className="text-navy-900/75 text-sm mb-2">{t("donate.flow.modal.hesab.intro")}</p>
                   <p className="text-[11px] text-navy-900/60 mb-4">
-                    Amounts shown in <strong className="text-navy-900">{currency}</strong> — HesabPay processes
-                    the payment in Afghani (AFN) at the live exchange rate.
+                    {t("donate.flow.modal.hesab.currencyNote", { currency })}
                   </p>
                   <div className="grid grid-cols-5 gap-2 mb-4">
                     {usdPresets.map((u, i) => {
@@ -474,7 +470,7 @@ function Donate() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                     <div>
                       <label className="text-[11px] uppercase tracking-wider text-navy-900/60 font-semibold block mb-1">
-                        Custom amount ({currency})
+                        {t("donate.flow.modal.hesab.customLabel", { currency })}
                       </label>
                       <input
                         type="number"
@@ -488,13 +484,13 @@ function Donate() {
                     </div>
                     <div>
                       <label className="text-[11px] uppercase tracking-wider text-navy-900/60 font-semibold block mb-1">
-                        Email (optional)
+                        {t("donate.flow.modal.hesab.emailLabel")}
                       </label>
                       <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="you@example.com"
+                        placeholder={t("donate.flow.modal.hesab.emailPh")}
                         className="w-full border border-border rounded-md px-3 py-2.5 text-sm"
                       />
                     </div>
@@ -502,7 +498,7 @@ function Donate() {
 
                   {rates && afnAmount > 0 && (
                     <div className="bg-brand-blue-wash text-navy-900 text-xs rounded-md px-3 py-2 mb-3 flex items-center justify-between">
-                      <span>You'll be charged in Afghani (AFN):</span>
+                      <span>{t("donate.flow.modal.hesab.chargedIn")}</span>
                       <strong dir="ltr">≈ {afnAmount.toLocaleString("en-US")} AFN</strong>
                     </div>
                   )}
@@ -520,19 +516,20 @@ function Donate() {
                   >
                     {loading ? (
                       <>
-                        <Loader2 className="size-4 animate-spin" /> Creating secure session…
+                        <Loader2 className="size-4 animate-spin" /> {t("donate.flow.modal.hesab.creating")}
                       </>
                     ) : (
                       <>
-                        Continue to HesabPay —{" "}
-                        {rates ? formatMoney(selectedLocal, currency) : `$${customAmount || amount}`}
+                        {t("donate.flow.modal.hesab.continue", {
+                          amount: rates ? formatMoney(selectedLocal, currency) : `$${customAmount || amount}`,
+                        })}
                       </>
                     )}
                   </button>
 
 
                   <p className="text-[11px] text-navy-900/60 mt-3 text-center">
-                    Or send directly in HesabPay to{" "}
+                    {t("donate.flow.modal.hesab.orSendTo")}{" "}
                     <button
                       onClick={() => copy(HESAB_PAY_ACCOUNT, "hacc")}
                       className="font-semibold text-navy-900 hover:text-brand-blue inline-flex items-center gap-1"
@@ -552,42 +549,38 @@ function Donate() {
 
               {method === "cash" && (
                 <div>
-                  <p className="text-navy-900/75 text-sm mb-4">
-                    Bring your contribution directly to our Kabul office. You will receive an official receipt.
-                  </p>
+                  <p className="text-navy-900/75 text-sm mb-4">{t("donate.flow.modal.cash.intro")}</p>
                   <ul className="space-y-4 text-sm">
                     <li className="flex items-start gap-3">
                       <MapPin className="size-4 text-brand-blue mt-0.5 shrink-0" />
                       <div>
-                        <div className="font-semibold text-navy-900">PYECSO Head Office</div>
-                        <div className="text-navy-900/70">
-                          Sarak-e-Naw, District 4, Kabul, Afghanistan
-                        </div>
+                        <div className="font-semibold text-navy-900">{t("donate.flow.modal.cash.officeName")}</div>
+                        <div className="text-navy-900/70">{t("donate.flow.modal.cash.officeAddr")}</div>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
                       <Phone className="size-4 text-brand-blue mt-0.5 shrink-0" />
                       <div>
-                        <div className="font-semibold text-navy-900">Call ahead</div>
+                        <div className="font-semibold text-navy-900">{t("donate.flow.modal.cash.callAhead")}</div>
                         <div className="text-navy-900/70" dir="ltr">+93 (0) 20 250 0312</div>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
                       <Mail className="size-4 text-brand-blue mt-0.5 shrink-0" />
                       <div>
-                        <div className="font-semibold text-navy-900">Coordinate your visit</div>
-                        <div className="text-navy-900/70">donations@pyecso.org.af</div>
+                        <div className="font-semibold text-navy-900">{t("donate.flow.modal.cash.coordVisit")}</div>
+                        <div className="text-navy-900/70" dir="ltr">donations@pyecso.org.af</div>
                       </div>
                     </li>
                   </ul>
                   <div className="bg-brand-blue-wash text-navy-900/80 text-xs rounded-md px-4 py-3 mt-5">
-                    <strong className="text-navy-900">Office hours:</strong> Sunday–Thursday, 8:30 AM – 4:30 PM
+                    <strong className="text-navy-900">{t("donate.flow.modal.cash.hoursLabel")}</strong> {t("donate.flow.modal.cash.hoursValue")}
                   </div>
                   <a
                     href={`mailto:donations@pyecso.org.af?subject=In-person%20donation%20-%20${encodeURIComponent(openCampaign.overlayTitle)}`}
                     className="mt-5 w-full inline-flex items-center justify-center bg-brand-blue text-white h-11 rounded-md font-semibold text-sm hover:bg-brand-blue-hover transition-colors"
                   >
-                    Email us to arrange a visit
+                    {t("donate.flow.modal.cash.emailBtn")}
                   </a>
                 </div>
               )}
@@ -595,20 +588,15 @@ function Donate() {
               {method === "bank" && (
                 <div>
                   <p className="text-navy-900/75 text-sm mb-4">
-                    Transfer your donation directly to PYECSO's bank account. Please email a copy of the transfer
-                    receipt to{" "}
-                    <a href="mailto:donations@pyecso.org.af" className="text-brand-blue hover:underline">
-                      donations@pyecso.org.af
-                    </a>{" "}
-                    so we can send you an official acknowledgement.
+                    {t("donate.flow.modal.bank.intro", { email: "donations@pyecso.org.af" })}
                   </p>
                   <div className="ring-1 ring-border rounded-md divide-y divide-border">
                     {[
-                      { label: "Account Name", value: BANK.accountName, key: "bacc" },
-                      { label: "Account Number", value: BANK.accountNumber, key: "bnum", ltr: true },
-                      { label: "Bank Name", value: BANK.bankName, key: "bname" },
-                      { label: "SWIFT / BIC", value: BANK.swift, key: "bswift", ltr: true },
-                      { label: "Branch", value: BANK.branch, key: "bbr" },
+                      { label: t("donate.flow.modal.bank.accountName"), value: BANK.accountName, key: "bacc" },
+                      { label: t("donate.flow.modal.bank.accountNumber"), value: BANK.accountNumber, key: "bnum", ltr: true },
+                      { label: t("donate.flow.modal.bank.bankName"), value: BANK.bankName, key: "bname" },
+                      { label: t("donate.flow.modal.bank.swift"), value: BANK.swift, key: "bswift", ltr: true },
+                      { label: t("donate.flow.modal.bank.branch"), value: BANK.branch, key: "bbr" },
                     ].map((row) => (
                       <div key={row.key} className="flex items-center justify-between gap-3 px-4 py-3">
                         <div className="min-w-0">
@@ -628,11 +616,11 @@ function Donate() {
                         >
                           {copied === row.key ? (
                             <>
-                              <Check className="size-3.5" /> Copied
+                              <Check className="size-3.5" /> {t("donate.flow.modal.bank.copied")}
                             </>
                           ) : (
                             <>
-                              <Copy className="size-3.5" /> Copy
+                              <Copy className="size-3.5" /> {t("donate.flow.modal.bank.copy")}
                             </>
                           )}
                         </button>
@@ -640,8 +628,8 @@ function Donate() {
                     ))}
                   </div>
                   <div className="bg-brand-blue-wash text-navy-900/80 text-xs rounded-md px-4 py-3 mt-4">
-                    <strong className="text-navy-900">Reference:</strong> please add "{openCampaign.overlayTitle}"
-                    as the transfer reference so we can allocate your gift correctly.
+                    <strong className="text-navy-900">{t("donate.flow.modal.bank.referenceLabel")}</strong>{" "}
+                    {t("donate.flow.modal.bank.referenceBody", { campaign: openCampaign.overlayTitle })}
                   </div>
                 </div>
               )}

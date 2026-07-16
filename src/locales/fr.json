@@ -585,6 +585,58 @@
     "trust": {
       "title": "Chaque don est documenté",
       "body": "PYECSO est une ONG afghane dirigée par des femmes, enregistrée auprès du Ministère de l'Économie (N° 1201) et auditée chaque année. Tous les dons sont enregistrés dans notre système financier et reportés aux bailleurs. Pour les partenariats institutionnels ou dons majeurs, contactez"
+    },
+    "flow": {
+      "success": "Merci ! Votre don HesabPay a bien été reçu. Nous vous enverrons un reçu par e-mail sous peu.",
+      "failure": "Votre paiement n'a pas abouti. Vous pouvez réessayer ou utiliser le paiement en espèces ou le virement bancaire.",
+      "where": {
+        "eyebrow": "Où va votre don",
+        "title": "Projets soutenus par votre don",
+        "body": "Chaque contribution finance l'un des six domaines de programme de PYECSO. Cliquez sur « Faire un don » pour donner via HesabPay, en espèces à notre bureau de Kaboul ou par virement bancaire."
+      },
+      "card": { "donateNow": "Faire un don", "raised": "collecté", "goal": "objectif", "donors": "donateurs" },
+      "modal": {
+        "donateTo": "Don pour",
+        "close": "Fermer",
+        "tabs": { "hesab": "HesabPay", "cash": "Espèces en main", "bank": "Virement bancaire" },
+        "hesab": {
+          "intro": "Choisissez un montant, puis passez au paiement sécurisé HesabPay.",
+          "currencyNote": "Montants affichés en {{currency}} — HesabPay traite le paiement en Afghani (AFN) au taux du jour.",
+          "customLabel": "Montant personnalisé ({{currency}})",
+          "emailLabel": "E-mail (facultatif)",
+          "emailPh": "vous@exemple.com",
+          "chargedIn": "Vous serez débité en Afghani (AFN) :",
+          "continue": "Continuer vers HesabPay — {{amount}}",
+          "creating": "Création de la session sécurisée…",
+          "orSendTo": "Ou envoyez directement dans HesabPay à",
+          "invalidAmount": "Veuillez choisir ou saisir un montant de don valide.",
+          "ratesLoading": "Les taux de change sont en cours de chargement. Réessayez dans un instant.",
+          "couldNotStart": "Impossible de démarrer le paiement. Veuillez réessayer.",
+          "networkError": "Erreur réseau. Veuillez réessayer."
+        },
+        "cash": {
+          "intro": "Apportez votre contribution directement à notre bureau de Kaboul. Vous recevrez un reçu officiel.",
+          "officeName": "Siège de PYECSO",
+          "officeAddr": "Sarak-e-Naw, District 4, Kaboul, Afghanistan",
+          "callAhead": "Appelez avant de venir",
+          "coordVisit": "Organisez votre visite",
+          "hoursLabel": "Heures d'ouverture :",
+          "hoursValue": "Dimanche–Jeudi, 8h30 – 16h30",
+          "emailBtn": "Écrivez-nous pour organiser une visite"
+        },
+        "bank": {
+          "intro": "Effectuez votre don directement sur le compte bancaire de PYECSO. Merci d'envoyer une copie du reçu de virement à {{email}} afin que nous puissions vous adresser un accusé de réception officiel.",
+          "accountName": "Nom du compte",
+          "accountNumber": "Numéro de compte",
+          "bankName": "Nom de la banque",
+          "swift": "SWIFT / BIC",
+          "branch": "Agence",
+          "copy": "Copier",
+          "copied": "Copié",
+          "referenceLabel": "Référence :",
+          "referenceBody": "veuillez indiquer « {{campaign}} » comme référence du virement afin que nous puissions affecter correctement votre don."
+        }
+      }
     }
   },
   "learn": {

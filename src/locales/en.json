@@ -585,6 +585,58 @@
     "trust": {
       "title": "Every donation is documented",
       "body": "PYECSO is a women-led Afghan NGO registered with the Ministry of Economy (No. 1201) and audited annually. All donations are recorded in our finance system and reported to donors. For institutional partnerships or major gifts, please contact"
+    },
+    "flow": {
+      "success": "Thank you! Your HesabPay donation was received. We will email a receipt shortly.",
+      "failure": "Your payment was not completed. You can try again or use cash by hand or bank transfer.",
+      "where": {
+        "eyebrow": "Where Your Donation Goes",
+        "title": "Projects supported by your donation",
+        "body": "Every contribution funds one of PYECSO's six program areas. Click \"Donate now\" to give via HesabPay, cash by hand at our Kabul office, or bank transfer."
+      },
+      "card": { "donateNow": "Donate now", "raised": "raised", "goal": "goal", "donors": "donors" },
+      "modal": {
+        "donateTo": "Donate to",
+        "close": "Close",
+        "tabs": { "hesab": "HesabPay", "cash": "Cash by Hand", "bank": "Bank Transfer" },
+        "hesab": {
+          "intro": "Choose an amount, then continue to HesabPay's secure checkout.",
+          "currencyNote": "Amounts shown in {{currency}} — HesabPay processes the payment in Afghani (AFN) at the live exchange rate.",
+          "customLabel": "Custom amount ({{currency}})",
+          "emailLabel": "Email (optional)",
+          "emailPh": "you@example.com",
+          "chargedIn": "You'll be charged in Afghani (AFN):",
+          "continue": "Continue to HesabPay — {{amount}}",
+          "creating": "Creating secure session…",
+          "orSendTo": "Or send directly in HesabPay to",
+          "invalidAmount": "Please choose or enter a valid donation amount.",
+          "ratesLoading": "Currency rates are still loading. Please try again in a moment.",
+          "couldNotStart": "Could not start payment. Please try again.",
+          "networkError": "Network error. Please try again."
+        },
+        "cash": {
+          "intro": "Bring your contribution directly to our Kabul office. You will receive an official receipt.",
+          "officeName": "PYECSO Head Office",
+          "officeAddr": "Sarak-e-Naw, District 4, Kabul, Afghanistan",
+          "callAhead": "Call ahead",
+          "coordVisit": "Coordinate your visit",
+          "hoursLabel": "Office hours:",
+          "hoursValue": "Sunday–Thursday, 8:30 AM – 4:30 PM",
+          "emailBtn": "Email us to arrange a visit"
+        },
+        "bank": {
+          "intro": "Transfer your donation directly to PYECSO's bank account. Please email a copy of the transfer receipt to {{email}} so we can send you an official acknowledgement.",
+          "accountName": "Account Name",
+          "accountNumber": "Account Number",
+          "bankName": "Bank Name",
+          "swift": "SWIFT / BIC",
+          "branch": "Branch",
+          "copy": "Copy",
+          "copied": "Copied",
+          "referenceLabel": "Reference:",
+          "referenceBody": "please add \"{{campaign}}\" as the transfer reference so we can allocate your gift correctly."
+        }
+      }
     }
   },
   "learn": {
