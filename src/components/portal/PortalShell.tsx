@@ -133,6 +133,9 @@ export function PortalGate({
           </button>
         </div>
       </section>
+      <div className="max-w-6xl mx-auto px-4 md:px-6 mt-6">
+        <GoogleLinkCard user={user} onChange={setUser} />
+      </div>
       {children(user, signOut)}
     </SiteLayout>
   );
