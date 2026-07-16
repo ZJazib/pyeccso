@@ -117,10 +117,16 @@ function Learn() {
             <>
               <Link
                 to={roleHomePath(user.role)}
-                className="h-11 px-5 rounded-md bg-white text-navy-900 font-semibold text-sm inline-flex items-center gap-2 hover:bg-white/90"
+                className="h-11 px-5 rounded-md bg-brand-blue text-white font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-hover shadow-md ring-2 ring-white/40"
+                aria-label={`Go to my ${user.role} portal`}
               >
-                <UserRoundCheck className="size-4" /> My Portal ({user.full_name})
+                <UserRoundCheck className="size-4" />
+                <span>Go to my {user.role.charAt(0).toUpperCase() + user.role.slice(1)} Portal</span>
+                <ArrowRight className="size-4" />
               </Link>
+              <span className="hidden sm:inline text-white/80 text-xs">
+                Signed in as <strong className="text-white">{user.full_name}</strong>
+              </span>
               <button
                 onClick={signOut}
                 className="h-11 px-4 rounded-md bg-white/10 text-white font-semibold text-sm inline-flex items-center gap-2 ring-1 ring-white/30 hover:bg-white/20"
