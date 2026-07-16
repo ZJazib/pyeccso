@@ -12,7 +12,7 @@ export const Route = createFileRoute("/api/public/hesab-session")({
       OPTIONS: async () => new Response(null, { status: 204, headers: CORS }),
       POST: async ({ request }) => {
         try {
-          const apiKey = process.env.HESABPAY_API_KEY;
+          const apiKey = process.env.HESABPAY_API_KEY?.trim();
           if (!apiKey) {
             return new Response(
               JSON.stringify({ error: "HesabPay is not configured yet. Please contact PYECSO." }),
