@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 import "@/lib/i18n";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import pyecsoLogo from "@/assets/pyecso-logo.png.asset.json";
 
 export function Header() {
   const { t } = useTranslation();
