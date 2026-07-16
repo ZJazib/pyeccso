@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Globe, Check, ChevronDown } from "lucide-react";
 import { LANGUAGES, applyLanguageSideEffects } from "@/lib/i18n";
+import { markUserLanguageChoice } from "@/lib/geo";
 
 interface Props {
   variant?: "top" | "inline";
