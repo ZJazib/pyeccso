@@ -167,3 +167,80 @@ export async function updateApplicationStatus(id: number, status: CourseApplicat
     body: JSON.stringify({ status, manager_notes }),
   }).then((result) => result.application);
 }
+
+export type CourseMaterial = {
+  id: number;
+  course_id: number;
+  title: string;
+  description: string | null;
+  original_name: string;
+  mime_type: string;
+  size_bytes: number;
+  visibility: "enrolled" | "public";
+  uploaded_by: number | null;
+  created_at: string;
+};
+
+export async function listCourseMaterials(courseId: number) {
+  return bridgeRequest<{ materials: CourseMaterial[] }>(`/materials?course_id=${courseId}`).then(
+    (r) => r.materials,
+  );
+}
+
+export async function uploadCourseMaterial(input: {
+  course_id: number;
+  title: string;
+  description?: string;
+  visibility?: "enrolled" | "public";
+  file: File;
+}) {
+  const token = getBridgeToken();
+  const form = new FormData();
+  form.append("course_id", String(input.course_id));
+  form.append("title", input.title);
+  if (input.description) form.append("description", input.description);
+  form.append("visibility", input.visibility ?? "enrolled");
+  form.append("file", input.file);
+
+  const response = await fetch(`${API_BASE}/materials`, {
+    method: "POST",
+    body: form,
+    headers: token ? { Authorization: `Bearer ${token}`, Accept: "application/json" } : { Accept: "application/json" },
+  });
+  const text = await response.text();
+  const payload = text ? JSON.parse(text) : null;
+  if (!response.ok) throw new Error(payload?.error || `Upload failed with status ${response.status}`);
+  return (payload as { material: CourseMaterial }).material;
+}
+
+export async function deleteCourseMaterial(id: number) {
+  return bridgeRequest<{ ok: boolean }>(`/materials?id=${id}`, { method: "DELETE" });
+}
+
+export function courseMaterialDownloadUrl(id: number) {
+  return `${API_BASE}/materials/download?id=${id}`;
+}
+
+/**
+ * Downloads a material through fetch so the JWT can be sent as an Authorization
+ * header, then triggers a browser save via a blob URL.
+ */
+export async function downloadCourseMaterial(material: CourseMaterial) {
+  const token = getBridgeToken();
+  const response = await fetch(courseMaterialDownloadUrl(material.id), {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (!response.ok) {
+    const text = await response.text().catch(() => "");
+    throw new Error(text || `Download failed with status ${response.status}`);
+  }
+  const blob = await response.blob();
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = material.original_name;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+}
