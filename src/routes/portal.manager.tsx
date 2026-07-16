@@ -1,10 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ClipboardList, Settings2 } from "lucide-react";
+import { ClipboardList, FolderOpen, Settings2 } from "lucide-react";
 import { PortalGate } from "@/components/portal/PortalShell";
+import { CourseMaterialsPanel } from "@/components/portal/CourseMaterialsPanel";
 import {
+  type CmsItem,
   type CourseApplication,
   listApplications,
+  listContent,
   updateApplicationStatus,
 } from "@/lib/phpBridge";
 
@@ -30,10 +33,12 @@ function ManagerPortal() {
 
 function ManagerDashboard() {
   const [apps, setApps] = useState<CourseApplication[]>([]);
+  const [courses, setCourses] = useState<CmsItem[]>([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
     listApplications().then(setApps).catch((e) => setError(e instanceof Error ? e.message : "Failed to load"));
+    listContent("courses", "en").then(setCourses).catch(() => setCourses([]));
   }, []);
 
   async function updateStatus(id: number, status: CourseApplication["status"]) {
@@ -116,6 +121,25 @@ function ManagerDashboard() {
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-xl font-bold text-navy-900 inline-flex items-center gap-2">
+          <FolderOpen className="size-5 text-brand-blue" /> Course materials
+        </h3>
+        <div className="grid gap-4">
+          {courses.map((c) => (
+            <article key={c.id} className="bg-white border border-border rounded-lg p-5">
+              <h4 className="font-bold text-navy-900">{c.title}</h4>
+              <CourseMaterialsPanel courseId={c.id} canUpload canDelete />
+            </article>
+          ))}
+          {!courses.length && (
+            <div className="bg-white border border-border rounded-lg p-6 text-center text-navy-900/60 text-sm">
+              No courses available yet.
+            </div>
+          )}
+        </div>
       </div>
     </section>
   );

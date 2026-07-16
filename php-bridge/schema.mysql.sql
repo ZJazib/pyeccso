@@ -63,3 +63,20 @@ CREATE TABLE audit_logs (
   INDEX idx_audit_user_created (user_id, created_at),
   CONSTRAINT fk_audit_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE course_materials (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  course_id BIGINT UNSIGNED NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  description TEXT NULL,
+  original_name VARCHAR(255) NOT NULL,
+  storage_name VARCHAR(255) NOT NULL,
+  mime_type VARCHAR(160) NOT NULL,
+  size_bytes BIGINT UNSIGNED NOT NULL,
+  visibility ENUM('enrolled', 'public') NOT NULL DEFAULT 'enrolled',
+  uploaded_by BIGINT UNSIGNED NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_materials_course (course_id),
+  CONSTRAINT fk_materials_course FOREIGN KEY (course_id) REFERENCES content_items(id) ON DELETE CASCADE,
+  CONSTRAINT fk_materials_uploader FOREIGN KEY (uploaded_by) REFERENCES users(id) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

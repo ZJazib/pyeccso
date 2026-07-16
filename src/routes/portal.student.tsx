@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { BookOpen, Send } from "lucide-react";
 import { PortalGate } from "@/components/portal/PortalShell";
+import { CourseMaterialsPanel } from "@/components/portal/CourseMaterialsPanel";
 import {
   type CmsItem,
   listContent,
@@ -74,6 +75,7 @@ function StudentDashboard({ user }: { user: { full_name: string; email: string }
             >
               <Send className="size-4" /> {applied[course.id] ? "Applied" : "Apply"}
             </button>
+            <CourseMaterialsPanel courseId={course.id} canUpload={false} />
           </article>
         ))}
         {!courses.length && (
