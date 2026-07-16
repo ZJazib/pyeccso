@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { MapPin, Phone, Mail, Globe } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import pyecsoLogo from "@/assets/pyecso-logo-official.png.asset.json";
 
 const sectors = [
   "Cash Assistance",
@@ -36,11 +37,8 @@ export function Footer() {
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-5">
-              <div className="size-12 rounded-full bg-white/5 ring-1 ring-white/20 flex items-center justify-center">
-                <svg viewBox="0 0 32 32" className="size-7 text-white" fill="currentColor">
-                  <circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                  <path d="M16 6 L20 14 L28 15 L22 21 L24 29 L16 25 L8 29 L10 21 L4 15 L12 14 Z" fillOpacity="0.9" />
-                </svg>
+              <div className="size-12 rounded-full bg-white p-1 ring-1 ring-white/20 flex items-center justify-center overflow-hidden">
+                <img src={pyecsoLogo.url} alt="PYECSO logo" className="size-full object-contain" />
               </div>
               <div>
                 <div className="text-white font-extrabold text-xl">{t("brand.short")}</div>
