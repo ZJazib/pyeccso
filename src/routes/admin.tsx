@@ -128,7 +128,7 @@ function AdminPanel() {
     setLoading(true);
     try {
       const nextItems = await listContent(resource, draft.language || "en");
-      setItems(nextItems);
+      setItems(sortItems(nextItems));
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Unable to load content.");
     } finally {
@@ -157,7 +157,8 @@ function AdminPanel() {
     setSaving(true);
     setMessage("");
     try {
-      const metadata = JSON.parse(draft.metadataText || "{}");
+      const extra = JSON.parse(draft.metadataText || "{}");
+      const metadata = { ...extra, sort_order: draft.sortOrder };
       await saveContent(activeResource, {
         id: draft.id,
         title: draft.title.trim(),
@@ -177,6 +178,47 @@ function AdminPanel() {
       setSaving(false);
     }
   }
+
+  async function persistItem(item: CmsItem, patch: Partial<{ status: CmsItem["status"]; sort_order: number }>) {
+    const metadata = { ...((item.metadata ?? {}) as Record<string, unknown>) };
+    if (patch.sort_order != null) metadata.sort_order = patch.sort_order;
+    try {
+      await saveContent(activeResource, {
+        id: item.id,
+        title: item.title,
+        slug: item.slug,
+        language: item.language,
+        summary: item.summary ?? "",
+        body: item.body ?? "",
+        status: patch.status ?? item.status,
+        metadata,
+      });
+      await loadItems(activeResource);
+    } catch (error) {
+      setMessage(error instanceof Error ? error.message : "Update failed.");
+    }
+  }
+
+  async function togglePublish(item: CmsItem) {
+    await persistItem(item, { status: item.status === "published" ? "draft" : "published" });
+  }
+
+  async function move(item: CmsItem, direction: -1 | 1) {
+    const ordered = sortItems(items);
+    const index = ordered.findIndex((x) => x.id === item.id);
+    const neighbour = ordered[index + direction];
+    if (!neighbour) return;
+    const a = readSortOrder(item);
+    const b = readSortOrder(neighbour);
+    // if equal, bump to distinct values around it
+    const nextA = a === b ? b + direction : b;
+    const nextB = a === b ? a : a;
+    await Promise.all([
+      persistItem(item, { sort_order: nextA }),
+      persistItem(neighbour, { sort_order: nextB }),
+    ]);
+  }
+
 
   async function remove(item: CmsItem) {
     if (!window.confirm(`Delete “${item.title}”?`)) return;
