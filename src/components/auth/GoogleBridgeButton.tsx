@@ -75,7 +75,7 @@ export function GoogleBridgeButton(props: Props) {
     return () => {
       cancelled = true;
     };
-  }, [onLogin]);
+  }, [props]);
 
   if (!GOOGLE_CLIENT_ID) {
     return (
