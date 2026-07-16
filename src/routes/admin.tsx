@@ -410,17 +410,48 @@ function AdminPanel() {
                 </button>
               </div>
               <div className="divide-y divide-border">
-                {items.map((item) => (
+                {items.map((item, index) => (
                   <article key={item.id} className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div>
-                      <div className="flex flex-wrap items-center gap-2 mb-1">
-                        <h3 className="font-bold text-navy-900">{item.title}</h3>
-                        <span className="text-[11px] uppercase tracking-wide bg-surface-alt px-2 py-1 rounded">{item.language}</span>
-                        <span className="text-[11px] uppercase tracking-wide bg-brand-blue-wash text-brand-blue px-2 py-1 rounded">{item.status}</span>
+                    <div className="flex items-start gap-3">
+                      <div className="flex flex-col gap-1">
+                        <button
+                          type="button"
+                          disabled={index === 0}
+                          onClick={() => move(item, -1)}
+                          title="Move up"
+                          className="size-7 rounded border border-border text-navy-900 disabled:opacity-30 inline-flex items-center justify-center"
+                        >
+                          <ArrowUp className="size-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          disabled={index === items.length - 1}
+                          onClick={() => move(item, 1)}
+                          title="Move down"
+                          className="size-7 rounded border border-border text-navy-900 disabled:opacity-30 inline-flex items-center justify-center"
+                        >
+                          <ArrowDown className="size-3.5" />
+                        </button>
                       </div>
-                      <p className="text-sm text-navy-900/60">/{item.slug}</p>
+                      <div>
+                        <div className="flex flex-wrap items-center gap-2 mb-1">
+                          <h3 className="font-bold text-navy-900">{item.title}</h3>
+                          <span className="text-[11px] uppercase tracking-wide bg-surface-alt px-2 py-1 rounded">{item.language}</span>
+                          <span className={`text-[11px] uppercase tracking-wide px-2 py-1 rounded ${item.status === "published" ? "bg-brand-blue-wash text-brand-blue" : "bg-amber-100 text-amber-800"}`}>{item.status}</span>
+                          <span className="text-[11px] text-navy-900/50">order {readSortOrder(item)}</span>
+                        </div>
+                        <p className="text-sm text-navy-900/60">/{item.slug}</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <button
+                        onClick={() => togglePublish(item)}
+                        className="h-10 px-4 rounded-md border border-border text-sm font-semibold inline-flex items-center gap-2"
+                        title={item.status === "published" ? "Unpublish" : "Publish"}
+                      >
+                        {item.status === "published" ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                        {item.status === "published" ? "Unpublish" : "Publish"}
+                      </button>
                       <button onClick={() => edit(item)} className="h-10 px-4 rounded-md border border-border text-sm font-semibold inline-flex items-center gap-2">
                         <Edit3 className="size-4" /> Edit
                       </button>
