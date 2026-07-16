@@ -36,15 +36,15 @@ $sectors = [
 </section>
 
 <section class="slab alt">
-  <div class="container grid grid-2" style="align-items:center;">
+  <div class="container grid grid-2" style="align-items:center; gap:3.5rem;">
     <div>
       <span class="eyebrow-small"><?= h(t('home.who.eyebrow')) ?></span>
       <h2><?= h(t('home.who.title')) ?></h2>
-      <p><?= h(t('home.who.p1')) ?></p>
+      <p class="serif" style="font-size:1.15rem;color:var(--navy-800);"><?= h(t('home.who.p1')) ?></p>
       <p><?= h(t('home.who.p2')) ?></p>
-      <a class="btn btn-outline" href="/about"><?= h(t('home.who.link')) ?></a>
+      <a class="btn btn-outline mt-2" href="/about"><?= h(t('home.who.link')) ?> <span class="arrow">→</span></a>
     </div>
-    <div><img src="/assets/img/hero-schoolgirl.jpg" alt="" style="border-radius:var(--radius);"></div>
+    <div class="frame"><img src="/assets/img/hero-schoolgirl.jpg" alt=""></div>
   </div>
 </section>
 
