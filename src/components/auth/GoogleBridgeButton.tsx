@@ -17,7 +17,11 @@ declare global {
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
 
-export function GoogleBridgeButton({ onLogin }: { onLogin: (user: BridgeUser) => void }) {
+type Props =
+  | { onLogin: (user: BridgeUser) => void; onCredential?: undefined; label?: string }
+  | { onCredential: (credential: string) => Promise<void> | void; onLogin?: undefined; label?: string };
+
+export function GoogleBridgeButton(props: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -36,9 +40,13 @@ export function GoogleBridgeButton({ onLogin }: { onLogin: (user: BridgeUser) =>
           setLoading(true);
           setError("");
           try {
-            onLogin(await loginToBridgeWithGoogle(response.credential));
+            if (props.onCredential) {
+              await props.onCredential(response.credential);
+            } else {
+              props.onLogin(await loginToBridgeWithGoogle(response.credential));
+            }
           } catch (err) {
-            setError(err instanceof Error ? err.message : "Google login failed.");
+            setError(err instanceof Error ? err.message : "Google request failed.");
           } finally {
             setLoading(false);
           }
