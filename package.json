@@ -1,0 +1,11 @@
+{
+  "name": "pyecso-php",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx --yes http-server public_html -p 8080 -c-1",
+    "build": "echo 'PHP site — no build needed'",
+    "build:dev": "echo 'PHP site — no build needed'",
+    "start": "npx --yes http-server public_html -p 8080 -c-1"
+  }
+}
