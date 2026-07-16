@@ -151,7 +151,8 @@ function issue_login(array $config, array $user): void {
         'iat' => $now,
         'exp' => $now + (int)$config['security']['token_ttl_seconds'],
     ]);
-    unset($user['password_hash'], $user['status']);
+    $user['google_linked'] = !empty($user['google_sub']);
+    unset($user['password_hash'], $user['status'], $user['google_sub']);
     $user['id'] = (int)$user['id'];
     respond(['token' => $token, 'user' => $user]);
 }
