@@ -28,3 +28,16 @@ document.querySelectorAll('.lang-switch select').forEach(sel => {
     window.location.href = u.toString();
   });
 });
+
+// Scroll reveal
+const io = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
+  entries.forEach(en => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }) : null;
+document.querySelectorAll('.reveal').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+
+// Auto-tag section cards/features for reveal
+document.querySelectorAll('section.slab .card, section.slab .feature, section.slab .frame, section.slab .section-head').forEach((el, i) => {
+  el.classList.add('reveal');
+  el.style.transitionDelay = ((i % 4) * 60) + 'ms';
+  io?.observe(el);
+});
