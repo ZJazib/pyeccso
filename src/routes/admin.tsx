@@ -258,7 +258,7 @@ function AdminPanel() {
   }
 
   if (!user) {
-    return <AdminLogin health={health} onLogin={setUser} />;
+    return <AdminLogin health={health} healthChecking={healthChecking} onRecheck={runHealthCheck} onLogin={setUser} />;
   }
 
   if (user.role !== "admin" && user.role !== "learn_manager") {
