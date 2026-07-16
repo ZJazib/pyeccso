@@ -12,7 +12,7 @@ export const Route = createFileRoute("/api/public/hesab-session")({
       OPTIONS: async () => new Response(null, { status: 204, headers: CORS }),
       POST: async ({ request }) => {
         try {
-          const apiKey = process.env.HESABPAY_API_KEY;
+          const apiKey = process.env.HESABPAY_API_KEY?.trim();
           if (!apiKey) {
             return new Response(
               JSON.stringify({ error: "HesabPay is not configured yet. Please contact PYECSO." }),
@@ -64,14 +64,15 @@ export const Route = createFileRoute("/api/public/hesab-session")({
               { status: 502, headers: { "Content-Type": "application/json", ...CORS } },
             );
           }
-          const data = JSON.parse(text) as { success?: boolean; payment_url?: string; message?: string };
-          if (!data.success || !data.payment_url) {
+          const data = JSON.parse(text) as { success?: boolean; url?: string; payment_url?: string; message?: string };
+          const paymentUrl = data.url ?? data.payment_url;
+          if (!data.success || !paymentUrl) {
             return new Response(
               JSON.stringify({ error: data.message ?? "HesabPay did not return a payment URL" }),
               { status: 502, headers: { "Content-Type": "application/json", ...CORS } },
             );
           }
-          return new Response(JSON.stringify({ payment_url: data.payment_url }), {
+          return new Response(JSON.stringify({ payment_url: paymentUrl }), {
             status: 200,
             headers: { "Content-Type": "application/json", ...CORS },
           });
