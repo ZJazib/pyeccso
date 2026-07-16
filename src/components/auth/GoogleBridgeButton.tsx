@@ -16,7 +16,10 @@ declare global {
   }
 }
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || "";
+const GOOGLE_CLIENT_ID =
+  import.meta.env.VITE_GOOGLE_CLIENT_ID ||
+  "1017753453701-p2g7ej5mf4lqcun67f1cd59i70nqq8dv.apps.googleusercontent.com";
+
 
 type Props =
   | { onLogin: (user: BridgeUser) => void; onCredential?: undefined; label?: string }
