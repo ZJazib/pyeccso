@@ -1,11 +1,6 @@
 {
   "version": 1,
-  "asset_id": "e9aa506b-f556-4fa7-b16e-3152461172a1",
-  "project_id": "b3957823-b9ae-4b63-aa13-903bcadc2bc1",
-  "url": "/__l5e/assets-v1/e9aa506b-f556-4fa7-b16e-3152461172a1/pyecso-logo-primary.png",
-  "r2_key": "a/v1/b3957823-b9ae-4b63-aa13-903bcadc2bc1/e9aa506b-f556-4fa7-b16e-3152461172a1/pyecso-logo-primary.png",
+  "url": "/pyecso-logo.png",
   "original_filename": "pyecso-logo-primary.png",
-  "size": 1430825,
-  "content_type": "image/png",
-  "created_at": "2026-07-16T21:19:25Z"
+  "content_type": "image/png"
 }
