@@ -17,6 +17,7 @@ return [
         'allowed_origins' => [
             'https://www.pyecso.org.af',
             'https://pyecso.org.af',
+            'https://id-preview--b3957823-b9ae-4b63-aa13-903bcadc2bc1.lovable.app',
             'http://localhost:8080',
         ],
     ],

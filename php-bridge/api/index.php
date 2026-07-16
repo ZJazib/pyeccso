@@ -46,7 +46,7 @@ function current_route(): string {
     if (isset($_GET['route'])) return trim((string)$_GET['route'], '/');
     $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
     $scriptDir = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
-    if ($scriptDir && str_starts_with($path, $scriptDir)) $path = substr($path, strlen($scriptDir));
+    if ($scriptDir && strpos($path, $scriptDir) === 0) $path = substr($path, strlen($scriptDir));
     $path = preg_replace('#^/index\.php/?#', '/', $path) ?: '/';
     return trim($path, '/');
 }
