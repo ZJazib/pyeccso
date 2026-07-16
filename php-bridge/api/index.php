@@ -286,6 +286,10 @@ function content(array $config, string $method): void {
     }
 
     $user = require_manager($config);
+    if (!can_manage_resource((string)$user['role'], $resource)) {
+        respond(['error' => 'Forbidden: your role cannot manage this resource'], 403);
+    }
+
     if ($method === 'POST' || $method === 'PUT') {
         $data = read_json();
         validate_required($data, ['title', 'slug', 'language']);
