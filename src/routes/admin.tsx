@@ -328,7 +328,7 @@ function AdminPanel() {
       <section className="max-w-7xl mx-auto px-4 md:px-6 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-8">
           <aside className="space-y-2">
-            {resources.map((resource) => (
+            {visibleResources.map((resource) => (
               <button
                 type="button"
                 key={resource.id}
