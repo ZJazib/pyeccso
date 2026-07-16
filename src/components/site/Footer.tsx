@@ -60,9 +60,15 @@ export function Footer() {
             <ul className="space-y-3">
               {quickLinks.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="hover:text-white transition-colors">
-                    {l.label}
-                  </Link>
+                  {l.to === "/learn" ? (
+                    <a href="https://learn.pyecso.org.af" className="hover:text-white transition-colors">
+                      {l.label}
+                    </a>
+                  ) : (
+                    <Link to={l.to} className="hover:text-white transition-colors">
+                      {l.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>
