@@ -29,6 +29,14 @@ try {
     if ($route === 'applications') applications($config, $method);
     if ($route === 'materials') materials($config, $method);
     if ($route === 'materials/download' && $method === 'GET') materials_download($config);
+    if ($route === 'users') users_route($config, $method);
+    if ($route === 'users/password' && $method === 'POST') reset_user_password($config);
+    if ($route === 'campaigns') campaigns_route($config, $method);
+    if ($route === 'donations') donations_route($config, $method);
+    if ($route === 'donations/manual' && $method === 'POST') donation_manual($config);
+    if ($route === 'uploads') uploads_route($config, $method);
+    if ($route === 'site-settings') site_settings_route($config, $method);
+    if ($route === 'dashboard' && $method === 'GET') dashboard_stats($config);
 
     respond(['error' => 'Route not found'], 404);
 } catch (Throwable $error) {
