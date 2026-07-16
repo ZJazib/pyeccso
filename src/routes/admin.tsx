@@ -108,10 +108,26 @@ function AdminPanel() {
     }
   }
 
-  const activeMeta = useMemo(
-    () => resources.find((resource) => resource.id === activeResource) ?? resources[0],
-    [activeResource],
+  const visibleResources = useMemo(
+    () => resources.filter((r) => allowedResources(user?.role).includes(r.id)),
+    [user?.role],
   );
+
+  const activeMeta = useMemo(
+    () => visibleResources.find((resource) => resource.id === activeResource) ?? visibleResources[0] ?? resources[0],
+    [activeResource, visibleResources],
+  );
+
+  // Clamp active resource to what the current user is allowed to see
+  useEffect(() => {
+    if (!user) return;
+    const allowed = allowedResources(user.role);
+    if (allowed.length && !allowed.includes(activeResource)) {
+      setActiveResource(allowed[0]);
+      setDraft(emptyDraft);
+    }
+  }, [user, activeResource]);
+
 
   useEffect(() => {
     let cancelled = false;
