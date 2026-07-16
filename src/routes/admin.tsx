@@ -279,14 +279,17 @@ function AdminPanel() {
     <SiteLayout>
       <section className="bg-navy-900 text-white py-10">
         <div className="max-w-7xl mx-auto px-4 md:px-6 flex flex-col md:flex-row md:items-end justify-between gap-6">
-          <div>
+          <div className="flex-1">
             <div className="inline-flex items-center gap-2 text-white/70 text-sm mb-3">
-              <ShieldCheck className="size-4" /> PHP API Bridge: {health === "online" ? "online" : "check setup"}
+              <ShieldCheck className="size-4" /> PYECSO Admin
             </div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight">PYECSO Admin Panel</h1>
             <p className="text-white/70 mt-2 max-w-2xl">
               Manage website pages, programs, projects, learning announcements, media and career posts.
             </p>
+            <div className="mt-4">
+              <HealthStatusCard health={health} checking={healthChecking} onRecheck={runHealthCheck} />
+            </div>
           </div>
           <button onClick={logout} className="h-11 px-5 rounded-md bg-white text-navy-900 font-semibold inline-flex items-center gap-2">
             <LogOut className="size-4" /> Sign out
