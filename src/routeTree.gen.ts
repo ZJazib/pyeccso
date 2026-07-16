@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ProgramsRouteImport } from './routes/programs'
+import { Route as PortalRouteImport } from './routes/portal'
 import { Route as MediaRouteImport } from './routes/media'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as DonateRouteImport } from './routes/donate'
@@ -30,6 +31,11 @@ const ProjectsRoute = ProjectsRouteImport.update({
 const ProgramsRoute = ProgramsRouteImport.update({
   id: '/programs',
   path: '/programs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MediaRoute = MediaRouteImport.update({
@@ -73,9 +79,9 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const PortalIndexRoute = PortalIndexRouteImport.update({
-  id: '/portal/',
-  path: '/portal/',
-  getParentRoute: () => rootRouteImport,
+  id: '/',
+  path: '/',
+  getParentRoute: () => PortalRoute,
 } as any)
 const ApiPublicHesabSessionRoute = ApiPublicHesabSessionRouteImport.update({
   id: '/api/public/hesab-session',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
+  '/portal': typeof PortalRouteWithChildren
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
   '/portal/': typeof PortalIndexRoute
@@ -121,6 +128,7 @@ export interface FileRoutesById {
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
+  '/portal': typeof PortalRouteWithChildren
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
   '/portal/': typeof PortalIndexRoute
@@ -137,6 +145,7 @@ export interface FileRouteTypes {
     | '/donate'
     | '/learn'
     | '/media'
+    | '/portal'
     | '/programs'
     | '/projects'
     | '/portal/'
@@ -165,6 +174,7 @@ export interface FileRouteTypes {
     | '/donate'
     | '/learn'
     | '/media'
+    | '/portal'
     | '/programs'
     | '/projects'
     | '/portal/'
@@ -180,9 +190,9 @@ export interface RootRouteChildren {
   DonateRoute: typeof DonateRoute
   LearnRoute: typeof LearnRoute
   MediaRoute: typeof MediaRoute
+  PortalRoute: typeof PortalRouteWithChildren
   ProgramsRoute: typeof ProgramsRoute
   ProjectsRoute: typeof ProjectsRoute
-  PortalIndexRoute: typeof PortalIndexRoute
   ApiPublicHesabSessionRoute: typeof ApiPublicHesabSessionRoute
 }
 
@@ -200,6 +210,13 @@ declare module '@tanstack/react-router' {
       path: '/programs'
       fullPath: '/programs'
       preLoaderRoute: typeof ProgramsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/media': {
@@ -260,10 +277,10 @@ declare module '@tanstack/react-router' {
     }
     '/portal/': {
       id: '/portal/'
-      path: '/portal'
+      path: '/'
       fullPath: '/portal/'
       preLoaderRoute: typeof PortalIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof PortalRoute
     }
     '/api/public/hesab-session': {
       id: '/api/public/hesab-session'
@@ -275,6 +292,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface PortalRouteChildren {
+  PortalIndexRoute: typeof PortalIndexRoute
+}
+
+const PortalRouteChildren: PortalRouteChildren = {
+  PortalIndexRoute: PortalIndexRoute,
+}
+
+const PortalRouteWithChildren =
+  PortalRoute._addFileChildren(PortalRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -284,9 +312,9 @@ const rootRouteChildren: RootRouteChildren = {
   DonateRoute: DonateRoute,
   LearnRoute: LearnRoute,
   MediaRoute: MediaRoute,
+  PortalRoute: PortalRouteWithChildren,
   ProgramsRoute: ProgramsRoute,
   ProjectsRoute: ProjectsRoute,
-  PortalIndexRoute: PortalIndexRoute,
   ApiPublicHesabSessionRoute: ApiPublicHesabSessionRoute,
 }
 export const routeTree = rootRouteImport
