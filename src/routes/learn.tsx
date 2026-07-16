@@ -3,7 +3,7 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import { GraduationCap, Calendar, MapPin, Clock, Users, ArrowRight, Search, LogIn, LogOut, UserRoundCheck } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePortalUser, roleHomePath } from "@/components/portal/PortalShell";
 import { AuthModal } from "@/components/portal/AuthModal";
 import { submitCourseApplication, setBridgeToken, type BridgeUser } from "@/lib/phpBridge";
