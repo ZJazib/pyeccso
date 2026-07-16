@@ -213,29 +213,126 @@ function login(array $config): void {
     issue_login($config, $user);
 }
 
-function google_login(array $config): void {
+function verify_google_id_token(array $config, string $idToken): array {
     $clientId = $config['google']['client_id'] ?? '';
     if (!$clientId) respond(['error' => 'Google login is not configured'], 400);
-    $data = read_json();
-    validate_required($data, ['id_token']);
-    $tokenInfo = json_decode(file_get_contents('https://oauth2.googleapis.com/tokeninfo?id_token=' . urlencode($data['id_token'])) ?: '', true);
+    $raw = @file_get_contents('https://oauth2.googleapis.com/tokeninfo?id_token=' . urlencode($idToken));
+    $tokenInfo = $raw ? json_decode($raw, true) : null;
     if (!is_array($tokenInfo) || ($tokenInfo['aud'] ?? '') !== $clientId || ($tokenInfo['email_verified'] ?? '') !== 'true') {
         respond(['error' => 'Google token is invalid'], 401);
     }
+    if (empty($tokenInfo['sub']) || empty($tokenInfo['email'])) {
+        respond(['error' => 'Google token missing identity claims'], 401);
+    }
+    return $tokenInfo;
+}
 
-    $email = strtolower($tokenInfo['email']);
-    $stmt = pdo($config)->prepare('SELECT * FROM users WHERE email = ? LIMIT 1');
-    $stmt->execute([$email]);
+/**
+ * Google sign-in with account linking.
+ *
+ * Resolution order:
+ *   1. Match by google_sub (canonical link) -> sign in.
+ *   2. Match by email -> link google_sub to that existing account, preserving
+ *      role, username, and password. This lets an admin pre-provision a
+ *      teacher/manager with an email and have their first Google sign-in
+ *      attach to that same record (not create a duplicate student).
+ *   3. Otherwise create a new student account.
+ *
+ * Suspended/disabled accounts are always rejected. If the Google sub is
+ * already linked to a different account than the one matching by email, the
+ * request is rejected to prevent silent account takeover.
+ */
+function google_login(array $config): void {
+    $data = read_json();
+    validate_required($data, ['id_token']);
+    $tokenInfo = verify_google_id_token($config, $data['id_token']);
+
+    $sub = (string)$tokenInfo['sub'];
+    $email = strtolower((string)$tokenInfo['email']);
+    $name = (string)($tokenInfo['name'] ?? $email);
+    $pdo = pdo($config);
+
+    // 1. Match by google_sub.
+    $stmt = $pdo->prepare('SELECT * FROM users WHERE google_sub = ? LIMIT 1');
+    $stmt->execute([$sub]);
     $user = $stmt->fetch();
+
     if (!$user) {
-        $username = preg_replace('/[^a-z0-9_\-]/i', '', explode('@', $email)[0]) . random_int(100, 999);
-        $insert = pdo($config)->prepare('INSERT INTO users (username, email, full_name, role, provider, google_sub) VALUES (?, ?, ?, ?, ?, ?)');
-        $insert->execute([$username, $email, $tokenInfo['name'] ?? $email, 'student', 'google', $tokenInfo['sub']]);
+        // 2. Match by email; link the Google sub to that record.
+        $stmt = $pdo->prepare('SELECT * FROM users WHERE email = ? LIMIT 1');
         $stmt->execute([$email]);
         $user = $stmt->fetch();
+        if ($user) {
+            if (!empty($user['google_sub']) && $user['google_sub'] !== $sub) {
+                respond(['error' => 'This email is already linked to a different Google account.'], 409);
+            }
+            $provider = $user['provider'] === 'password' ? 'password+google' : ($user['provider'] === 'google' ? 'google' : $user['provider']);
+            $update = $pdo->prepare('UPDATE users SET google_sub = ?, provider = ?, full_name = COALESCE(NULLIF(full_name, ""), ?) WHERE id = ?');
+            $update->execute([$sub, $provider, $name, $user['id']]);
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE id = ? LIMIT 1');
+            $stmt->execute([$user['id']]);
+            $user = $stmt->fetch();
+        }
+    }
+
+    // 3. Auto-provision as student.
+    if (!$user) {
+        $base = preg_replace('/[^a-z0-9_\-]/i', '', explode('@', $email)[0]) ?: 'user';
+        $username = $base . random_int(100, 999);
+        $insert = $pdo->prepare('INSERT INTO users (username, email, full_name, role, provider, google_sub) VALUES (?, ?, ?, ?, ?, ?)');
+        $insert->execute([$username, $email, $name, 'student', 'google', $sub]);
+        $stmt = $pdo->prepare('SELECT * FROM users WHERE google_sub = ? LIMIT 1');
+        $stmt->execute([$sub]);
+        $user = $stmt->fetch();
+    }
+
+    if (!$user || $user['status'] !== 'active') {
+        respond(['error' => 'This account is not active. Contact an administrator.'], 403);
     }
     issue_login($config, $user);
 }
+
+/**
+ * Link a Google account to the currently signed-in bridge user. Used by
+ * students/teachers/managers who first signed in with a password and want to
+ * enable Google sign-in without losing their role.
+ */
+function google_link(array $config): void {
+    $current = require_user($config);
+    $data = read_json();
+    validate_required($data, ['id_token']);
+    $tokenInfo = verify_google_id_token($config, $data['id_token']);
+    $sub = (string)$tokenInfo['sub'];
+    $email = strtolower((string)$tokenInfo['email']);
+    $pdo = pdo($config);
+
+    $stmt = $pdo->prepare('SELECT id FROM users WHERE google_sub = ? AND id <> ? LIMIT 1');
+    $stmt->execute([$sub, $current['id']]);
+    if ($stmt->fetch()) {
+        respond(['error' => 'This Google account is already linked to another user.'], 409);
+    }
+    if ($email !== strtolower($current['email'])) {
+        respond(['error' => 'Google email does not match your account email.'], 409);
+    }
+    $update = $pdo->prepare('UPDATE users SET google_sub = ?, provider = CASE WHEN provider = "password" THEN "password+google" ELSE provider END WHERE id = ?');
+    $update->execute([$sub, $current['id']]);
+    respond(['ok' => true, 'linked' => true]);
+}
+
+function google_unlink(array $config): void {
+    $current = require_user($config);
+    $pdo = pdo($config);
+    $stmt = $pdo->prepare('SELECT password_hash FROM users WHERE id = ? LIMIT 1');
+    $stmt->execute([$current['id']]);
+    $row = $stmt->fetch();
+    if (!$row || !$row['password_hash']) {
+        respond(['error' => 'Set a password before unlinking Google, or you will lose access.'], 400);
+    }
+    $update = $pdo->prepare('UPDATE users SET google_sub = NULL, provider = CASE WHEN provider = "password+google" THEN "password" ELSE provider END WHERE id = ?');
+    $update->execute([$current['id']]);
+    respond(['ok' => true, 'linked' => false]);
+}
+
 
 function me(array $config): void {
     respond(['user' => require_user($config)]);
