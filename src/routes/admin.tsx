@@ -82,7 +82,19 @@ function AdminPanel() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
-  const [health, setHealth] = useState<"checking" | "online" | "offline">("checking");
+  const [health, setHealth] = useState<BridgeHealth | null>(null);
+  const [healthChecking, setHealthChecking] = useState(true);
+
+  async function runHealthCheck() {
+    setHealthChecking(true);
+    try {
+      const result = await checkBridgeHealth();
+      setHealth(result);
+      return result;
+    } finally {
+      setHealthChecking(false);
+    }
+  }
 
   const activeMeta = useMemo(
     () => resources.find((resource) => resource.id === activeResource) ?? resources[0],
