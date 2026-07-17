@@ -201,10 +201,12 @@ export type Database = {
           data: Json
           id: string
           position: number
+          publish_at: string | null
           published_at: string | null
           slug: string | null
           status: Database["public"]["Enums"]["content_status"]
           type: Database["public"]["Enums"]["content_type"]
+          unpublish_at: string | null
           updated_at: string
           updated_by: string | null
         }
@@ -215,10 +217,12 @@ export type Database = {
           data?: Json
           id?: string
           position?: number
+          publish_at?: string | null
           published_at?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["content_status"]
           type: Database["public"]["Enums"]["content_type"]
+          unpublish_at?: string | null
           updated_at?: string
           updated_by?: string | null
         }
@@ -229,10 +233,12 @@ export type Database = {
           data?: Json
           id?: string
           position?: number
+          publish_at?: string | null
           published_at?: string | null
           slug?: string | null
           status?: Database["public"]["Enums"]["content_status"]
           type?: Database["public"]["Enums"]["content_type"]
+          unpublish_at?: string | null
           updated_at?: string
           updated_by?: string | null
         }
@@ -414,6 +420,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      apply_content_schedule: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

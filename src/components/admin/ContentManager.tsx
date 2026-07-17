@@ -20,9 +20,26 @@ type Item = {
   cover_url: string | null;
   data: Record<string, any>;
   published_at: string | null;
+  publish_at: string | null;
+  unpublish_at: string | null;
   created_at: string;
   updated_at: string;
 };
+
+// Convert an ISO/UTC timestamp to a value compatible with <input type="datetime-local">.
+function toLocalInput(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function fromLocalInput(v: string): string | null {
+  if (!v) return null;
+  const d = new Date(v);
+  return isNaN(d.getTime()) ? null : d.toISOString();
+}
+
 
 export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS }) {
   const config = CMS_CONFIGS[typeKey];
@@ -243,10 +260,13 @@ function ItemEditor({
       cover_url: null,
       data: {},
       published_at: null,
+      publish_at: null,
+      unpublish_at: null,
       created_at: "",
       updated_at: "",
     } as Item)
   );
+
 
   function setField(f: Field, value: any) {
     if (f.column) {
@@ -271,8 +291,11 @@ function ItemEditor({
         data: row.data ?? {},
         status: publish ? "published" : row.status,
         published_at: publish ? new Date().toISOString() : row.published_at,
+        publish_at: row.publish_at,
+        unpublish_at: row.unpublish_at,
         updated_by: user.user?.id,
       };
+
       let error;
       if (item) {
         ({ error } = await supabase.from("content_items").update(payload).eq("id", item.id));
@@ -342,7 +365,50 @@ function ItemEditor({
               />
             </div>
           </div>
+
+          <div className="pt-4 border-t border-slate-200 dark:border-white/10 space-y-3">
+            <div>
+              <Label className="text-sm font-semibold">Scheduled publishing</Label>
+              <p className="text-xs opacity-60 mt-0.5">
+                Optional. Times use your local timezone. A background job checks every minute.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-3">
+              <div>
+                <Label>Publish at</Label>
+                <Input
+                  type="datetime-local"
+                  value={toLocalInput(row.publish_at)}
+                  onChange={(e) => setRow({ ...row, publish_at: fromLocalInput(e.target.value) })}
+                />
+                <div className="text-[11px] opacity-60 mt-1">
+                  Draft items automatically go live at this time.
+                </div>
+              </div>
+              <div>
+                <Label>Unpublish at</Label>
+                <Input
+                  type="datetime-local"
+                  value={toLocalInput(row.unpublish_at)}
+                  onChange={(e) => setRow({ ...row, unpublish_at: fromLocalInput(e.target.value) })}
+                />
+                <div className="text-[11px] opacity-60 mt-1">
+                  Published items are archived at this time.
+                </div>
+              </div>
+            </div>
+            {(row.publish_at || row.unpublish_at) && (
+              <button
+                type="button"
+                onClick={() => setRow({ ...row, publish_at: null, unpublish_at: null })}
+                className="text-xs text-brand-blue hover:underline"
+              >
+                Clear schedule
+              </button>
+            )}
+          </div>
         </div>
+
 
         {previewOpen && (
           <div className="lg:sticky lg:top-4 lg:self-start">

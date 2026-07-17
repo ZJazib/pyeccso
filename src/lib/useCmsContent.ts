@@ -48,11 +48,13 @@ export function useCmsList(type: string) {
   useEffect(() => {
     let alive = true;
     setLoading(true);
+    const nowIso = new Date().toISOString();
     supabase
       .from("content_items")
       .select("*")
       .eq("type", type as any)
       .eq("status", "published")
+      .or(`unpublish_at.is.null,unpublish_at.gt.${nowIso}`)
       .order("position", { ascending: true })
       .order("published_at", { ascending: false })
       .then(({ data, error }) => {
@@ -65,6 +67,7 @@ export function useCmsList(type: string) {
       alive = false;
     };
   }, [type]);
+
 
   return { items, loading, error };
 }
