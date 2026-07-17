@@ -135,51 +135,55 @@ function Media() {
           </aside>
 
           <div className="lg:col-span-3 space-y-12">
-            <div>
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="text-navy-900 text-xl font-bold">{t("media.sections.photos")}</h3>
-                <a href="#" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5">{t("media.sections.viewAllPhotos")} <ArrowRight className="size-3.5" /></a>
-              </div>
-              <div className="grid grid-cols-3 grid-rows-2 gap-3 h-[400px]">
-                <div className="row-span-2 relative rounded-lg overflow-hidden"><img src={cardEducation} alt="" className="w-full h-full object-cover" /></div>
-                <div className="relative rounded-lg overflow-hidden"><img src={cardLivelihoods} alt="" className="w-full h-full object-cover" /></div>
-                <div className="relative rounded-lg overflow-hidden"><img src={cardWash} alt="" className="w-full h-full object-cover" /></div>
-                <div className="relative rounded-lg overflow-hidden"><img src={cardHealth} alt="" className="w-full h-full object-cover" /></div>
-                <div className="relative rounded-lg overflow-hidden group cursor-pointer">
-                  <img src={cardWomen} alt="" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-navy-950/60 flex items-center justify-center text-white font-bold text-center">
-                    +245<br /><span className="text-xs font-normal">{t("media.sections.morePhotos")}</span>
+            {activeTab === "photos" && (
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-navy-900 text-xl font-bold">{t("media.sections.photos")}</h3>
+                  <a href="#" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5">{t("media.sections.viewAllPhotos")} <ArrowRight className="size-3.5" /></a>
+                </div>
+                <div className="grid grid-cols-3 grid-rows-2 gap-3 h-[400px]">
+                  <div className="row-span-2 relative rounded-lg overflow-hidden"><img src={cardEducation} alt="" className="w-full h-full object-cover" /></div>
+                  <div className="relative rounded-lg overflow-hidden"><img src={cardLivelihoods} alt="" className="w-full h-full object-cover" /></div>
+                  <div className="relative rounded-lg overflow-hidden"><img src={cardWash} alt="" className="w-full h-full object-cover" /></div>
+                  <div className="relative rounded-lg overflow-hidden"><img src={cardHealth} alt="" className="w-full h-full object-cover" /></div>
+                  <div className="relative rounded-lg overflow-hidden group cursor-pointer">
+                    <img src={cardWomen} alt="" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-navy-950/60 flex items-center justify-center text-white font-bold text-center">
+                      +245<br /><span className="text-xs font-normal">{t("media.sections.morePhotos")}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
-            <div>
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="text-navy-900 text-xl font-bold">{t("media.sections.videos")}</h3>
-                <a href="#" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5">{t("media.sections.viewAllVideos")} <ArrowRight className="size-3.5" /></a>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {videos.map((v) => (
-                  <div key={v.key} className="group cursor-pointer">
-                    <div className="relative aspect-video rounded-lg overflow-hidden mb-2">
-                      <img src={v.img} alt="" className="w-full h-full object-cover" loading="lazy" />
-                      <div className="absolute inset-0 bg-navy-950/30 flex items-center justify-center">
-                        <div className="size-12 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <PlayCircle className="size-6 text-brand-blue" />
+            {activeTab === "videos" && (
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-navy-900 text-xl font-bold">{t("media.sections.videos")}</h3>
+                  <a href="#" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5">{t("media.sections.viewAllVideos")} <ArrowRight className="size-3.5" /></a>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {videos.map((v) => (
+                    <div key={v.key} className="group cursor-pointer">
+                      <div className="relative aspect-video rounded-lg overflow-hidden mb-2">
+                        <img src={v.img} alt="" className="w-full h-full object-cover" loading="lazy" />
+                        <div className="absolute inset-0 bg-navy-950/30 flex items-center justify-center">
+                          <div className="size-12 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <PlayCircle className="size-6 text-brand-blue" />
+                          </div>
                         </div>
+                        <span className="absolute bottom-2 right-2 bg-navy-950/80 text-white text-[10px] px-1.5 py-0.5 rounded">{v.duration}</span>
                       </div>
-                      <span className="absolute bottom-2 right-2 bg-navy-950/80 text-white text-[10px] px-1.5 py-0.5 rounded">{v.duration}</span>
+                      <h4 className="text-navy-900 text-sm font-semibold leading-snug mb-1">{t(`media.videos.${v.key}.title`)}</h4>
+                      <p className="text-navy-900/60 text-xs">{t(`media.videos.${v.key}.date`)}</p>
                     </div>
-                    <h4 className="text-navy-900 text-sm font-semibold leading-snug mb-1">{t(`media.videos.${v.key}.title`)}</h4>
-                    <p className="text-navy-900/60 text-xs">{t(`media.videos.${v.key}.date`)}</p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
+            {activeTab === "press" && (
+              <div>
                 <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.sections.press")}</h3>
                 <div className="space-y-3">
                   {releaseKeys.map((r) => (
@@ -204,6 +208,71 @@ function Media() {
                   </button>
                 </div>
               </div>
+            )}
+
+            {activeTab === "news" && (
+              <div>
+                <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.sections.stories")}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  {storyKeys.map((s) => (
+                    <article key={s} className="bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                      <img src={storyImgs[s]} alt="" className="w-full aspect-[4/3] object-cover" loading="lazy" />
+                      <div className="p-4">
+                        <h4 className="text-navy-900 font-semibold text-sm leading-snug mb-1">{t(`media.stories.${s}.title`)}</h4>
+                        <p className="text-navy-900/60 text-xs">{t(`media.stories.${s}.date`)}</p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {activeTab === "coverage" && (
+              <div>
+                <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.tabs.coverage")}</h3>
+                <ul className="space-y-3">
+                  {[
+                    { outlet: "TOLOnews", title: "PYECSO reaches 24 provinces with humanitarian aid", date: "May 2025" },
+                    { outlet: "Reuters", title: "Women-led NGO expands education access in Afghanistan", date: "Mar 2025" },
+                    { outlet: "Al Jazeera", title: "Community resilience programs delivered by PYECSO", date: "Jan 2025" },
+                    { outlet: "BBC Persian", title: "Livelihoods and cash assistance across rural districts", date: "Nov 2024" },
+                  ].map((c) => (
+                    <li key={c.title} className="bg-white ring-1 ring-border rounded-lg p-4 flex items-start gap-4">
+                      <Tv className="size-5 text-brand-blue shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-bold text-brand-blue uppercase tracking-wider mb-1">{c.outlet}</div>
+                        <div className="text-navy-900 text-sm font-semibold leading-snug">{c.title}</div>
+                        <div className="text-navy-900/60 text-xs mt-1">{c.date}</div>
+                      </div>
+                      <a href="#" className="text-brand-blue text-xs font-semibold shrink-0 inline-flex items-center gap-1">Read <ArrowRight className="size-3" /></a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {activeTab === "publications" && (
+              <div>
+                <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.tabs.publications")}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {downloads.map((d) => (
+                    <div key={d.key} className="bg-white ring-1 ring-border rounded-lg p-5 flex items-start gap-4 hover:shadow-md transition-shadow">
+                      <div className="size-12 rounded-md bg-brand-blue-wash text-brand-blue flex items-center justify-center shrink-0">
+                        <d.icon className="size-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-navy-900 font-semibold text-sm">{t(`media.downloads.${d.key}`)}</div>
+                        <div className="text-navy-900/60 text-xs mt-0.5">{d.meta}</div>
+                        <a href="#" className="inline-flex items-center gap-1 text-brand-blue text-xs font-semibold mt-2">
+                          <Download className="size-3" /> Download
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
 
               <div>
                 <div className="bg-white ring-1 ring-border rounded-lg p-5 mb-6">
