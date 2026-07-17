@@ -63,11 +63,15 @@ function Home() {
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-900/20"
+          className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-900/20 rtl:from-navy-950 rtl:via-navy-950/95 rtl:to-navy-950/60"
         />
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-b from-navy-950/40 via-transparent to-navy-950/40"
+          className="absolute inset-0 bg-gradient-to-b from-navy-950/40 via-transparent to-navy-950/40 rtl:from-navy-950/60 rtl:via-navy-950/30 rtl:to-navy-950/60"
+        />
+        <div
+          aria-hidden="true"
+          className="hidden rtl:block absolute inset-0 bg-navy-950/35"
         />
 
         <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28 lg:py-36">
