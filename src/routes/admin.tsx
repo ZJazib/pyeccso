@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Users, Image as ImageIcon, Settings, ShieldCheck, LogOut,
   FileText, Newspaper, Calendar, Briefcase, Heart, Mail, GraduationCap,
   UsersRound, Handshake, MessageSquareQuote, BookOpen, FolderKanban, ClipboardList,
-  Menu, X, Home,
+  Menu, X, Home, Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdminLogin } from "@/components/admin/AdminLogin";
@@ -57,6 +57,7 @@ const NAV: NavSection[] = [
       { to: "/admin/media", label: "Media Library", icon: ImageIcon },
       { to: "/admin/users", label: "Users & Roles", icon: Users },
       { to: "/admin/audit", label: "Audit Log", icon: ShieldCheck },
+      { to: "/admin/recycle", label: "Recycle Bin", icon: Trash2 },
       { to: "/admin/settings", label: "Settings", icon: Settings },
     ],
   },
@@ -193,6 +194,7 @@ function crumbFor(pathname: string): string {
     "/admin/media": "Media Library",
     "/admin/settings": "Settings",
     "/admin/audit": "Audit Log",
+    "/admin/recycle": "Recycle Bin",
     "/admin/pages": "Pages",
     "/admin/programs": "Programs",
     "/admin/projects": "Projects",

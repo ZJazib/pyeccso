@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Plus, Search, Trash2, Pencil, ArrowLeft, Save, Eye, EyeOff, Languages, Monitor, Smartphone } from "lucide-react";
+import { Plus, Search, Trash2, Pencil, ArrowLeft, Save, Eye, EyeOff, Languages, Monitor, Smartphone, Copy, History, Archive, CheckSquare, Square, Download } from "lucide-react";
 import { ImageUpload, GalleryUpload } from "./ImageUpload";
 import { I18nField } from "./I18nField";
 import { LANGUAGES, type Lang } from "@/lib/cmsConfig";
@@ -27,6 +27,17 @@ type Item = {
 };
 
 // Convert an ISO/UTC timestamp to a value compatible with <input type="datetime-local">.
+function dupI18n(v: any): any {
+  if (!v) return v;
+  if (typeof v === "string") return `${v} (copy)`;
+  if (typeof v === "object") {
+    const out: any = {};
+    for (const k of Object.keys(v)) out[k] = typeof v[k] === "string" ? `${v[k]} (copy)` : v[k];
+    return out;
+  }
+  return v;
+}
+
 function toLocalInput(iso: string | null | undefined): string {
   if (!iso) return "";
   const d = new Date(iso);
@@ -49,6 +60,7 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
   const [statusFilter, setStatusFilter] = useState<"all" | "draft" | "published" | "archived">("all");
   const [editing, setEditing] = useState<Item | null>(null);
   const [creating, setCreating] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   async function load() {
     setLoading(true);
@@ -56,10 +68,12 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
       .from("content_items")
       .select("*")
       .eq("type", typeKey as any)
+      .is("deleted_at", null)
       .order("position", { ascending: true })
       .order("updated_at", { ascending: false });
     if (error) toast.error(error.message);
     setRows((data as any) ?? []);
+    setSelected(new Set());
     setLoading(false);
   }
   useEffect(() => { load(); }, [typeKey]);
@@ -88,12 +102,79 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
     load();
   }
 
-  async function remove(item: Item) {
-    if (!confirm(`Delete this ${config.singular.toLowerCase()}?`)) return;
-    const { error } = await supabase.from("content_items").delete().eq("id", item.id);
+  async function softDelete(item: Item) {
+    if (!confirm(`Move this ${config.singular.toLowerCase()} to the Recycle Bin?`)) return;
+    const { error } = await supabase.from("content_items").update({ deleted_at: new Date().toISOString() }).eq("id", item.id);
     if (error) return toast.error(error.message);
-    toast.success("Deleted");
+    toast.success("Moved to Recycle Bin");
     load();
+  }
+
+  async function duplicate(item: Item) {
+    const { data: user } = await supabase.auth.getUser();
+    const copy: any = {
+      type: item.type,
+      slug: null,
+      status: "draft",
+      position: item.position,
+      cover_url: item.cover_url,
+      data: {
+        ...(item.data ?? {}),
+        title: dupI18n(item.data?.title),
+        name: dupI18n(item.data?.name),
+      },
+      created_by: user.user?.id,
+      updated_by: user.user?.id,
+    };
+    const { error } = await supabase.from("content_items").insert(copy);
+    if (error) return toast.error(error.message);
+    toast.success("Duplicated as draft");
+    load();
+  }
+
+  async function bulk(action: "publish" | "unpublish" | "archive" | "delete") {
+    if (selected.size === 0) return;
+    const ids = Array.from(selected);
+    const patch: any =
+      action === "publish"   ? { status: "published", published_at: new Date().toISOString() } :
+      action === "unpublish" ? { status: "draft" } :
+      action === "archive"   ? { status: "archived" } :
+      { deleted_at: new Date().toISOString() };
+    const label = action === "delete" ? "Move to Recycle Bin" : action;
+    if (!confirm(`${label} ${ids.length} item(s)?`)) return;
+    const { error } = await supabase.from("content_items").update(patch).in("id", ids);
+    if (error) return toast.error(error.message);
+    toast.success(`${ids.length} item(s) updated`);
+    load();
+  }
+
+  function exportCsv() {
+    const cols = config.listColumns ?? [{ key: "title", label: "Title" }];
+    const rowsToExport = selected.size > 0 ? filtered.filter((r) => selected.has(r.id)) : filtered;
+    const header = ["id", "slug", "status", ...cols.map((c) => c.key)];
+    const csv = [
+      header.join(","),
+      ...rowsToExport.map((r) => [
+        r.id, r.slug ?? "", r.status,
+        ...cols.map((c) => JSON.stringify(String(valueFor(r, c.key, config) ?? "")).replace(/^"|"$/g, ""))
+      ].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")),
+    ].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `${config.type}-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function toggleSelect(id: string) {
+    setSelected((s) => {
+      const n = new Set(s);
+      n.has(id) ? n.delete(id) : n.add(id);
+      return n;
+    });
+  }
+  function toggleSelectAll() {
+    setSelected((s) => s.size === filtered.length ? new Set() : new Set(filtered.map((r) => r.id)));
   }
 
   if (editing || creating) {
@@ -136,16 +217,41 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
           <option value="published">Published</option>
           <option value="archived">Archived</option>
         </select>
+        <Button variant="outline" size="sm" onClick={exportCsv} title="Export visible rows to CSV">
+          <Download className="w-4 h-4 mr-1" /> Export CSV
+        </Button>
         <div className="text-xs opacity-60 self-center ml-2">
           {loading ? "Loading…" : `${filtered.length} of ${rows.length}`}
         </div>
       </div>
+
+      {selected.size > 0 && (
+        <div className="rounded-lg border border-brand-blue/30 bg-brand-blue/5 dark:bg-brand-blue/10 p-3 flex flex-wrap items-center gap-2 text-sm">
+          <span className="font-medium">{selected.size} selected</span>
+          <div className="ml-auto flex flex-wrap gap-2">
+            <Button size="sm" variant="outline" onClick={() => bulk("publish")}>Publish</Button>
+            <Button size="sm" variant="outline" onClick={() => bulk("unpublish")}>Unpublish</Button>
+            <Button size="sm" variant="outline" onClick={() => bulk("archive")}><Archive className="w-3 h-3 mr-1" />Archive</Button>
+            <Button size="sm" variant="outline" className="text-red-600 border-red-300 hover:bg-red-50 dark:border-red-900/50 dark:hover:bg-red-900/20" onClick={() => bulk("delete")}>
+              <Trash2 className="w-3 h-3 mr-1" /> Delete
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>Clear</Button>
+          </div>
+        </div>
+      )}
 
       <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-navy-900 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 dark:bg-white/5 text-xs uppercase tracking-wide">
               <tr>
+                <th className="p-3 w-8">
+                  <button onClick={toggleSelectAll} className="opacity-70 hover:opacity-100" title="Select all">
+                    {selected.size === filtered.length && filtered.length > 0
+                      ? <CheckSquare className="w-4 h-4" />
+                      : <Square className="w-4 h-4" />}
+                  </button>
+                </th>
                 {(config.listColumns ?? [{ key: "title", label: "Title" }]).map((c) => (
                   <th key={c.key} className="text-left p-3">{c.label}</th>
                 ))}
@@ -154,7 +260,12 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
             </thead>
             <tbody>
               {filtered.map((item) => (
-                <tr key={item.id} className="border-t border-slate-100 dark:border-white/5">
+                <tr key={item.id} className={`border-t border-slate-100 dark:border-white/5 ${selected.has(item.id) ? "bg-brand-blue/5" : ""}`}>
+                  <td className="p-3">
+                    <button onClick={() => toggleSelect(item.id)} className="opacity-70 hover:opacity-100">
+                      {selected.has(item.id) ? <CheckSquare className="w-4 h-4 text-brand-blue" /> : <Square className="w-4 h-4" />}
+                    </button>
+                  </td>
                   {(config.listColumns ?? [{ key: "title", label: "Title" }]).map((c) => (
                     <td key={c.key} className="p-3 align-middle">
                       <ListCell item={item} col={c} config={config} />
@@ -162,25 +273,16 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
                   ))}
                   <td className="p-3 text-right">
                     <div className="inline-flex gap-1">
-                      <button
-                        onClick={() => togglePublish(item)}
-                        className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5"
-                        title={item.status === "published" ? "Unpublish" : "Publish"}
-                      >
+                      <button onClick={() => togglePublish(item)} className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5" title={item.status === "published" ? "Unpublish" : "Publish"}>
                         {item.status === "published" ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
-                      <button
-                        onClick={() => setEditing(item)}
-                        className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5"
-                        title="Edit"
-                      >
+                      <button onClick={() => setEditing(item)} className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5" title="Edit">
                         <Pencil className="w-4 h-4" />
                       </button>
-                      <button
-                        onClick={() => remove(item)}
-                        className="p-1.5 rounded hover:bg-red-50 text-red-600 dark:hover:bg-red-900/20"
-                        title="Delete"
-                      >
+                      <button onClick={() => duplicate(item)} className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5" title="Duplicate">
+                        <Copy className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => softDelete(item)} className="p-1.5 rounded hover:bg-red-50 text-red-600 dark:hover:bg-red-900/20" title="Move to Recycle Bin">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -189,7 +291,7 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
               ))}
               {!loading && filtered.length === 0 && (
                 <tr>
-                  <td colSpan={(config.listColumns?.length ?? 1) + 1} className="p-10 text-center opacity-60">
+                  <td colSpan={(config.listColumns?.length ?? 1) + 2} className="p-10 text-center opacity-60">
                     No {config.label.toLowerCase()} yet. Click <b>New {config.singular}</b> to add one.
                   </td>
                 </tr>
@@ -297,13 +399,32 @@ function ItemEditor({
       };
 
       let error;
+      let contentId = item?.id as string | undefined;
       if (item) {
         ({ error } = await supabase.from("content_items").update(payload).eq("id", item.id));
       } else {
         payload.created_by = user.user?.id;
-        ({ error } = await supabase.from("content_items").insert(payload));
+        const ins = await supabase.from("content_items").insert(payload).select("id").single();
+        error = ins.error;
+        contentId = ins.data?.id;
       }
       if (error) throw error;
+      // Snapshot version (best-effort, ignore failure)
+      if (contentId) {
+        const { data: last } = await supabase
+          .from("content_versions").select("version_no").eq("content_id", contentId)
+          .order("version_no", { ascending: false }).limit(1).maybeSingle();
+        const nextVersion = ((last?.version_no as number | undefined) ?? 0) + 1;
+        await supabase.from("content_versions").insert({
+          content_id: contentId,
+          version_no: nextVersion,
+          data: payload.data,
+          status: payload.status,
+          slug: payload.slug,
+          cover_url: payload.cover_url,
+          edited_by: user.user?.id,
+        });
+      }
       toast.success(publish ? "Saved & published" : "Saved");
       onSaved();
     } catch (err: any) {
