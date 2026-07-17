@@ -51,7 +51,7 @@ function Contact() {
           <div className="rounded-lg overflow-hidden ring-1 ring-border shadow-sm">
             <iframe
               title="PYECSO Office Location — Kabul, Afghanistan"
-              src="https://www.google.com/maps?q=Kabul,+Afghanistan&output=embed"
+              src="https://www.google.com/maps?q=Patriotic+Youths+Education+Culture+and+Social+Organization+PYECSO&ll=34.5409913,69.1738007&z=17&output=embed"
               width="100%"
               height="420"
               style={{ border: 0 }}
