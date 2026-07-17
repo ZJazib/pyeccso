@@ -1,12 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ComingSoon } from "@/components/admin/ComingSoon";
+import { ContentManager } from "@/components/admin/ContentManager";
 
 export const Route = createFileRoute("/admin/programs")({
-  component: () => (
-    <ComingSoon
-      title="Programs"
-      phase="Phase 2"
-      description="Create and edit programs shown on the Programs section of the site."
-    />
-  ),
+  component: () => <ContentManager typeKey="program" />,
 });
