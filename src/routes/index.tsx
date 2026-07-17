@@ -70,8 +70,8 @@ function Home() {
           className="absolute inset-0 bg-gradient-to-b from-navy-950/40 via-transparent to-navy-950/40"
         />
 
-        <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28 lg:py-36">
-          <div className="max-w-2xl">
+        <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28 lg:py-36" dir="ltr">
+          <div className="max-w-2xl text-left">
             <span className="inline-block bg-white/10 ring-1 ring-white/20 text-white text-xs font-semibold tracking-[0.2em] px-4 py-1.5 rounded-full mb-6 uppercase">
               {t("hero.home.eyebrow")}
             </span>
