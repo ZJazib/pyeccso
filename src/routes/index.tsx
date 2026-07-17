@@ -9,7 +9,7 @@ import cardEducation from "@/assets/card-education.jpg";
 import cardLivelihoods from "@/assets/card-livelihoods.jpg";
 import cardEmergency from "@/assets/card-emergency.jpg";
 import heroImage from "@/assets/hero-schoolgirl.jpg";
-import { AfghanistanPhotoMask } from "@/components/site/AfghanistanPhotoMask";
+
 
 export const Route = createFileRoute("/")({
   component: Home,
