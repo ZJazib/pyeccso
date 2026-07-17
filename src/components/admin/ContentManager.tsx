@@ -206,16 +206,41 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
           <option value="published">Published</option>
           <option value="archived">Archived</option>
         </select>
+        <Button variant="outline" size="sm" onClick={exportCsv} title="Export visible rows to CSV">
+          <Download className="w-4 h-4 mr-1" /> Export CSV
+        </Button>
         <div className="text-xs opacity-60 self-center ml-2">
           {loading ? "Loading…" : `${filtered.length} of ${rows.length}`}
         </div>
       </div>
+
+      {selected.size > 0 && (
+        <div className="rounded-lg border border-brand-blue/30 bg-brand-blue/5 dark:bg-brand-blue/10 p-3 flex flex-wrap items-center gap-2 text-sm">
+          <span className="font-medium">{selected.size} selected</span>
+          <div className="ml-auto flex flex-wrap gap-2">
+            <Button size="sm" variant="outline" onClick={() => bulk("publish")}>Publish</Button>
+            <Button size="sm" variant="outline" onClick={() => bulk("unpublish")}>Unpublish</Button>
+            <Button size="sm" variant="outline" onClick={() => bulk("archive")}><Archive className="w-3 h-3 mr-1" />Archive</Button>
+            <Button size="sm" variant="outline" className="text-red-600 border-red-300 hover:bg-red-50 dark:border-red-900/50 dark:hover:bg-red-900/20" onClick={() => bulk("delete")}>
+              <Trash2 className="w-3 h-3 mr-1" /> Delete
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => setSelected(new Set())}>Clear</Button>
+          </div>
+        </div>
+      )}
 
       <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-navy-900 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-slate-50 dark:bg-white/5 text-xs uppercase tracking-wide">
               <tr>
+                <th className="p-3 w-8">
+                  <button onClick={toggleSelectAll} className="opacity-70 hover:opacity-100" title="Select all">
+                    {selected.size === filtered.length && filtered.length > 0
+                      ? <CheckSquare className="w-4 h-4" />
+                      : <Square className="w-4 h-4" />}
+                  </button>
+                </th>
                 {(config.listColumns ?? [{ key: "title", label: "Title" }]).map((c) => (
                   <th key={c.key} className="text-left p-3">{c.label}</th>
                 ))}
@@ -224,7 +249,12 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
             </thead>
             <tbody>
               {filtered.map((item) => (
-                <tr key={item.id} className="border-t border-slate-100 dark:border-white/5">
+                <tr key={item.id} className={`border-t border-slate-100 dark:border-white/5 ${selected.has(item.id) ? "bg-brand-blue/5" : ""}`}>
+                  <td className="p-3">
+                    <button onClick={() => toggleSelect(item.id)} className="opacity-70 hover:opacity-100">
+                      {selected.has(item.id) ? <CheckSquare className="w-4 h-4 text-brand-blue" /> : <Square className="w-4 h-4" />}
+                    </button>
+                  </td>
                   {(config.listColumns ?? [{ key: "title", label: "Title" }]).map((c) => (
                     <td key={c.key} className="p-3 align-middle">
                       <ListCell item={item} col={c} config={config} />
@@ -232,25 +262,16 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
                   ))}
                   <td className="p-3 text-right">
                     <div className="inline-flex gap-1">
-                      <button
-                        onClick={() => togglePublish(item)}
-                        className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5"
-                        title={item.status === "published" ? "Unpublish" : "Publish"}
-                      >
+                      <button onClick={() => togglePublish(item)} className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5" title={item.status === "published" ? "Unpublish" : "Publish"}>
                         {item.status === "published" ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
-                      <button
-                        onClick={() => setEditing(item)}
-                        className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5"
-                        title="Edit"
-                      >
+                      <button onClick={() => setEditing(item)} className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5" title="Edit">
                         <Pencil className="w-4 h-4" />
                       </button>
-                      <button
-                        onClick={() => remove(item)}
-                        className="p-1.5 rounded hover:bg-red-50 text-red-600 dark:hover:bg-red-900/20"
-                        title="Delete"
-                      >
+                      <button onClick={() => duplicate(item)} className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5" title="Duplicate">
+                        <Copy className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => softDelete(item)} className="p-1.5 rounded hover:bg-red-50 text-red-600 dark:hover:bg-red-900/20" title="Move to Recycle Bin">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -259,7 +280,7 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
               ))}
               {!loading && filtered.length === 0 && (
                 <tr>
-                  <td colSpan={(config.listColumns?.length ?? 1) + 1} className="p-10 text-center opacity-60">
+                  <td colSpan={(config.listColumns?.length ?? 1) + 2} className="p-10 text-center opacity-60">
                     No {config.label.toLowerCase()} yet. Click <b>New {config.singular}</b> to add one.
                   </td>
                 </tr>
