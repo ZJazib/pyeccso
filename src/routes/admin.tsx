@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Users, Image as ImageIcon, Settings, ShieldCheck, LogOut,
   FileText, Newspaper, Calendar, Briefcase, Heart, Mail, GraduationCap,
   UsersRound, Handshake, MessageSquareQuote, BookOpen, FolderKanban, ClipboardList,
-  Menu, X, Home,
+  Menu, X, Home, Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdminLogin } from "@/components/admin/AdminLogin";
