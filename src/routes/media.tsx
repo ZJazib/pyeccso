@@ -74,12 +74,22 @@ function Media() {
       <div className="relative -mt-12 md:-mt-14 z-10">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="bg-white rounded-lg shadow-xl ring-1 ring-black/5 grid grid-cols-3 md:grid-cols-6 divide-x divide-border">
-            {tabs.map((tab) => (
-              <button key={tab.key} className={`p-5 flex flex-col items-center gap-2 hover:bg-brand-blue-wash transition-colors ${"active" in tab && tab.active ? "border-b-2 border-brand-blue text-brand-blue" : "text-navy-900/70"}`}>
-                <tab.icon className="size-5" />
-                <span className="text-xs font-semibold text-center">{t(`media.tabs.${tab.key}`)}</span>
-              </button>
-            ))}
+            {tabs.map((tab) => {
+              const isActive = tab.key === activeTab;
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveTab(tab.key)}
+                  aria-pressed={isActive}
+                  className={`p-5 flex flex-col items-center gap-2 hover:bg-brand-blue-wash transition-colors ${isActive ? "border-b-2 border-brand-blue text-brand-blue" : "text-navy-900/70"}`}
+                >
+                  <tab.icon className="size-5" />
+                  <span className="text-xs font-semibold text-center">{t(`media.tabs.${tab.key}`)}</span>
+                </button>
+              );
+            })}
+
           </div>
         </div>
       </div>
