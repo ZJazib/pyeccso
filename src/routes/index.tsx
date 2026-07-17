@@ -55,7 +55,7 @@ function Home() {
 
   return (
     <SiteLayout>
-      <section className="relative bg-navy-900 text-white overflow-hidden" dir="ltr">
+      <section className="relative bg-navy-900 text-white overflow-hidden">
         <img
           src={heroImage}
           alt="Afghan schoolgirl in classroom"
@@ -71,28 +71,27 @@ function Home() {
         />
 
         <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28 lg:py-36">
-          <div className="max-w-2xl text-left">
-            <span dir="auto" className="inline-block bg-white/10 ring-1 ring-white/20 text-white text-xs font-semibold tracking-[0.2em] px-4 py-1.5 rounded-full mb-6 uppercase">
+          <div className="max-w-2xl">
+            <span className="inline-block bg-white/10 ring-1 ring-white/20 text-white text-xs font-semibold tracking-[0.2em] px-4 py-1.5 rounded-full mb-6 uppercase">
               {t("hero.home.eyebrow")}
             </span>
-            <h1 dir="auto" className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight mb-5 text-left">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.05] tracking-tight mb-5">
               {t("hero.home.title")}
             </h1>
-            <p dir="auto" className="text-white/85 text-base md:text-lg leading-relaxed mb-8 max-w-xl text-left">
+            <p className="text-white/85 text-base md:text-lg leading-relaxed mb-8 max-w-xl text-pretty">
               {t("hero.home.description")}
             </p>
             <div className="flex flex-wrap gap-3">
               <Link to="/programs" className="bg-brand-blue hover:bg-brand-blue-hover text-white h-12 px-6 rounded-md font-semibold text-sm inline-flex items-center gap-2 transition-colors">
-                <span dir="auto">{t("home.cta.programs")}</span> <ArrowRight className="size-4" />
+                {t("home.cta.programs")} <ArrowRight className="size-4" />
               </Link>
               <Link to="/donate" className="bg-white text-navy-900 h-12 px-6 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-wash transition-colors">
-                <span dir="auto">{t("home.cta.donate")}</span> <UserPlus className="size-4" />
+                {t("home.cta.donate")} <UserPlus className="size-4" />
               </Link>
             </div>
           </div>
         </div>
       </section>
-
 
 
       <div className="relative -mt-10 md:-mt-14 z-10">

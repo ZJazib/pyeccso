@@ -357,21 +357,3 @@ html[dir="rtl"] .ltr-inline {
 html[dir="rtl"] .object-right { object-position: left; }
 html[dir="rtl"] .object-left { object-position: right; }
 
-
-/* Local LTR override: when [dir="ltr"] is set on a subtree inside html[dir="rtl"],
-   keep native LTR behavior for text alignment, gradients, and icon flips. */
-html [dir="ltr"] .text-left { text-align: left; }
-html [dir="ltr"] .text-right { text-align: right; }
-html [dir="ltr"] .bg-gradient-to-r,
-html [dir="ltr"] .bg-linear-to-r {
-  background-image: linear-gradient(to right, var(--tw-gradient-stops));
-}
-html [dir="ltr"] .bg-gradient-to-l,
-html [dir="ltr"] .bg-linear-to-l {
-  background-image: linear-gradient(to left, var(--tw-gradient-stops));
-}
-html [dir="ltr"] .lucide-arrow-right,
-html [dir="ltr"] .lucide-arrow-left,
-html [dir="ltr"] .lucide-chevron-right,
-html [dir="ltr"] .lucide-chevron-left,
-html [dir="ltr"] .rtl-flip { transform: none; }
