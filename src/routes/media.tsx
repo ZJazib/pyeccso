@@ -272,38 +272,6 @@ function Media() {
                 </div>
               </div>
             )}
-
-
-              <div>
-                <div className="bg-white ring-1 ring-border rounded-lg p-5 mb-6">
-                  <h4 className="text-brand-blue font-bold mb-4">{t("media.sections.stories")}</h4>
-                  <div className="space-y-4">
-                    {storyKeys.map((s) => (
-                      <div key={s} className="flex gap-3">
-                        <img src={storyImgs[s]} alt="" className="size-14 object-cover rounded-md shrink-0" loading="lazy" />
-                        <div>
-                          <h5 className="text-navy-900 font-semibold text-xs leading-snug mb-1">{t(`media.stories.${s}.title`)}</h5>
-                          <p className="text-navy-900/60 text-[10px]">{t(`media.stories.${s}.date`)}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  <button className="w-full mt-4 border border-brand-blue text-brand-blue rounded-md py-2 text-xs font-semibold inline-flex items-center justify-center gap-1">
-                    {t("media.sections.viewAllStories")} <ArrowRight className="size-3" />
-                  </button>
-                </div>
-
-                <div className="bg-white ring-1 ring-border rounded-lg p-5">
-                  <h4 className="text-brand-blue font-bold mb-2 flex items-center gap-2"><Mail className="size-4" /> {t("media.contact.title")}</h4>
-                  <p className="text-navy-900/70 text-xs mb-4">{t("media.contact.body")}</p>
-                  <ul className="space-y-2 text-xs">
-                    <li className="flex items-center gap-2"><Mail className="size-3.5 text-brand-blue" /> media@pyecso.org.af</li>
-                    <li className="flex items-center gap-2"><Phone className="size-3.5 text-brand-blue" /> +93 (0) 20 250 0312</li>
-                  </ul>
-                  <button className="w-full mt-4 border border-brand-blue text-brand-blue rounded-md py-2 text-xs font-semibold">{t("media.contact.button")}</button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
