@@ -20,9 +20,26 @@ type Item = {
   cover_url: string | null;
   data: Record<string, any>;
   published_at: string | null;
+  publish_at: string | null;
+  unpublish_at: string | null;
   created_at: string;
   updated_at: string;
 };
+
+// Convert an ISO/UTC timestamp to a value compatible with <input type="datetime-local">.
+function toLocalInput(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+function fromLocalInput(v: string): string | null {
+  if (!v) return null;
+  const d = new Date(v);
+  return isNaN(d.getTime()) ? null : d.toISOString();
+}
+
 
 export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS }) {
   const config = CMS_CONFIGS[typeKey];
