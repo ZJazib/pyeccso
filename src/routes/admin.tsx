@@ -57,6 +57,7 @@ const NAV: NavSection[] = [
       { to: "/admin/media", label: "Media Library", icon: ImageIcon },
       { to: "/admin/users", label: "Users & Roles", icon: Users },
       { to: "/admin/audit", label: "Audit Log", icon: ShieldCheck },
+      { to: "/admin/recycle", label: "Recycle Bin", icon: Trash2 },
       { to: "/admin/settings", label: "Settings", icon: Settings },
     ],
   },

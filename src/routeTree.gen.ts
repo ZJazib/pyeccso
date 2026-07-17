@@ -29,6 +29,7 @@ import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
 import { Route as AdminTeamRouteImport } from './routes/admin.team'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminRecycleRouteImport } from './routes/admin.recycle'
 import { Route as AdminPublicationsRouteImport } from './routes/admin.publications'
 import { Route as AdminProjectsRouteImport } from './routes/admin.projects'
 import { Route as AdminProgramsRouteImport } from './routes/admin.programs'
@@ -146,6 +147,11 @@ const AdminSettingsRoute = AdminSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminRecycleRoute = AdminRecycleRouteImport.update({
+  id: '/recycle',
+  path: '/recycle',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminPublicationsRoute = AdminPublicationsRouteImport.update({
   id: '/publications',
   path: '/publications',
@@ -254,6 +260,7 @@ export interface FileRoutesByFullPath {
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/publications': typeof AdminPublicationsRoute
+  '/admin/recycle': typeof AdminRecycleRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
@@ -290,6 +297,7 @@ export interface FileRoutesByTo {
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/publications': typeof AdminPublicationsRoute
+  '/admin/recycle': typeof AdminRecycleRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
@@ -329,6 +337,7 @@ export interface FileRoutesById {
   '/admin/programs': typeof AdminProgramsRoute
   '/admin/projects': typeof AdminProjectsRoute
   '/admin/publications': typeof AdminPublicationsRoute
+  '/admin/recycle': typeof AdminRecycleRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
@@ -369,6 +378,7 @@ export interface FileRouteTypes {
     | '/admin/programs'
     | '/admin/projects'
     | '/admin/publications'
+    | '/admin/recycle'
     | '/admin/settings'
     | '/admin/team'
     | '/admin/testimonials'
@@ -405,6 +415,7 @@ export interface FileRouteTypes {
     | '/admin/programs'
     | '/admin/projects'
     | '/admin/publications'
+    | '/admin/recycle'
     | '/admin/settings'
     | '/admin/team'
     | '/admin/testimonials'
@@ -443,6 +454,7 @@ export interface FileRouteTypes {
     | '/admin/programs'
     | '/admin/projects'
     | '/admin/publications'
+    | '/admin/recycle'
     | '/admin/settings'
     | '/admin/team'
     | '/admin/testimonials'
@@ -612,6 +624,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/recycle': {
+      id: '/admin/recycle'
+      path: '/recycle'
+      fullPath: '/admin/recycle'
+      preLoaderRoute: typeof AdminRecycleRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/publications': {
       id: '/admin/publications'
       path: '/publications'
@@ -743,6 +762,7 @@ interface AdminRouteChildren {
   AdminProgramsRoute: typeof AdminProgramsRoute
   AdminProjectsRoute: typeof AdminProjectsRoute
   AdminPublicationsRoute: typeof AdminPublicationsRoute
+  AdminRecycleRoute: typeof AdminRecycleRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminTeamRoute: typeof AdminTeamRoute
   AdminTestimonialsRoute: typeof AdminTestimonialsRoute
@@ -766,6 +786,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminProgramsRoute: AdminProgramsRoute,
   AdminProjectsRoute: AdminProjectsRoute,
   AdminPublicationsRoute: AdminPublicationsRoute,
+  AdminRecycleRoute: AdminRecycleRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminTeamRoute: AdminTeamRoute,
   AdminTestimonialsRoute: AdminTestimonialsRoute,
