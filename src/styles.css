@@ -111,7 +111,7 @@
   --accent-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.1);
   --input: rgba(255, 255, 255, 0.16);
-  --ring: #9ecbff;
+  --ring: var(--brand-blue);
 
   --surface: var(--navy-950);
   --surface-alt: var(--navy-900);
@@ -217,44 +217,6 @@
   border-color: #ff8a8a;
 }
 .dark [data-slot="form-description"] { color: rgba(255, 255, 255, 0.7); }
-
-/* ============================================================
-   Focus-visible rings — WCAG 2.4.11 (3:1 non-text contrast).
-   Browser default 1px auto is invisible on dark navy surfaces.
-   ============================================================ */
-:where(a, button, [role="button"], input, textarea, select, summary, [tabindex]):focus-visible {
-  outline: 2px solid var(--brand-blue);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-.dark :where(a, button, [role="button"], input, textarea, select, summary, [tabindex]):focus-visible {
-  /* Light sky-blue ring: ~10.4:1 on navy-950, ~7.6:1 on navy-900 */
-  outline-color: #9ecbff;
-  box-shadow: 0 0 0 4px rgba(158, 203, 255, 0.25);
-}
-
-/* Dark-mode link colors: brand-blue #1e5ba8 fails 4.5:1 on navy.
-   Lighten to sky-blue for text links, and give hover a visible shift. */
-.dark a {
-  color: #9ecbff;
-}
-.dark a:hover {
-  color: #cfe4ff;
-}
-/* Preserve solid button links (they set their own bg + white text) */
-.dark a.bg-brand-blue,
-.dark a.bg-brand-red,
-.dark a.bg-primary,
-.dark a[class*="bg-navy-"],
-.dark a[class*="bg-white"],
-.dark header a,
-.dark footer a {
-  color: inherit;
-}
-.dark header a:hover,
-.dark footer a:hover {
-  color: #ffffff;
-}
 
 @layer base {
   * {
