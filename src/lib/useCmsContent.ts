@@ -54,6 +54,7 @@ export function useCmsList(type: string) {
       .select("*")
       .eq("type", type as any)
       .eq("status", "published")
+      .is("deleted_at", null)
       .or(`unpublish_at.is.null,unpublish_at.gt.${nowIso}`)
       .order("position", { ascending: true })
       .order("published_at", { ascending: false })
