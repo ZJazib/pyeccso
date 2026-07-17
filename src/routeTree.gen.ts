@@ -26,9 +26,24 @@ import { Route as PortalTeacherRouteImport } from './routes/portal.teacher'
 import { Route as PortalStudentRouteImport } from './routes/portal.student'
 import { Route as PortalManagerRouteImport } from './routes/portal.manager'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
+import { Route as AdminTeamRouteImport } from './routes/admin.team'
 import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminPublicationsRouteImport } from './routes/admin.publications'
+import { Route as AdminProjectsRouteImport } from './routes/admin.projects'
+import { Route as AdminProgramsRouteImport } from './routes/admin.programs'
+import { Route as AdminPartnersRouteImport } from './routes/admin.partners'
+import { Route as AdminPagesRouteImport } from './routes/admin.pages'
+import { Route as AdminNewsRouteImport } from './routes/admin.news'
+import { Route as AdminMediaCenterRouteImport } from './routes/admin.media-center'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
+import { Route as AdminLearnRouteImport } from './routes/admin.learn'
+import { Route as AdminEventsRouteImport } from './routes/admin.events'
+import { Route as AdminDonationsRouteImport } from './routes/admin.donations'
+import { Route as AdminContactRouteImport } from './routes/admin.contact'
+import { Route as AdminCareersRouteImport } from './routes/admin.careers'
 import { Route as AdminAuditRouteImport } from './routes/admin.audit'
+import { Route as AdminApplicationsRouteImport } from './routes/admin.applications'
 import { Route as ApiPublicHesabSessionRouteImport } from './routes/api/public/hesab-session'
 
 const ProjectsRoute = ProjectsRouteImport.update({
@@ -116,9 +131,54 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminTestimonialsRoute = AdminTestimonialsRouteImport.update({
+  id: '/testimonials',
+  path: '/testimonials',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTeamRoute = AdminTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSettingsRoute = AdminSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPublicationsRoute = AdminPublicationsRouteImport.update({
+  id: '/publications',
+  path: '/publications',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProjectsRoute = AdminProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminProgramsRoute = AdminProgramsRouteImport.update({
+  id: '/programs',
+  path: '/programs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPartnersRoute = AdminPartnersRouteImport.update({
+  id: '/partners',
+  path: '/partners',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPagesRoute = AdminPagesRouteImport.update({
+  id: '/pages',
+  path: '/pages',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminNewsRoute = AdminNewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMediaCenterRoute = AdminMediaCenterRouteImport.update({
+  id: '/media-center',
+  path: '/media-center',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminMediaRoute = AdminMediaRouteImport.update({
@@ -126,9 +186,39 @@ const AdminMediaRoute = AdminMediaRouteImport.update({
   path: '/media',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminLearnRoute = AdminLearnRouteImport.update({
+  id: '/learn',
+  path: '/learn',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEventsRoute = AdminEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDonationsRoute = AdminDonationsRouteImport.update({
+  id: '/donations',
+  path: '/donations',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContactRoute = AdminContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCareersRoute = AdminCareersRouteImport.update({
+  id: '/careers',
+  path: '/careers',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAuditRoute = AdminAuditRouteImport.update({
   id: '/audit',
   path: '/audit',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminApplicationsRoute = AdminApplicationsRouteImport.update({
+  id: '/applications',
+  path: '/applications',
   getParentRoute: () => AdminRoute,
 } as any)
 const ApiPublicHesabSessionRoute = ApiPublicHesabSessionRouteImport.update({
@@ -149,9 +239,24 @@ export interface FileRoutesByFullPath {
   '/portal': typeof PortalRouteWithChildren
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/admin/applications': typeof AdminApplicationsRoute
   '/admin/audit': typeof AdminAuditRoute
+  '/admin/careers': typeof AdminCareersRoute
+  '/admin/contact': typeof AdminContactRoute
+  '/admin/donations': typeof AdminDonationsRoute
+  '/admin/events': typeof AdminEventsRoute
+  '/admin/learn': typeof AdminLearnRoute
   '/admin/media': typeof AdminMediaRoute
+  '/admin/media-center': typeof AdminMediaCenterRoute
+  '/admin/news': typeof AdminNewsRoute
+  '/admin/pages': typeof AdminPagesRoute
+  '/admin/partners': typeof AdminPartnersRoute
+  '/admin/programs': typeof AdminProgramsRoute
+  '/admin/projects': typeof AdminProjectsRoute
+  '/admin/publications': typeof AdminPublicationsRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/team': typeof AdminTeamRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/users': typeof AdminUsersRoute
   '/portal/manager': typeof PortalManagerRoute
   '/portal/student': typeof PortalStudentRoute
@@ -170,9 +275,24 @@ export interface FileRoutesByTo {
   '/media': typeof MediaRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/admin/applications': typeof AdminApplicationsRoute
   '/admin/audit': typeof AdminAuditRoute
+  '/admin/careers': typeof AdminCareersRoute
+  '/admin/contact': typeof AdminContactRoute
+  '/admin/donations': typeof AdminDonationsRoute
+  '/admin/events': typeof AdminEventsRoute
+  '/admin/learn': typeof AdminLearnRoute
   '/admin/media': typeof AdminMediaRoute
+  '/admin/media-center': typeof AdminMediaCenterRoute
+  '/admin/news': typeof AdminNewsRoute
+  '/admin/pages': typeof AdminPagesRoute
+  '/admin/partners': typeof AdminPartnersRoute
+  '/admin/programs': typeof AdminProgramsRoute
+  '/admin/projects': typeof AdminProjectsRoute
+  '/admin/publications': typeof AdminPublicationsRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/team': typeof AdminTeamRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/users': typeof AdminUsersRoute
   '/portal/manager': typeof PortalManagerRoute
   '/portal/student': typeof PortalStudentRoute
@@ -194,9 +314,24 @@ export interface FileRoutesById {
   '/portal': typeof PortalRouteWithChildren
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/admin/applications': typeof AdminApplicationsRoute
   '/admin/audit': typeof AdminAuditRoute
+  '/admin/careers': typeof AdminCareersRoute
+  '/admin/contact': typeof AdminContactRoute
+  '/admin/donations': typeof AdminDonationsRoute
+  '/admin/events': typeof AdminEventsRoute
+  '/admin/learn': typeof AdminLearnRoute
   '/admin/media': typeof AdminMediaRoute
+  '/admin/media-center': typeof AdminMediaCenterRoute
+  '/admin/news': typeof AdminNewsRoute
+  '/admin/pages': typeof AdminPagesRoute
+  '/admin/partners': typeof AdminPartnersRoute
+  '/admin/programs': typeof AdminProgramsRoute
+  '/admin/projects': typeof AdminProjectsRoute
+  '/admin/publications': typeof AdminPublicationsRoute
   '/admin/settings': typeof AdminSettingsRoute
+  '/admin/team': typeof AdminTeamRoute
+  '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/users': typeof AdminUsersRoute
   '/portal/manager': typeof PortalManagerRoute
   '/portal/student': typeof PortalStudentRoute
@@ -219,9 +354,24 @@ export interface FileRouteTypes {
     | '/portal'
     | '/programs'
     | '/projects'
+    | '/admin/applications'
     | '/admin/audit'
+    | '/admin/careers'
+    | '/admin/contact'
+    | '/admin/donations'
+    | '/admin/events'
+    | '/admin/learn'
     | '/admin/media'
+    | '/admin/media-center'
+    | '/admin/news'
+    | '/admin/pages'
+    | '/admin/partners'
+    | '/admin/programs'
+    | '/admin/projects'
+    | '/admin/publications'
     | '/admin/settings'
+    | '/admin/team'
+    | '/admin/testimonials'
     | '/admin/users'
     | '/portal/manager'
     | '/portal/student'
@@ -240,9 +390,24 @@ export interface FileRouteTypes {
     | '/media'
     | '/programs'
     | '/projects'
+    | '/admin/applications'
     | '/admin/audit'
+    | '/admin/careers'
+    | '/admin/contact'
+    | '/admin/donations'
+    | '/admin/events'
+    | '/admin/learn'
     | '/admin/media'
+    | '/admin/media-center'
+    | '/admin/news'
+    | '/admin/pages'
+    | '/admin/partners'
+    | '/admin/programs'
+    | '/admin/projects'
+    | '/admin/publications'
     | '/admin/settings'
+    | '/admin/team'
+    | '/admin/testimonials'
     | '/admin/users'
     | '/portal/manager'
     | '/portal/student'
@@ -263,9 +428,24 @@ export interface FileRouteTypes {
     | '/portal'
     | '/programs'
     | '/projects'
+    | '/admin/applications'
     | '/admin/audit'
+    | '/admin/careers'
+    | '/admin/contact'
+    | '/admin/donations'
+    | '/admin/events'
+    | '/admin/learn'
     | '/admin/media'
+    | '/admin/media-center'
+    | '/admin/news'
+    | '/admin/pages'
+    | '/admin/partners'
+    | '/admin/programs'
+    | '/admin/projects'
+    | '/admin/publications'
     | '/admin/settings'
+    | '/admin/team'
+    | '/admin/testimonials'
     | '/admin/users'
     | '/portal/manager'
     | '/portal/student'
@@ -411,11 +591,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/testimonials': {
+      id: '/admin/testimonials'
+      path: '/testimonials'
+      fullPath: '/admin/testimonials'
+      preLoaderRoute: typeof AdminTestimonialsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/team': {
+      id: '/admin/team'
+      path: '/team'
+      fullPath: '/admin/team'
+      preLoaderRoute: typeof AdminTeamRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/settings': {
       id: '/admin/settings'
       path: '/settings'
       fullPath: '/admin/settings'
       preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/publications': {
+      id: '/admin/publications'
+      path: '/publications'
+      fullPath: '/admin/publications'
+      preLoaderRoute: typeof AdminPublicationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/projects': {
+      id: '/admin/projects'
+      path: '/projects'
+      fullPath: '/admin/projects'
+      preLoaderRoute: typeof AdminProjectsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/programs': {
+      id: '/admin/programs'
+      path: '/programs'
+      fullPath: '/admin/programs'
+      preLoaderRoute: typeof AdminProgramsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/partners': {
+      id: '/admin/partners'
+      path: '/partners'
+      fullPath: '/admin/partners'
+      preLoaderRoute: typeof AdminPartnersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/pages': {
+      id: '/admin/pages'
+      path: '/pages'
+      fullPath: '/admin/pages'
+      preLoaderRoute: typeof AdminPagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/news': {
+      id: '/admin/news'
+      path: '/news'
+      fullPath: '/admin/news'
+      preLoaderRoute: typeof AdminNewsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/media-center': {
+      id: '/admin/media-center'
+      path: '/media-center'
+      fullPath: '/admin/media-center'
+      preLoaderRoute: typeof AdminMediaCenterRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/media': {
@@ -425,11 +668,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminMediaRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/learn': {
+      id: '/admin/learn'
+      path: '/learn'
+      fullPath: '/admin/learn'
+      preLoaderRoute: typeof AdminLearnRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/events': {
+      id: '/admin/events'
+      path: '/events'
+      fullPath: '/admin/events'
+      preLoaderRoute: typeof AdminEventsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/donations': {
+      id: '/admin/donations'
+      path: '/donations'
+      fullPath: '/admin/donations'
+      preLoaderRoute: typeof AdminDonationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/contact': {
+      id: '/admin/contact'
+      path: '/contact'
+      fullPath: '/admin/contact'
+      preLoaderRoute: typeof AdminContactRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/careers': {
+      id: '/admin/careers'
+      path: '/careers'
+      fullPath: '/admin/careers'
+      preLoaderRoute: typeof AdminCareersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/audit': {
       id: '/admin/audit'
       path: '/audit'
       fullPath: '/admin/audit'
       preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/applications': {
+      id: '/admin/applications'
+      path: '/applications'
+      fullPath: '/admin/applications'
+      preLoaderRoute: typeof AdminApplicationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/api/public/hesab-session': {
@@ -443,17 +728,47 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminApplicationsRoute: typeof AdminApplicationsRoute
   AdminAuditRoute: typeof AdminAuditRoute
+  AdminCareersRoute: typeof AdminCareersRoute
+  AdminContactRoute: typeof AdminContactRoute
+  AdminDonationsRoute: typeof AdminDonationsRoute
+  AdminEventsRoute: typeof AdminEventsRoute
+  AdminLearnRoute: typeof AdminLearnRoute
   AdminMediaRoute: typeof AdminMediaRoute
+  AdminMediaCenterRoute: typeof AdminMediaCenterRoute
+  AdminNewsRoute: typeof AdminNewsRoute
+  AdminPagesRoute: typeof AdminPagesRoute
+  AdminPartnersRoute: typeof AdminPartnersRoute
+  AdminProgramsRoute: typeof AdminProgramsRoute
+  AdminProjectsRoute: typeof AdminProjectsRoute
+  AdminPublicationsRoute: typeof AdminPublicationsRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminTeamRoute: typeof AdminTeamRoute
+  AdminTestimonialsRoute: typeof AdminTestimonialsRoute
   AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminApplicationsRoute: AdminApplicationsRoute,
   AdminAuditRoute: AdminAuditRoute,
+  AdminCareersRoute: AdminCareersRoute,
+  AdminContactRoute: AdminContactRoute,
+  AdminDonationsRoute: AdminDonationsRoute,
+  AdminEventsRoute: AdminEventsRoute,
+  AdminLearnRoute: AdminLearnRoute,
   AdminMediaRoute: AdminMediaRoute,
+  AdminMediaCenterRoute: AdminMediaCenterRoute,
+  AdminNewsRoute: AdminNewsRoute,
+  AdminPagesRoute: AdminPagesRoute,
+  AdminPartnersRoute: AdminPartnersRoute,
+  AdminProgramsRoute: AdminProgramsRoute,
+  AdminProjectsRoute: AdminProjectsRoute,
+  AdminPublicationsRoute: AdminPublicationsRoute,
   AdminSettingsRoute: AdminSettingsRoute,
+  AdminTeamRoute: AdminTeamRoute,
+  AdminTestimonialsRoute: AdminTestimonialsRoute,
   AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
