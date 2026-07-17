@@ -56,19 +56,22 @@ function Home() {
   return (
     <SiteLayout>
       <section className="relative bg-navy-900 text-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-navy-950 via-navy-900 to-navy-900" />
-        {/* Faint dot texture for editorial feel */}
+        <img
+          src={heroImage}
+          alt="Afghan schoolgirl in classroom"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        />
         <div
           aria-hidden="true"
-          className="absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage:
-              "radial-gradient(circle, #ffffff 1px, transparent 1px)",
-            backgroundSize: "22px 22px",
-          }}
+          className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-900/20"
         />
-        <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
-          <div className="max-w-xl">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-b from-navy-950/40 via-transparent to-navy-950/40"
+        />
+
+        <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28 lg:py-36">
+          <div className="max-w-2xl">
             <span className="inline-block bg-white/10 ring-1 ring-white/20 text-white text-xs font-semibold tracking-[0.2em] px-4 py-1.5 rounded-full mb-6 uppercase">
               {t("hero.home.eyebrow")}
             </span>
@@ -87,20 +90,9 @@ function Home() {
               </Link>
             </div>
           </div>
-          <div className="relative w-full max-w-md lg:max-w-none mx-auto lg:mx-0">
-            <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] lg:aspect-[4/5] rounded-xl overflow-hidden ring-1 ring-white/15 shadow-2xl bg-navy-950">
-              <img
-                src={heroImage}
-                alt="Afghan communities served by PYECSO"
-                className="absolute inset-0 w-full h-full object-cover object-center"
-                loading="eager"
-              />
-            </div>
-          </div>
-
-
         </div>
       </section>
+
 
       <div className="relative -mt-10 md:-mt-14 z-10">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
