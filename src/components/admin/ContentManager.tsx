@@ -49,6 +49,7 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
   const [statusFilter, setStatusFilter] = useState<"all" | "draft" | "published" | "archived">("all");
   const [editing, setEditing] = useState<Item | null>(null);
   const [creating, setCreating] = useState(false);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
 
   async function load() {
     setLoading(true);
@@ -56,10 +57,12 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
       .from("content_items")
       .select("*")
       .eq("type", typeKey as any)
+      .is("deleted_at", null)
       .order("position", { ascending: true })
       .order("updated_at", { ascending: false });
     if (error) toast.error(error.message);
     setRows((data as any) ?? []);
+    setSelected(new Set());
     setLoading(false);
   }
   useEffect(() => { load(); }, [typeKey]);
@@ -88,12 +91,79 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
     load();
   }
 
-  async function remove(item: Item) {
-    if (!confirm(`Delete this ${config.singular.toLowerCase()}?`)) return;
-    const { error } = await supabase.from("content_items").delete().eq("id", item.id);
+  async function softDelete(item: Item) {
+    if (!confirm(`Move this ${config.singular.toLowerCase()} to the Recycle Bin?`)) return;
+    const { error } = await supabase.from("content_items").update({ deleted_at: new Date().toISOString() }).eq("id", item.id);
     if (error) return toast.error(error.message);
-    toast.success("Deleted");
+    toast.success("Moved to Recycle Bin");
     load();
+  }
+
+  async function duplicate(item: Item) {
+    const { data: user } = await supabase.auth.getUser();
+    const copy: any = {
+      type: item.type,
+      slug: null,
+      status: "draft",
+      position: item.position,
+      cover_url: item.cover_url,
+      data: {
+        ...(item.data ?? {}),
+        title: dupI18n(item.data?.title),
+        name: dupI18n(item.data?.name),
+      },
+      created_by: user.user?.id,
+      updated_by: user.user?.id,
+    };
+    const { error } = await supabase.from("content_items").insert(copy);
+    if (error) return toast.error(error.message);
+    toast.success("Duplicated as draft");
+    load();
+  }
+
+  async function bulk(action: "publish" | "unpublish" | "archive" | "delete") {
+    if (selected.size === 0) return;
+    const ids = Array.from(selected);
+    const patch: any =
+      action === "publish"   ? { status: "published", published_at: new Date().toISOString() } :
+      action === "unpublish" ? { status: "draft" } :
+      action === "archive"   ? { status: "archived" } :
+      { deleted_at: new Date().toISOString() };
+    const label = action === "delete" ? "Move to Recycle Bin" : action;
+    if (!confirm(`${label} ${ids.length} item(s)?`)) return;
+    const { error } = await supabase.from("content_items").update(patch).in("id", ids);
+    if (error) return toast.error(error.message);
+    toast.success(`${ids.length} item(s) updated`);
+    load();
+  }
+
+  function exportCsv() {
+    const cols = config.listColumns ?? [{ key: "title", label: "Title" }];
+    const rowsToExport = selected.size > 0 ? filtered.filter((r) => selected.has(r.id)) : filtered;
+    const header = ["id", "slug", "status", ...cols.map((c) => c.key)];
+    const csv = [
+      header.join(","),
+      ...rowsToExport.map((r) => [
+        r.id, r.slug ?? "", r.status,
+        ...cols.map((c) => JSON.stringify(String(valueFor(r, c.key, config) ?? "")).replace(/^"|"$/g, ""))
+      ].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(",")),
+    ].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `${config.type}-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function toggleSelect(id: string) {
+    setSelected((s) => {
+      const n = new Set(s);
+      n.has(id) ? n.delete(id) : n.add(id);
+      return n;
+    });
+  }
+  function toggleSelectAll() {
+    setSelected((s) => s.size === filtered.length ? new Set() : new Set(filtered.map((r) => r.id)));
   }
 
   if (editing || creating) {
