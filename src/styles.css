@@ -4,6 +4,7 @@
 @import "@fontsource-variable/vazirmatn";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant rtl (&:is([dir="rtl"] *));
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
