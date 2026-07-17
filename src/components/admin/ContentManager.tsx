@@ -37,7 +37,7 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
     const { data, error } = await supabase
       .from("content_items")
       .select("*")
-      .eq("type", typeKey)
+      .eq("type", typeKey as any)
       .order("position", { ascending: true })
       .order("updated_at", { ascending: false });
     if (error) toast.error(error.message);
