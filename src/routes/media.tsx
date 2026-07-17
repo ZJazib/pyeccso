@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   Image as ImageIcon, PlayCircle, FileText, Newspaper, Tv, BookOpen,
   Download, ArrowRight, Camera, ChevronRight, Mail, Phone,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
+
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import cardEducation from "@/assets/card-education.jpg";
@@ -28,14 +30,18 @@ export const Route = createFileRoute("/media")({
 function Media() {
   const { t } = useTranslation();
 
-  const tabs = [
-    { icon: ImageIcon, key: "photos", active: true },
+  type TabKey = "photos" | "videos" | "press" | "news" | "coverage" | "publications";
+  const [activeTab, setActiveTab] = useState<TabKey>("photos");
+
+  const tabs: { icon: typeof ImageIcon; key: TabKey }[] = [
+    { icon: ImageIcon, key: "photos" },
     { icon: PlayCircle, key: "videos" },
     { icon: FileText, key: "press" },
     { icon: Newspaper, key: "news" },
     { icon: Tv, key: "coverage" },
     { icon: BookOpen, key: "publications" },
-  ] as const;
+  ];
+
 
   const catKeys = ["all","education","livelihoods","health","protection","wash","emergency","agriculture","women","youth","events"] as const;
 
@@ -68,12 +74,22 @@ function Media() {
       <div className="relative -mt-12 md:-mt-14 z-10">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
           <div className="bg-white rounded-lg shadow-xl ring-1 ring-black/5 grid grid-cols-3 md:grid-cols-6 divide-x divide-border">
-            {tabs.map((tab) => (
-              <button key={tab.key} className={`p-5 flex flex-col items-center gap-2 hover:bg-brand-blue-wash transition-colors ${"active" in tab && tab.active ? "border-b-2 border-brand-blue text-brand-blue" : "text-navy-900/70"}`}>
-                <tab.icon className="size-5" />
-                <span className="text-xs font-semibold text-center">{t(`media.tabs.${tab.key}`)}</span>
-              </button>
-            ))}
+            {tabs.map((tab) => {
+              const isActive = tab.key === activeTab;
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveTab(tab.key)}
+                  aria-pressed={isActive}
+                  className={`p-5 flex flex-col items-center gap-2 hover:bg-brand-blue-wash transition-colors ${isActive ? "border-b-2 border-brand-blue text-brand-blue" : "text-navy-900/70"}`}
+                >
+                  <tab.icon className="size-5" />
+                  <span className="text-xs font-semibold text-center">{t(`media.tabs.${tab.key}`)}</span>
+                </button>
+              );
+            })}
+
           </div>
         </div>
       </div>
@@ -119,51 +135,55 @@ function Media() {
           </aside>
 
           <div className="lg:col-span-3 space-y-12">
-            <div>
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="text-navy-900 text-xl font-bold">{t("media.sections.photos")}</h3>
-                <a href="#" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5">{t("media.sections.viewAllPhotos")} <ArrowRight className="size-3.5" /></a>
-              </div>
-              <div className="grid grid-cols-3 grid-rows-2 gap-3 h-[400px]">
-                <div className="row-span-2 relative rounded-lg overflow-hidden"><img src={cardEducation} alt="" className="w-full h-full object-cover" /></div>
-                <div className="relative rounded-lg overflow-hidden"><img src={cardLivelihoods} alt="" className="w-full h-full object-cover" /></div>
-                <div className="relative rounded-lg overflow-hidden"><img src={cardWash} alt="" className="w-full h-full object-cover" /></div>
-                <div className="relative rounded-lg overflow-hidden"><img src={cardHealth} alt="" className="w-full h-full object-cover" /></div>
-                <div className="relative rounded-lg overflow-hidden group cursor-pointer">
-                  <img src={cardWomen} alt="" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 bg-navy-950/60 flex items-center justify-center text-white font-bold text-center">
-                    +245<br /><span className="text-xs font-normal">{t("media.sections.morePhotos")}</span>
+            {activeTab === "photos" && (
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-navy-900 text-xl font-bold">{t("media.sections.photos")}</h3>
+                  <a href="#" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5">{t("media.sections.viewAllPhotos")} <ArrowRight className="size-3.5" /></a>
+                </div>
+                <div className="grid grid-cols-3 grid-rows-2 gap-3 h-[400px]">
+                  <div className="row-span-2 relative rounded-lg overflow-hidden"><img src={cardEducation} alt="" className="w-full h-full object-cover" /></div>
+                  <div className="relative rounded-lg overflow-hidden"><img src={cardLivelihoods} alt="" className="w-full h-full object-cover" /></div>
+                  <div className="relative rounded-lg overflow-hidden"><img src={cardWash} alt="" className="w-full h-full object-cover" /></div>
+                  <div className="relative rounded-lg overflow-hidden"><img src={cardHealth} alt="" className="w-full h-full object-cover" /></div>
+                  <div className="relative rounded-lg overflow-hidden group cursor-pointer">
+                    <img src={cardWomen} alt="" className="w-full h-full object-cover" />
+                    <div className="absolute inset-0 bg-navy-950/60 flex items-center justify-center text-white font-bold text-center">
+                      +245<br /><span className="text-xs font-normal">{t("media.sections.morePhotos")}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )}
 
-            <div>
-              <div className="flex items-center justify-between mb-5">
-                <h3 className="text-navy-900 text-xl font-bold">{t("media.sections.videos")}</h3>
-                <a href="#" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5">{t("media.sections.viewAllVideos")} <ArrowRight className="size-3.5" /></a>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {videos.map((v) => (
-                  <div key={v.key} className="group cursor-pointer">
-                    <div className="relative aspect-video rounded-lg overflow-hidden mb-2">
-                      <img src={v.img} alt="" className="w-full h-full object-cover" loading="lazy" />
-                      <div className="absolute inset-0 bg-navy-950/30 flex items-center justify-center">
-                        <div className="size-12 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-                          <PlayCircle className="size-6 text-brand-blue" />
+            {activeTab === "videos" && (
+              <div>
+                <div className="flex items-center justify-between mb-5">
+                  <h3 className="text-navy-900 text-xl font-bold">{t("media.sections.videos")}</h3>
+                  <a href="#" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5">{t("media.sections.viewAllVideos")} <ArrowRight className="size-3.5" /></a>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {videos.map((v) => (
+                    <div key={v.key} className="group cursor-pointer">
+                      <div className="relative aspect-video rounded-lg overflow-hidden mb-2">
+                        <img src={v.img} alt="" className="w-full h-full object-cover" loading="lazy" />
+                        <div className="absolute inset-0 bg-navy-950/30 flex items-center justify-center">
+                          <div className="size-12 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <PlayCircle className="size-6 text-brand-blue" />
+                          </div>
                         </div>
+                        <span className="absolute bottom-2 right-2 bg-navy-950/80 text-white text-[10px] px-1.5 py-0.5 rounded">{v.duration}</span>
                       </div>
-                      <span className="absolute bottom-2 right-2 bg-navy-950/80 text-white text-[10px] px-1.5 py-0.5 rounded">{v.duration}</span>
+                      <h4 className="text-navy-900 text-sm font-semibold leading-snug mb-1">{t(`media.videos.${v.key}.title`)}</h4>
+                      <p className="text-navy-900/60 text-xs">{t(`media.videos.${v.key}.date`)}</p>
                     </div>
-                    <h4 className="text-navy-900 text-sm font-semibold leading-snug mb-1">{t(`media.videos.${v.key}.title`)}</h4>
-                    <p className="text-navy-900/60 text-xs">{t(`media.videos.${v.key}.date`)}</p>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2">
+            {activeTab === "press" && (
+              <div>
                 <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.sections.press")}</h3>
                 <div className="space-y-3">
                   {releaseKeys.map((r) => (
@@ -188,37 +208,70 @@ function Media() {
                   </button>
                 </div>
               </div>
+            )}
 
+            {activeTab === "news" && (
               <div>
-                <div className="bg-white ring-1 ring-border rounded-lg p-5 mb-6">
-                  <h4 className="text-brand-blue font-bold mb-4">{t("media.sections.stories")}</h4>
-                  <div className="space-y-4">
-                    {storyKeys.map((s) => (
-                      <div key={s} className="flex gap-3">
-                        <img src={storyImgs[s]} alt="" className="size-14 object-cover rounded-md shrink-0" loading="lazy" />
-                        <div>
-                          <h5 className="text-navy-900 font-semibold text-xs leading-snug mb-1">{t(`media.stories.${s}.title`)}</h5>
-                          <p className="text-navy-900/60 text-[10px]">{t(`media.stories.${s}.date`)}</p>
-                        </div>
+                <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.sections.stories")}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                  {storyKeys.map((s) => (
+                    <article key={s} className="bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
+                      <img src={storyImgs[s]} alt="" className="w-full aspect-[4/3] object-cover" loading="lazy" />
+                      <div className="p-4">
+                        <h4 className="text-navy-900 font-semibold text-sm leading-snug mb-1">{t(`media.stories.${s}.title`)}</h4>
+                        <p className="text-navy-900/60 text-xs">{t(`media.stories.${s}.date`)}</p>
                       </div>
-                    ))}
-                  </div>
-                  <button className="w-full mt-4 border border-brand-blue text-brand-blue rounded-md py-2 text-xs font-semibold inline-flex items-center justify-center gap-1">
-                    {t("media.sections.viewAllStories")} <ArrowRight className="size-3" />
-                  </button>
-                </div>
-
-                <div className="bg-white ring-1 ring-border rounded-lg p-5">
-                  <h4 className="text-brand-blue font-bold mb-2 flex items-center gap-2"><Mail className="size-4" /> {t("media.contact.title")}</h4>
-                  <p className="text-navy-900/70 text-xs mb-4">{t("media.contact.body")}</p>
-                  <ul className="space-y-2 text-xs">
-                    <li className="flex items-center gap-2"><Mail className="size-3.5 text-brand-blue" /> media@pyecso.org.af</li>
-                    <li className="flex items-center gap-2"><Phone className="size-3.5 text-brand-blue" /> +93 (0) 20 250 0312</li>
-                  </ul>
-                  <button className="w-full mt-4 border border-brand-blue text-brand-blue rounded-md py-2 text-xs font-semibold">{t("media.contact.button")}</button>
+                    </article>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
+
+            {activeTab === "coverage" && (
+              <div>
+                <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.tabs.coverage")}</h3>
+                <ul className="space-y-3">
+                  {[
+                    { outlet: "TOLOnews", title: "PYECSO reaches 24 provinces with humanitarian aid", date: "May 2025" },
+                    { outlet: "Reuters", title: "Women-led NGO expands education access in Afghanistan", date: "Mar 2025" },
+                    { outlet: "Al Jazeera", title: "Community resilience programs delivered by PYECSO", date: "Jan 2025" },
+                    { outlet: "BBC Persian", title: "Livelihoods and cash assistance across rural districts", date: "Nov 2024" },
+                  ].map((c) => (
+                    <li key={c.title} className="bg-white ring-1 ring-border rounded-lg p-4 flex items-start gap-4">
+                      <Tv className="size-5 text-brand-blue shrink-0 mt-0.5" />
+                      <div className="flex-1 min-w-0">
+                        <div className="text-xs font-bold text-brand-blue uppercase tracking-wider mb-1">{c.outlet}</div>
+                        <div className="text-navy-900 text-sm font-semibold leading-snug">{c.title}</div>
+                        <div className="text-navy-900/60 text-xs mt-1">{c.date}</div>
+                      </div>
+                      <a href="#" className="text-brand-blue text-xs font-semibold shrink-0 inline-flex items-center gap-1">Read <ArrowRight className="size-3" /></a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {activeTab === "publications" && (
+              <div>
+                <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.tabs.publications")}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {downloads.map((d) => (
+                    <div key={d.key} className="bg-white ring-1 ring-border rounded-lg p-5 flex items-start gap-4 hover:shadow-md transition-shadow">
+                      <div className="size-12 rounded-md bg-brand-blue-wash text-brand-blue flex items-center justify-center shrink-0">
+                        <d.icon className="size-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-navy-900 font-semibold text-sm">{t(`media.downloads.${d.key}`)}</div>
+                        <div className="text-navy-900/60 text-xs mt-0.5">{d.meta}</div>
+                        <a href="#" className="inline-flex items-center gap-1 text-brand-blue text-xs font-semibold mt-2">
+                          <Download className="size-3" /> Download
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>
