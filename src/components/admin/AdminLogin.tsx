@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { lovable } from "@/integrations/lovable";
+
 import { ShieldCheck } from "lucide-react";
 
 export function AdminLogin({ hasSession, onSignedIn }: { hasSession: boolean; onSignedIn: () => void }) {
@@ -37,17 +37,6 @@ export function AdminLogin({ hasSession, onSignedIn }: { hasSession: boolean; on
     }
   }
 
-  async function google() {
-    try {
-      const result = await lovable.auth.signInWithOAuth("google", {
-        redirect_uri: `${window.location.origin}/admin`,
-      });
-      if (result.error) throw result.error instanceof Error ? result.error : new Error(String(result.error));
-      if (!result.redirected) onSignedIn();
-    } catch (err: any) {
-      toast.error(err.message ?? "Google sign-in failed");
-    }
-  }
 
   return (
     <div className="min-h-screen grid place-items-center p-6 bg-slate-100 dark:bg-navy-950">
