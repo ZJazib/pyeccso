@@ -53,15 +53,20 @@ function Programs() {
             <p className="text-navy-900/70 mt-3">{t("programs.sectorsHead.body")}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {sectors.map((s) => (
-              <article key={s.key} className="bg-white ring-1 ring-border rounded-lg p-6 hover:shadow-md transition-shadow">
-                <div className={`size-12 ${s.color} text-white rounded-md flex items-center justify-center mb-4`}>
-                  <s.icon className="size-6" />
-                </div>
-                <h3 className="text-navy-900 font-bold mb-2">{t(`programs.sectorCards.${s.key}.title`)}</h3>
-                <p className="text-navy-900/70 text-sm leading-relaxed">{t(`programs.sectorCards.${s.key}.body`)}</p>
-              </article>
-            ))}
+            {sectors.map((s) => {
+              const iconName = (s.data?.icon as string) || "Sprout";
+              const Icon = ICON_MAP[iconName] ?? Sprout;
+              const color = SECTOR_COLOR[iconName] ?? "bg-brand-blue";
+              return (
+                <article key={s.id} className="bg-white ring-1 ring-border rounded-lg p-6 hover:shadow-md transition-shadow">
+                  <div className={`size-12 ${color} text-white rounded-md flex items-center justify-center mb-4`}>
+                    <Icon className="size-6" />
+                  </div>
+                  <h3 className="text-navy-900 font-bold mb-2">{s.t.title}</h3>
+                  <p className="text-navy-900/70 text-sm leading-relaxed">{s.t.summary}</p>
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -78,21 +83,21 @@ function Programs() {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {highlights.map((p) => (
-              <article key={p.key} className="bg-white ring-1 ring-border rounded-lg p-6 flex flex-col">
-                <span className={`inline-block ${p.tagColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase mb-3 w-fit`}>
-                  {t(`programs.highlights.${p.key}.tag`)}
+            {highlights.slice(0, 6).map((p) => (
+              <article key={p.id} className="bg-white ring-1 ring-border rounded-lg p-6 flex flex-col">
+                <span className="inline-block bg-brand-blue text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase mb-3 w-fit">
+                  {(p.data?.category as string) ?? ""}
                 </span>
-                <h4 className="text-navy-900 font-bold mb-2 leading-snug">{t(`programs.highlights.${p.key}.title`)}</h4>
-                <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{t(`programs.highlights.${p.key}.body`)}</p>
+                <h4 className="text-navy-900 font-bold mb-2 leading-snug">{p.t.title}</h4>
+                <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{p.t.summary}</p>
                 <dl className="grid grid-cols-2 gap-3 text-xs mt-auto pt-4 border-t border-border">
                   <div>
                     <dt className="text-navy-900/50">{t("common.location")}</dt>
-                    <dd className="text-navy-900 font-semibold">{p.location}</dd>
+                    <dd className="text-navy-900 font-semibold">{(p.data?.location as string) ?? ""}</dd>
                   </div>
                   <div>
                     <dt className="text-navy-900/50">{t("common.donorPartner")}</dt>
-                    <dd className="text-navy-900 font-semibold">{p.donor}</dd>
+                    <dd className="text-navy-900 font-semibold">{(p.data?.partner as string) ?? ""}</dd>
                   </div>
                 </dl>
               </article>
