@@ -156,6 +156,68 @@
 .dark .bg-navy-800 { background-color: #0f2c5c; }
 .dark .bg-white { background-color: var(--navy-900); }
 
+/* Dark-mode form controls: inputs, textareas, selects, placeholders,
+   validation text, and native option lists all stay light and legible. */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.18);
+  caret-color: #ffffff;
+}
+.dark input:focus,
+.dark textarea:focus,
+.dark select:focus,
+.dark input:focus-visible,
+.dark textarea:focus-visible,
+.dark select:focus-visible {
+  background-color: rgba(255, 255, 255, 0.09);
+  border-color: var(--brand-blue);
+  outline-color: var(--brand-blue);
+}
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+  opacity: 1;
+}
+.dark input:-webkit-autofill,
+.dark textarea:-webkit-autofill,
+.dark select:-webkit-autofill {
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px var(--navy-900) inset;
+  caret-color: #ffffff;
+}
+.dark select option,
+.dark select optgroup {
+  background-color: #0a2350;
+  color: #ffffff;
+}
+.dark input[type="checkbox"],
+.dark input[type="radio"] {
+  accent-color: var(--brand-blue);
+}
+.dark input[type="file"] { color: rgba(255, 255, 255, 0.85); }
+.dark input[type="file"]::file-selector-button {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+.dark ::-webkit-calendar-picker-indicator { filter: invert(1) brightness(1.4); }
+
+/* Labels + form validation / helper text */
+.dark label { color: #ffffff; }
+.dark [role="alert"],
+.dark .form-message,
+.dark [data-slot="form-message"],
+.dark [data-invalid="true"] { color: #ff9a9a; }
+.dark input[aria-invalid="true"],
+.dark textarea[aria-invalid="true"],
+.dark select[aria-invalid="true"] {
+  border-color: #ff8a8a;
+}
+.dark [data-slot="form-description"] { color: rgba(255, 255, 255, 0.7); }
+
 @layer base {
   * {
     border-color: var(--color-border);
