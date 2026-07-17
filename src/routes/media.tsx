@@ -1,9 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   Image as ImageIcon, PlayCircle, FileText, Newspaper, Tv, BookOpen,
   Download, ArrowRight, Camera, ChevronRight, Mail, Phone,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
+
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import cardEducation from "@/assets/card-education.jpg";
