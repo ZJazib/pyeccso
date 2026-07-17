@@ -93,15 +93,6 @@ export function AdminLogin({ hasSession, onSignedIn }: { hasSession: boolean; on
               </Button>
             </form>
 
-            <div className="my-4 flex items-center gap-2 text-xs opacity-60">
-              <div className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
-              <span>OR</span>
-              <div className="h-px flex-1 bg-slate-200 dark:bg-white/10" />
-            </div>
-
-            <Button variant="outline" className="w-full" onClick={google}>
-              Continue with Google
-            </Button>
 
             <div className="mt-6 text-center text-xs">
               {mode === "login" ? (
