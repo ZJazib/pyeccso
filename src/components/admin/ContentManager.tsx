@@ -230,6 +230,9 @@ function ItemEditor({
   onSaved: () => void;
 }) {
   const [saving, setSaving] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(true);
+  const [previewLang, setPreviewLang] = useState<Lang>("en");
+  const [previewDevice, setPreviewDevice] = useState<"desktop" | "mobile">("desktop");
   const [row, setRow] = useState<Item>(
     item ?? ({
       id: "",
