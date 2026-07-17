@@ -42,7 +42,7 @@ export function AdminLogin({ hasSession, onSignedIn }: { hasSession: boolean; on
       const result = await lovable.auth.signInWithOAuth("google", {
         redirect_uri: `${window.location.origin}/admin`,
       });
-      if (result.error) throw new Error(result.error);
+      if (result.error) throw result.error instanceof Error ? result.error : new Error(String(result.error));
       if (!result.redirected) onSignedIn();
     } catch (err: any) {
       toast.error(err.message ?? "Google sign-in failed");

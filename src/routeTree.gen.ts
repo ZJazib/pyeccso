@@ -21,9 +21,14 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as PortalTeacherRouteImport } from './routes/portal.teacher'
 import { Route as PortalStudentRouteImport } from './routes/portal.student'
 import { Route as PortalManagerRouteImport } from './routes/portal.manager'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
+import { Route as AdminMediaRouteImport } from './routes/admin.media'
+import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as ApiPublicHesabSessionRouteImport } from './routes/api/public/hesab-session'
 
 const ProjectsRoute = ProjectsRouteImport.update({
@@ -86,6 +91,11 @@ const PortalIndexRoute = PortalIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PortalRoute,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const PortalTeacherRoute = PortalTeacherRouteImport.update({
   id: '/teacher',
   path: '/teacher',
@@ -101,6 +111,26 @@ const PortalManagerRoute = PortalManagerRouteImport.update({
   path: '/manager',
   getParentRoute: () => PortalRoute,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminMediaRoute = AdminMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAuditRoute = AdminAuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
+  getParentRoute: () => AdminRoute,
+} as any)
 const ApiPublicHesabSessionRoute = ApiPublicHesabSessionRouteImport.update({
   id: '/api/public/hesab-session',
   path: '/api/public/hesab-session',
@@ -110,7 +140,7 @@ const ApiPublicHesabSessionRoute = ApiPublicHesabSessionRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
@@ -119,16 +149,20 @@ export interface FileRoutesByFullPath {
   '/portal': typeof PortalRouteWithChildren
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/portal/manager': typeof PortalManagerRoute
   '/portal/student': typeof PortalStudentRoute
   '/portal/teacher': typeof PortalTeacherRoute
+  '/admin/': typeof AdminIndexRoute
   '/portal/': typeof PortalIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin': typeof AdminRoute
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
@@ -136,9 +170,14 @@ export interface FileRoutesByTo {
   '/media': typeof MediaRoute
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/portal/manager': typeof PortalManagerRoute
   '/portal/student': typeof PortalStudentRoute
   '/portal/teacher': typeof PortalTeacherRoute
+  '/admin': typeof AdminIndexRoute
   '/portal': typeof PortalIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
@@ -146,7 +185,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/careers': typeof CareersRoute
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
@@ -155,9 +194,14 @@ export interface FileRoutesById {
   '/portal': typeof PortalRouteWithChildren
   '/programs': typeof ProgramsRoute
   '/projects': typeof ProjectsRoute
+  '/admin/audit': typeof AdminAuditRoute
+  '/admin/media': typeof AdminMediaRoute
+  '/admin/settings': typeof AdminSettingsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/portal/manager': typeof PortalManagerRoute
   '/portal/student': typeof PortalStudentRoute
   '/portal/teacher': typeof PortalTeacherRoute
+  '/admin/': typeof AdminIndexRoute
   '/portal/': typeof PortalIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
@@ -175,16 +219,20 @@ export interface FileRouteTypes {
     | '/portal'
     | '/programs'
     | '/projects'
+    | '/admin/audit'
+    | '/admin/media'
+    | '/admin/settings'
+    | '/admin/users'
     | '/portal/manager'
     | '/portal/student'
     | '/portal/teacher'
+    | '/admin/'
     | '/portal/'
     | '/api/public/hesab-session'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/admin'
     | '/careers'
     | '/contact'
     | '/donate'
@@ -192,9 +240,14 @@ export interface FileRouteTypes {
     | '/media'
     | '/programs'
     | '/projects'
+    | '/admin/audit'
+    | '/admin/media'
+    | '/admin/settings'
+    | '/admin/users'
     | '/portal/manager'
     | '/portal/student'
     | '/portal/teacher'
+    | '/admin'
     | '/portal'
     | '/api/public/hesab-session'
   id:
@@ -210,9 +263,14 @@ export interface FileRouteTypes {
     | '/portal'
     | '/programs'
     | '/projects'
+    | '/admin/audit'
+    | '/admin/media'
+    | '/admin/settings'
+    | '/admin/users'
     | '/portal/manager'
     | '/portal/student'
     | '/portal/teacher'
+    | '/admin/'
     | '/portal/'
     | '/api/public/hesab-session'
   fileRoutesById: FileRoutesById
@@ -220,7 +278,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   CareersRoute: typeof CareersRoute
   ContactRoute: typeof ContactRoute
   DonateRoute: typeof DonateRoute
@@ -318,6 +376,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalIndexRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/portal/teacher': {
       id: '/portal/teacher'
       path: '/teacher'
@@ -339,6 +404,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PortalManagerRouteImport
       parentRoute: typeof PortalRoute
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/media': {
+      id: '/admin/media'
+      path: '/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminMediaRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/audit': {
+      id: '/admin/audit'
+      path: '/audit'
+      fullPath: '/admin/audit'
+      preLoaderRoute: typeof AdminAuditRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/api/public/hesab-session': {
       id: '/api/public/hesab-session'
       path: '/api/public/hesab-session'
@@ -348,6 +441,24 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AdminRouteChildren {
+  AdminAuditRoute: typeof AdminAuditRoute
+  AdminMediaRoute: typeof AdminMediaRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAuditRoute: AdminAuditRoute,
+  AdminMediaRoute: AdminMediaRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface PortalRouteChildren {
   PortalManagerRoute: typeof PortalManagerRoute
@@ -369,7 +480,7 @@ const PortalRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   CareersRoute: CareersRoute,
   ContactRoute: ContactRoute,
   DonateRoute: DonateRoute,
