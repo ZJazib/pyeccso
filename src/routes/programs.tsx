@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Banknote, Wheat, Sprout, GraduationCap, Leaf, Shield, HeartPulse, ArrowRight, UserPlus } from "lucide-react";
+import { Banknote, Wheat, Sprout, GraduationCap, Leaf, Shield, HeartPulse, ArrowRight, UserPlus, type LucideIcon } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
+import { useCmsListTranslated } from "@/lib/useCmsContent";
 
 export const Route = createFileRoute("/programs")({
   component: Programs,
