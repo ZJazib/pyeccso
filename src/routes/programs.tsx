@@ -20,25 +20,22 @@ export const Route = createFileRoute("/programs")({
 
 function Programs() {
   const { t } = useTranslation();
+  const { items: sectors } = useCmsListTranslated("program");
+  const { items: allProjects } = useCmsListTranslated("project");
+  const highlights = allProjects.filter((p) => p.data?.featured);
 
-  const sectors = [
-    { icon: Banknote, key: "cash", color: "bg-sector-emergency" },
-    { icon: Wheat, key: "food", color: "bg-sector-food" },
-    { icon: Sprout, key: "livelihoods", color: "bg-sector-livelihoods" },
-    { icon: GraduationCap, key: "education", color: "bg-sector-education" },
-    { icon: Leaf, key: "agriculture", color: "bg-sector-agriculture" },
-    { icon: Shield, key: "protection", color: "bg-sector-child" },
-    { icon: HeartPulse, key: "health", color: "bg-sector-health" },
-  ] as const;
-
-  const highlights = [
-    { key: "winter", tagColor: "bg-sector-emergency", location: "Kabul", donor: "Board of Directors / Donations" },
-    { key: "food24", tagColor: "bg-sector-food", location: "24 Provinces", donor: "PRT" },
-    { key: "womenTvet", tagColor: "bg-sector-livelihoods", location: "Logar", donor: "UNICEF / HODKA" },
-    { key: "unwomen", tagColor: "bg-sector-education", location: "Kabul", donor: "UN Women" },
-    { key: "seeds", tagColor: "bg-sector-agriculture", location: "Khost", donor: "PRT" },
-    { key: "mhpss", tagColor: "bg-sector-health", location: "Logar", donor: "DAI / LGCD" },
-  ] as const;
+  const ICON_MAP: Record<string, LucideIcon> = {
+    Banknote, Wheat, Sprout, GraduationCap, Leaf, Shield, HeartPulse,
+  };
+  const SECTOR_COLOR: Record<string, string> = {
+    Banknote: "bg-sector-emergency",
+    Wheat: "bg-sector-food",
+    Sprout: "bg-sector-livelihoods",
+    GraduationCap: "bg-sector-education",
+    Leaf: "bg-sector-agriculture",
+    Shield: "bg-sector-child",
+    HeartPulse: "bg-sector-health",
+  };
 
   return (
     <SiteLayout>
