@@ -365,7 +365,50 @@ function ItemEditor({
               />
             </div>
           </div>
+
+          <div className="pt-4 border-t border-slate-200 dark:border-white/10 space-y-3">
+            <div>
+              <Label className="text-sm font-semibold">Scheduled publishing</Label>
+              <p className="text-xs opacity-60 mt-0.5">
+                Optional. Times use your local timezone. A background job checks every minute.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 gap-3">
+              <div>
+                <Label>Publish at</Label>
+                <Input
+                  type="datetime-local"
+                  value={toLocalInput(row.publish_at)}
+                  onChange={(e) => setRow({ ...row, publish_at: fromLocalInput(e.target.value) })}
+                />
+                <div className="text-[11px] opacity-60 mt-1">
+                  Draft items automatically go live at this time.
+                </div>
+              </div>
+              <div>
+                <Label>Unpublish at</Label>
+                <Input
+                  type="datetime-local"
+                  value={toLocalInput(row.unpublish_at)}
+                  onChange={(e) => setRow({ ...row, unpublish_at: fromLocalInput(e.target.value) })}
+                />
+                <div className="text-[11px] opacity-60 mt-1">
+                  Published items are archived at this time.
+                </div>
+              </div>
+            </div>
+            {(row.publish_at || row.unpublish_at) && (
+              <button
+                type="button"
+                onClick={() => setRow({ ...row, publish_at: null, unpublish_at: null })}
+                className="text-xs text-brand-blue hover:underline"
+              >
+                Clear schedule
+              </button>
+            )}
+          </div>
         </div>
+
 
         {previewOpen && (
           <div className="lg:sticky lg:top-4 lg:self-start">
