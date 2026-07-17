@@ -388,13 +388,32 @@ function ItemEditor({
       };
 
       let error;
+      let contentId = item?.id as string | undefined;
       if (item) {
         ({ error } = await supabase.from("content_items").update(payload).eq("id", item.id));
       } else {
         payload.created_by = user.user?.id;
-        ({ error } = await supabase.from("content_items").insert(payload));
+        const ins = await supabase.from("content_items").insert(payload).select("id").single();
+        error = ins.error;
+        contentId = ins.data?.id;
       }
       if (error) throw error;
+      // Snapshot version (best-effort, ignore failure)
+      if (contentId) {
+        const { data: last } = await supabase
+          .from("content_versions").select("version_no").eq("content_id", contentId)
+          .order("version_no", { ascending: false }).limit(1).maybeSingle();
+        const nextVersion = ((last?.version_no as number | undefined) ?? 0) + 1;
+        await supabase.from("content_versions").insert({
+          content_id: contentId,
+          version_no: nextVersion,
+          data: payload.data,
+          status: payload.status,
+          slug: payload.slug,
+          cover_url: payload.cover_url,
+          edited_by: user.user?.id,
+        });
+      }
       toast.success(publish ? "Saved & published" : "Saved");
       onSaved();
     } catch (err: any) {
