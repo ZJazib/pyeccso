@@ -120,6 +120,42 @@
   --brand-blue-soft: rgba(30, 91, 168, 0.25);
 }
 
+/* Dark mode: force all navy/ink text tokens to light so hardcoded
+   `text-navy-900`, `text-ink`, `text-navy-900/70`, etc. read on dark surfaces. */
+.dark {
+  --color-navy-950: #ffffff;
+  --color-navy-900: #ffffff;
+  --color-navy-800: #ffffff;
+  --color-ink: #ffffff;
+  --navy-950-solid: #071a35;
+}
+
+.dark [class*="text-navy-"],
+.dark [class*="text-ink"],
+.dark .text-foreground,
+.dark .text-card-foreground,
+.dark .text-popover-foreground,
+.dark .text-secondary-foreground,
+.dark .text-accent-foreground {
+  color: #ffffff;
+}
+
+.dark .text-muted-foreground,
+.dark [class*="text-white/"],
+.dark [class*="text-navy-900/"],
+.dark [class*="text-navy-800/"] {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.dark .text-brand-blue { color: #7db4ee; }
+
+/* Keep dark navy backgrounds actually dark (footer, hero) even though
+   the navy text token is remapped to white above. */
+.dark .bg-navy-950 { background-color: #071a35; }
+.dark .bg-navy-900 { background-color: #0a2350; }
+.dark .bg-navy-800 { background-color: #0f2c5c; }
+.dark .bg-white { background-color: var(--navy-900); }
+
 @layer base {
   * {
     border-color: var(--color-border);
