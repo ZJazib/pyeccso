@@ -39,6 +39,7 @@ const NAV: NavSection[] = [
       { to: "/admin/partners", label: "Partners", icon: Handshake },
       { to: "/admin/testimonials", label: "Testimonials", icon: MessageSquareQuote },
       { to: "/admin/publications", label: "Publications", icon: BookOpen },
+      { to: "/admin/offices", label: "Offices", icon: MapPin },
     ],
   },
   {
