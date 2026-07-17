@@ -291,8 +291,8 @@ function ItemEditor({
   }
 
   return (
-    <div className="space-y-6 max-w-4xl">
-      <div className="flex items-center gap-3">
+    <div className="space-y-6">
+      <div className="flex items-center gap-3 flex-wrap">
         <Button variant="outline" size="sm" onClick={onCancel}>
           <ArrowLeft className="w-4 h-4 mr-1" /> Back
         </Button>
@@ -302,40 +302,98 @@ function ItemEditor({
         <span className={`text-[11px] px-2 py-0.5 rounded-full ${
           row.status === "published" ? "bg-green-100 text-green-700 dark:bg-green-500/10" : "bg-slate-100 dark:bg-white/10"
         }`}>{row.status}</span>
+        <div className="ml-auto">
+          <Button variant="outline" size="sm" onClick={() => setPreviewOpen((v) => !v)}>
+            <Eye className="w-4 h-4 mr-1" /> {previewOpen ? "Hide preview" : "Show preview"}
+          </Button>
+        </div>
       </div>
 
-      <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-navy-900 p-6 space-y-5">
-        {config.fields.map((f) => (
-          <div key={f.name}>
-            <Label className="text-sm">
-              {f.label}
-              {f.required && <span className="text-red-500 ml-1">*</span>}
-            </Label>
-            {f.help && <div className="text-xs opacity-60 mb-1">{f.help}</div>}
-            <div className="mt-1">
-              <FieldRenderer field={f} value={getField(f)} onChange={(v) => setField(f, v)} />
+      <div className={`grid gap-6 ${previewOpen ? "lg:grid-cols-2" : "max-w-4xl"}`}>
+        <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-navy-900 p-6 space-y-5">
+          {config.fields.map((f) => (
+            <div key={f.name}>
+              <Label className="text-sm">
+                {f.label}
+                {f.required && <span className="text-red-500 ml-1">*</span>}
+              </Label>
+              {f.help && <div className="text-xs opacity-60 mb-1">{f.help}</div>}
+              <div className="mt-1">
+                <FieldRenderer field={f} value={getField(f)} onChange={(v) => setField(f, v)} />
+              </div>
+            </div>
+          ))}
+
+          <div className="pt-4 border-t border-slate-200 dark:border-white/10 grid md:grid-cols-2 gap-3">
+            <div>
+              <Label>Slug (URL)</Label>
+              <Input
+                value={row.slug ?? ""}
+                onChange={(e) => setRow({ ...row, slug: e.target.value })}
+                placeholder="auto-generated from title"
+              />
+            </div>
+            <div>
+              <Label>Display order</Label>
+              <Input
+                type="number"
+                value={row.position}
+                onChange={(e) => setRow({ ...row, position: Number(e.target.value) || 0 })}
+              />
             </div>
           </div>
-        ))}
-
-        <div className="pt-4 border-t border-slate-200 dark:border-white/10 grid md:grid-cols-2 gap-3">
-          <div>
-            <Label>Slug (URL)</Label>
-            <Input
-              value={row.slug ?? ""}
-              onChange={(e) => setRow({ ...row, slug: e.target.value })}
-              placeholder="auto-generated from title"
-            />
-          </div>
-          <div>
-            <Label>Display order</Label>
-            <Input
-              type="number"
-              value={row.position}
-              onChange={(e) => setRow({ ...row, position: Number(e.target.value) || 0 })}
-            />
-          </div>
         </div>
+
+        {previewOpen && (
+          <div className="lg:sticky lg:top-4 lg:self-start">
+            <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/[0.02] overflow-hidden">
+              <div className="flex items-center gap-1 px-3 py-2 border-b border-slate-200 dark:border-white/10 bg-white dark:bg-navy-900 flex-wrap">
+                <Languages className="w-3.5 h-3.5 opacity-60 mr-1" />
+                {LANGUAGES.map((l) => {
+                  const active = previewLang === l.code;
+                  return (
+                    <button
+                      key={l.code}
+                      type="button"
+                      onClick={() => setPreviewLang(l.code)}
+                      className={`text-xs px-2 py-1 rounded ${
+                        active ? "bg-brand-blue text-white" : "hover:bg-slate-100 dark:hover:bg-white/10"
+                      }`}
+                    >
+                      {l.label}
+                    </button>
+                  );
+                })}
+                <div className="ml-auto flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setPreviewDevice("desktop")}
+                    className={`p-1.5 rounded ${previewDevice === "desktop" ? "bg-brand-blue text-white" : "hover:bg-slate-100 dark:hover:bg-white/10"}`}
+                    title="Desktop"
+                  >
+                    <Monitor className="w-4 h-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPreviewDevice("mobile")}
+                    className={`p-1.5 rounded ${previewDevice === "mobile" ? "bg-brand-blue text-white" : "hover:bg-slate-100 dark:hover:bg-white/10"}`}
+                    title="Mobile"
+                  >
+                    <Smartphone className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+              <div className="p-4 max-h-[75vh] overflow-auto">
+                <div className={previewDevice === "mobile" ? "mx-auto w-[390px] max-w-full" : "w-full"}>
+                  <ContentPreview type={config.type} row={row} lang={previewLang} />
+                </div>
+              </div>
+              <div className="px-3 py-1.5 border-t border-slate-200 dark:border-white/10 text-[11px] opacity-60 bg-white dark:bg-navy-900">
+                Live preview — this is how the entry will render on the public site.
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex gap-2 justify-end sticky bottom-0 bg-gradient-to-t from-slate-50 dark:from-navy-950 py-3">
@@ -347,6 +405,191 @@ function ItemEditor({
           <Eye className="w-4 h-4 mr-1" /> {saving ? "Saving…" : "Publish"}
         </Button>
       </div>
+    </div>
+  );
+}
+
+const RTL_LANGS: Lang[] = ["dr", "ps", "ar"];
+
+function pick(value: any, lang: Lang): string {
+  if (value == null) return "";
+  if (typeof value === "string") return value;
+  if (typeof value === "object") {
+    return value[lang] || value.en || value.dr || value.ps || value.ar || value.fr || "";
+  }
+  return String(value);
+}
+
+function ContentPreview({ type, row, lang }: { type: string; row: Item; lang: Lang }) {
+  const isRtl = RTL_LANGS.includes(lang);
+  const d = row.data ?? {};
+  const title = pick(d.title ?? d.name, lang) || "(untitled)";
+  const summary = pick(d.summary ?? d.description ?? d.excerpt ?? d.quote, lang);
+  const body = pick(d.body ?? d.description, lang);
+  const cover = row.cover_url;
+  const category = typeof d.category === "string" ? d.category : "";
+  const location = typeof d.location === "string" ? d.location : "";
+  const partner = typeof d.partner === "string" ? d.partner : "";
+  const role = typeof d.role === "string" ? d.role : "";
+  const department = typeof d.department === "string" ? d.department : "";
+  const startDate = typeof d.start_date === "string" ? d.start_date : "";
+  const endDate = typeof d.end_date === "string" ? d.end_date : "";
+  const venue = typeof d.venue === "string" ? d.venue : "";
+  const city = typeof d.city === "string" ? d.city : "";
+  const employmentType = typeof d.employment_type === "string" ? d.employment_type : "";
+  const deadline = typeof d.deadline === "string" ? d.deadline : "";
+  const goal = Number(d.goal_amount_afn ?? 0);
+  const raised = Number(d.raised_amount_afn ?? 0);
+  const website = typeof d.website === "string" ? d.website : "";
+  const author = typeof d.author === "string" ? d.author : "";
+  const year = typeof d.year === "number" ? d.year : "";
+
+  return (
+    <div
+      dir={isRtl ? "rtl" : "ltr"}
+      className={`font-sans text-navy-900 ${isRtl ? "text-right" : "text-left"}`}
+      style={{ fontFamily: isRtl ? '"Vazirmatn Variable", ui-sans-serif, system-ui, sans-serif' : undefined }}
+    >
+      {(type === "project" || type === "program" || type === "news" || type === "publication" || type === "media") && (
+        <article className="bg-white ring-1 ring-slate-200 rounded-lg overflow-hidden shadow-sm">
+          {cover && (
+            <div className="aspect-[16/9] bg-slate-100 overflow-hidden">
+              <img src={cover} alt="" className="w-full h-full object-cover" />
+            </div>
+          )}
+          <div className="p-5">
+            {category && (
+              <span className="inline-block bg-brand-blue text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase mb-3">
+                {category}
+              </span>
+            )}
+            <h3 className="text-navy-900 font-bold text-lg leading-snug mb-2">{title}</h3>
+            {summary && <p className="text-navy-900/70 text-sm leading-relaxed mb-3">{summary}</p>}
+            {body && <p className="text-navy-900/60 text-sm leading-relaxed mb-3 whitespace-pre-line">{body}</p>}
+            {(location || partner || year || author) && (
+              <dl className="grid grid-cols-2 gap-3 text-xs mt-3 pt-3 border-t border-slate-200">
+                {location && (<div><dt className="opacity-60">Location</dt><dd className="font-semibold">{location}</dd></div>)}
+                {partner && (<div><dt className="opacity-60">Donor / Partner</dt><dd className="font-semibold">{partner}</dd></div>)}
+                {year && (<div><dt className="opacity-60">Year</dt><dd className="font-semibold">{year}</dd></div>)}
+                {author && (<div><dt className="opacity-60">Author</dt><dd className="font-semibold">{author}</dd></div>)}
+              </dl>
+            )}
+          </div>
+        </article>
+      )}
+
+      {type === "team" && (
+        <article className="bg-white ring-1 ring-slate-200 rounded-lg overflow-hidden shadow-sm text-center">
+          <div className="aspect-square bg-slate-100 overflow-hidden">
+            {cover ? <img src={cover} alt="" className="w-full h-full object-cover" /> : null}
+          </div>
+          <div className="p-5">
+            <h3 className="text-navy-900 font-bold text-lg">{title}</h3>
+            {role && <div className="text-brand-blue text-sm font-semibold mt-1">{role}</div>}
+            {department && <div className="text-xs opacity-60 uppercase tracking-wide mt-1">{department}</div>}
+            {summary && <p className="text-navy-900/70 text-sm mt-3">{summary}</p>}
+          </div>
+        </article>
+      )}
+
+      {type === "partner" && (
+        <article className="bg-white ring-1 ring-slate-200 rounded-lg p-6 text-center shadow-sm">
+          <div className="h-24 flex items-center justify-center mb-3">
+            {cover ? <img src={cover} alt="" className="max-h-24 max-w-full object-contain" /> : <div className="text-xs opacity-40">Logo</div>}
+          </div>
+          <h3 className="font-bold">{title}</h3>
+          {category && <div className="text-xs opacity-60 uppercase mt-1">{category}</div>}
+          {summary && <p className="text-sm opacity-70 mt-2">{summary}</p>}
+          {website && <div className="text-xs text-brand-blue mt-2 truncate">{website}</div>}
+        </article>
+      )}
+
+      {type === "testimonial" && (
+        <article className="bg-white ring-1 ring-slate-200 rounded-lg p-6 shadow-sm">
+          <div className="text-4xl text-brand-blue leading-none mb-2">“</div>
+          <p className="text-navy-900 italic leading-relaxed">{summary || "(quote)"}</p>
+          <div className="mt-4 flex items-center gap-3">
+            {cover && <img src={cover} alt="" className="w-10 h-10 rounded-full object-cover" />}
+            <div>
+              <div className="font-bold text-sm">{title}</div>
+              {role && <div className="text-xs opacity-60">{role}</div>}
+            </div>
+          </div>
+        </article>
+      )}
+
+      {type === "event" && (
+        <article className="bg-white ring-1 ring-slate-200 rounded-lg overflow-hidden shadow-sm">
+          {cover && <div className="aspect-[16/9] bg-slate-100 overflow-hidden"><img src={cover} alt="" className="w-full h-full object-cover" /></div>}
+          <div className="p-5">
+            <h3 className="font-bold text-lg mb-2">{title}</h3>
+            {summary && <p className="text-sm opacity-70 mb-3">{summary}</p>}
+            <div className="text-xs space-y-1">
+              {startDate && <div><span className="opacity-60">Starts:</span> <strong>{new Date(startDate).toLocaleString()}</strong></div>}
+              {endDate && <div><span className="opacity-60">Ends:</span> <strong>{new Date(endDate).toLocaleString()}</strong></div>}
+              {(venue || city) && <div><span className="opacity-60">Where:</span> <strong>{[venue, city].filter(Boolean).join(", ")}</strong></div>}
+            </div>
+          </div>
+        </article>
+      )}
+
+      {type === "career" && (
+        <article className="bg-white ring-1 ring-slate-200 rounded-lg p-5 shadow-sm">
+          <h3 className="font-bold text-lg">{title}</h3>
+          <div className="flex flex-wrap gap-3 text-xs opacity-70 mt-1">
+            {location && <span>📍 {location}</span>}
+            {employmentType && <span>⏱ {employmentType}</span>}
+            {deadline && <span>Apply by {new Date(deadline).toLocaleDateString()}</span>}
+          </div>
+          {summary && <p className="text-sm opacity-80 mt-3">{summary}</p>}
+          {body && <p className="text-sm opacity-70 mt-3 whitespace-pre-line">{body}</p>}
+        </article>
+      )}
+
+      {type === "donation" && (
+        <article className="bg-white ring-1 ring-slate-200 rounded-lg overflow-hidden shadow-sm">
+          {cover && <div className="aspect-[16/9] bg-slate-100 overflow-hidden"><img src={cover} alt="" className="w-full h-full object-cover" /></div>}
+          <div className="p-5">
+            <h3 className="font-bold text-lg mb-2">{title}</h3>
+            {summary && <p className="text-sm opacity-70 mb-4">{summary}</p>}
+            {goal > 0 && (
+              <>
+                <div className="h-2 rounded-full bg-slate-100 overflow-hidden mb-2">
+                  <div className="h-full bg-brand-blue" style={{ width: `${Math.min(100, (raised / goal) * 100)}%` }} />
+                </div>
+                <div className="flex justify-between text-xs">
+                  <span className="font-bold">{raised.toLocaleString()} AFN raised</span>
+                  <span className="opacity-60">of {goal.toLocaleString()} AFN</span>
+                </div>
+              </>
+            )}
+          </div>
+        </article>
+      )}
+
+      {type === "learn" && (
+        <article className="bg-white ring-1 ring-slate-200 rounded-lg overflow-hidden shadow-sm">
+          {cover && <div className="aspect-[16/9] bg-slate-100 overflow-hidden"><img src={cover} alt="" className="w-full h-full object-cover" /></div>}
+          <div className="p-5">
+            <h3 className="font-bold text-lg mb-2">{title}</h3>
+            {summary && <p className="text-sm opacity-70 mb-3">{summary}</p>}
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              {d.duration && <div><span className="opacity-60">Duration:</span> <strong>{String(d.duration)}</strong></div>}
+              {d.level && <div><span className="opacity-60">Level:</span> <strong>{String(d.level)}</strong></div>}
+              {d.seats && <div><span className="opacity-60">Seats:</span> <strong>{String(d.seats)}</strong></div>}
+              {deadline && <div><span className="opacity-60">Deadline:</span> <strong>{new Date(deadline).toLocaleDateString()}</strong></div>}
+            </div>
+          </div>
+        </article>
+      )}
+
+      {type === "page" && (
+        <article className="prose prose-sm max-w-none">
+          <h1 className="text-2xl font-bold mb-3">{title}</h1>
+          {summary && <p className="text-lg opacity-80">{summary}</p>}
+          {body && <div className="whitespace-pre-line opacity-80 mt-4">{body}</div>}
+        </article>
+      )}
     </div>
   );
 }
