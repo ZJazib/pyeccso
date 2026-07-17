@@ -92,3 +92,56 @@ export function useCmsListTranslated(type: string) {
   }));
   return { items: translated, loading, error };
 }
+
+/** Fetch a single published CMS item by type + slug. */
+export function useCmsItem(type: string, slug: string | undefined) {
+  const [item, setItem] = useState<CmsItem | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!slug) { setItem(null); setLoading(false); return; }
+    let alive = true;
+    setLoading(true);
+    const nowIso = new Date().toISOString();
+    supabase
+      .from("content_items")
+      .select("*")
+      .eq("type", type as any)
+      .eq("slug", slug)
+      .eq("status", "published")
+      .is("deleted_at", null)
+      .or(`unpublish_at.is.null,unpublish_at.gt.${nowIso}`)
+      .maybeSingle()
+      .then(({ data, error }) => {
+        if (!alive) return;
+        if (error) setError(error.message);
+        setItem((data as any) ?? null);
+        setLoading(false);
+      });
+    return () => { alive = false; };
+  }, [type, slug]);
+
+  return { item, loading, error };
+}
+
+/** Single item with translated fields ready for display. */
+export function useCmsItemTranslated(type: string, slug: string | undefined) {
+  const { item, loading, error } = useCmsItem(type, slug);
+  const { i18n } = useTranslation();
+  const lang = i18n.language;
+  const translated = item ? {
+    ...item,
+    t: {
+      title: pickI18n(item.data?.title ?? item.data?.name, lang),
+      name: pickI18n(item.data?.name ?? item.data?.title, lang),
+      summary: pickI18n(item.data?.summary ?? item.data?.description ?? item.data?.excerpt, lang),
+      body: pickI18n(item.data?.body ?? item.data?.description ?? item.data?.summary, lang),
+      description: pickI18n(item.data?.description ?? item.data?.summary, lang),
+      excerpt: pickI18n(item.data?.excerpt ?? item.data?.summary, lang),
+      requirements: pickI18n(item.data?.requirements, lang),
+    },
+  } : null;
+  return { item: translated, loading, error };
+}
+
