@@ -194,6 +194,7 @@ function crumbFor(pathname: string): string {
     "/admin/media": "Media Library",
     "/admin/settings": "Settings",
     "/admin/audit": "Audit Log",
+    "/admin/recycle": "Recycle Bin",
     "/admin/pages": "Pages",
     "/admin/programs": "Programs",
     "/admin/projects": "Projects",
