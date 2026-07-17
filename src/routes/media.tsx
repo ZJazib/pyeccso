@@ -286,9 +286,12 @@ function Media() {
                 <p className="text-navy-900/70 text-sm">{t("media.share.body")}</p>
               </div>
             </div>
-            <button className="bg-brand-blue text-white rounded-md px-6 py-2.5 text-sm font-semibold inline-flex items-center gap-2">
+            <a
+              href="mailto:media@pyecso.org.af?subject=Share%20Your%20Story%20with%20PYECSO&body=Hello%20PYECSO%20Media%20Team%2C%0A%0AI%27d%20like%20to%20share%20a%20story%3A%0A%0A(Please%20describe%20your%20story%20and%20attach%20any%20photos%20or%20videos.)%0A%0AName%3A%0ALocation%3A%0AContact%20number%3A"
+              className="bg-brand-blue hover:bg-brand-blue-hover text-white rounded-md px-6 py-2.5 text-sm font-semibold inline-flex items-center gap-2"
+            >
               {t("media.share.button")} <ArrowRight className="size-4" />
-            </button>
+            </a>
           </div>
         </div>
       </section>
