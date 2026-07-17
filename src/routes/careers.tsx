@@ -45,7 +45,16 @@ function Careers() {
                     <span className="flex items-center gap-1"><Clock className="size-3.5" /> {t(`careers.types.${o.type}`)}</span>
                   </div>
                 </div>
-                <button className="bg-brand-blue text-white rounded-md px-5 py-2 text-sm font-semibold">{t("careers.apply")}</button>
+                <a
+                  href={`mailto:careers@pyecso.org.af?subject=${encodeURIComponent(
+                    `Application: ${t(`careers.jobs.${o.key}`)} (${o.location})`,
+                  )}&body=${encodeURIComponent(
+                    `Dear PYECSO HR,\n\nI would like to apply for the position of ${t(`careers.jobs.${o.key}`)} based in ${o.location}.\n\nPlease find my CV attached.\n\nName:\nPhone:\nProvince:\n\nThank you,`,
+                  )}`}
+                  className="bg-brand-blue text-white rounded-md px-5 py-2 text-sm font-semibold hover:bg-brand-blue/90 transition-colors inline-flex items-center justify-center"
+                >
+                  {t("careers.apply")}
+                </a>
               </div>
             ))}
           </div>
