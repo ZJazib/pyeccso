@@ -44,6 +44,68 @@ export type Database = {
         }
         Relationships: []
       }
+      applications: {
+        Row: {
+          applicant_user_id: string | null
+          created_at: string
+          data: Json
+          email: string
+          full_name: string
+          id: string
+          kind: Database["public"]["Enums"]["application_kind"]
+          notes: string | null
+          phone: string | null
+          province: string | null
+          reference_id: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["application_status"]
+          updated_at: string
+        }
+        Insert: {
+          applicant_user_id?: string | null
+          created_at?: string
+          data?: Json
+          email: string
+          full_name: string
+          id?: string
+          kind: Database["public"]["Enums"]["application_kind"]
+          notes?: string | null
+          phone?: string | null
+          province?: string | null
+          reference_id?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["application_status"]
+          updated_at?: string
+        }
+        Update: {
+          applicant_user_id?: string | null
+          created_at?: string
+          data?: Json
+          email?: string
+          full_name?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["application_kind"]
+          notes?: string | null
+          phone?: string | null
+          province?: string | null
+          reference_id?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["application_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_reference_id_fkey"
+            columns: ["reference_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: string
@@ -83,6 +145,96 @@ export type Database = {
           id?: string
           ip_address?: string | null
           user_agent?: string | null
+        }
+        Relationships: []
+      }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string
+          handled_at: string | null
+          handled_by: string | null
+          id: string
+          message: string
+          meta: Json
+          phone: string | null
+          status: Database["public"]["Enums"]["message_status"]
+          subject: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name: string
+          handled_at?: string | null
+          handled_by?: string | null
+          id?: string
+          message: string
+          meta?: Json
+          phone?: string | null
+          status?: Database["public"]["Enums"]["message_status"]
+          subject?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string
+          handled_at?: string | null
+          handled_by?: string | null
+          id?: string
+          message?: string
+          meta?: Json
+          phone?: string | null
+          status?: Database["public"]["Enums"]["message_status"]
+          subject?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      content_items: {
+        Row: {
+          cover_url: string | null
+          created_at: string
+          created_by: string | null
+          data: Json
+          id: string
+          position: number
+          published_at: string | null
+          slug: string | null
+          status: Database["public"]["Enums"]["content_status"]
+          type: Database["public"]["Enums"]["content_type"]
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: Json
+          id?: string
+          position?: number
+          published_at?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["content_status"]
+          type: Database["public"]["Enums"]["content_type"]
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          cover_url?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: Json
+          id?: string
+          position?: number
+          published_at?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["content_status"]
+          type?: Database["public"]["Enums"]["content_type"]
+          updated_at?: string
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -283,6 +435,29 @@ export type Database = {
         | "communications"
         | "editor"
         | "viewer"
+      application_kind: "training" | "job" | "volunteer" | "internship"
+      application_status:
+        | "pending"
+        | "reviewing"
+        | "accepted"
+        | "rejected"
+        | "waitlist"
+      content_status: "draft" | "published" | "archived"
+      content_type:
+        | "page"
+        | "program"
+        | "project"
+        | "news"
+        | "event"
+        | "team"
+        | "partner"
+        | "testimonial"
+        | "publication"
+        | "career"
+        | "donation"
+        | "media"
+        | "learn"
+      message_status: "new" | "read" | "replied" | "archived" | "spam"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -422,6 +597,31 @@ export const Constants = {
         "editor",
         "viewer",
       ],
+      application_kind: ["training", "job", "volunteer", "internship"],
+      application_status: [
+        "pending",
+        "reviewing",
+        "accepted",
+        "rejected",
+        "waitlist",
+      ],
+      content_status: ["draft", "published", "archived"],
+      content_type: [
+        "page",
+        "program",
+        "project",
+        "news",
+        "event",
+        "team",
+        "partner",
+        "testimonial",
+        "publication",
+        "career",
+        "donation",
+        "media",
+        "learn",
+      ],
+      message_status: ["new", "read", "replied", "archived", "spam"],
     },
   },
 } as const
