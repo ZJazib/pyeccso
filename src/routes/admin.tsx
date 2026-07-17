@@ -206,6 +206,7 @@ function crumbFor(pathname: string): string {
     "/admin/partners": "Partners",
     "/admin/testimonials": "Testimonials",
     "/admin/publications": "Publications",
+    "/admin/offices": "Offices",
     "/admin/careers": "Careers",
     "/admin/donations": "Donations",
     "/admin/contact": "Contact & Messages",
