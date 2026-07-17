@@ -1,12 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ComingSoon } from "@/components/admin/ComingSoon";
+import { ContentManager } from "@/components/admin/ContentManager";
 
 export const Route = createFileRoute("/admin/publications")({
-  component: () => (
-    <ComingSoon
-      title="Publications"
-      phase="Phase 3"
-      description="Upload annual reports, research and downloadable resources."
-    />
-  ),
+  component: () => <ContentManager typeKey="publication" />,
 });
