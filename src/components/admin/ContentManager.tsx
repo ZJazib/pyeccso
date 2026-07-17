@@ -27,6 +27,17 @@ type Item = {
 };
 
 // Convert an ISO/UTC timestamp to a value compatible with <input type="datetime-local">.
+function dupI18n(v: any): any {
+  if (!v) return v;
+  if (typeof v === "string") return `${v} (copy)`;
+  if (typeof v === "object") {
+    const out: any = {};
+    for (const k of Object.keys(v)) out[k] = typeof v[k] === "string" ? `${v[k]} (copy)` : v[k];
+    return out;
+  }
+  return v;
+}
+
 function toLocalInput(iso: string | null | undefined): string {
   if (!iso) return "";
   const d = new Date(iso);
