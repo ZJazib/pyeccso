@@ -56,12 +56,19 @@ function Home() {
   return (
     <SiteLayout>
       <section className="relative bg-navy-900 text-white overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={heroImage} alt="" className="w-full h-full object-cover object-right opacity-70" width={1920} height={900} />
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-900/85 to-navy-900/20" />
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-28">
-          <div className="max-w-2xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-navy-950 via-navy-900 to-navy-900" />
+        {/* Faint dot texture for editorial feel */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage:
+              "radial-gradient(circle, #ffffff 1px, transparent 1px)",
+            backgroundSize: "22px 22px",
+          }}
+        />
+        <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-14 items-center">
+          <div className="max-w-xl">
             <span className="inline-block bg-white/10 ring-1 ring-white/20 text-white text-xs font-semibold tracking-[0.2em] px-4 py-1.5 rounded-full mb-6 uppercase">
               {t("hero.home.eyebrow")}
             </span>
@@ -79,6 +86,9 @@ function Home() {
                 {t("home.cta.donate")} <UserPlus className="size-4" />
               </Link>
             </div>
+          </div>
+          <div className="relative">
+            <AfghanistanPhotoMask src={heroImage} alt="Afghan communities served by PYECSO" />
           </div>
         </div>
       </section>
