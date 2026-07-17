@@ -88,8 +88,11 @@ function Home() {
             </div>
           </div>
           <div className="relative">
-            <AfghanistanPhotoMask src={heroImage} alt="Afghan communities served by PYECSO" />
+            <div className="relative rounded-xl overflow-hidden ring-1 ring-white/15 shadow-2xl aspect-[4/5] md:aspect-[5/6]">
+              <img src={heroImage} alt="Afghan communities served by PYECSO" className="absolute inset-0 w-full h-full object-cover" />
+            </div>
           </div>
+
         </div>
       </section>
 
