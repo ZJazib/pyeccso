@@ -49,6 +49,7 @@ export type Database = {
           applicant_user_id: string | null
           created_at: string
           data: Json
+          deleted_at: string | null
           email: string
           full_name: string
           id: string
@@ -66,6 +67,7 @@ export type Database = {
           applicant_user_id?: string | null
           created_at?: string
           data?: Json
+          deleted_at?: string | null
           email: string
           full_name: string
           id?: string
@@ -83,6 +85,7 @@ export type Database = {
           applicant_user_id?: string | null
           created_at?: string
           data?: Json
+          deleted_at?: string | null
           email?: string
           full_name?: string
           id?: string
@@ -151,6 +154,7 @@ export type Database = {
       contact_messages: {
         Row: {
           created_at: string
+          deleted_at: string | null
           email: string
           full_name: string
           handled_at: string | null
@@ -165,6 +169,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deleted_at?: string | null
           email: string
           full_name: string
           handled_at?: string | null
@@ -179,6 +184,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deleted_at?: string | null
           email?: string
           full_name?: string
           handled_at?: string | null
@@ -199,10 +205,12 @@ export type Database = {
           created_at: string
           created_by: string | null
           data: Json
+          deleted_at: string | null
           id: string
           position: number
           publish_at: string | null
           published_at: string | null
+          search_tsv: unknown
           slug: string | null
           status: Database["public"]["Enums"]["content_status"]
           type: Database["public"]["Enums"]["content_type"]
@@ -215,10 +223,12 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           data?: Json
+          deleted_at?: string | null
           id?: string
           position?: number
           publish_at?: string | null
           published_at?: string | null
+          search_tsv?: unknown
           slug?: string | null
           status?: Database["public"]["Enums"]["content_status"]
           type: Database["public"]["Enums"]["content_type"]
@@ -231,10 +241,12 @@ export type Database = {
           created_at?: string
           created_by?: string | null
           data?: Json
+          deleted_at?: string | null
           id?: string
           position?: number
           publish_at?: string | null
           published_at?: string | null
+          search_tsv?: unknown
           slug?: string | null
           status?: Database["public"]["Enums"]["content_status"]
           type?: Database["public"]["Enums"]["content_type"]
@@ -244,11 +256,89 @@ export type Database = {
         }
         Relationships: []
       }
+      content_taxonomies: {
+        Row: {
+          content_id: string
+          term_id: string
+        }
+        Insert: {
+          content_id: string
+          term_id: string
+        }
+        Update: {
+          content_id?: string
+          term_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_taxonomies_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "content_taxonomies_term_id_fkey"
+            columns: ["term_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomy_terms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      content_versions: {
+        Row: {
+          content_id: string
+          cover_url: string | null
+          created_at: string
+          data: Json
+          edited_by: string | null
+          id: string
+          note: string | null
+          slug: string | null
+          status: Database["public"]["Enums"]["content_status"]
+          version_no: number
+        }
+        Insert: {
+          content_id: string
+          cover_url?: string | null
+          created_at?: string
+          data: Json
+          edited_by?: string | null
+          id?: string
+          note?: string | null
+          slug?: string | null
+          status: Database["public"]["Enums"]["content_status"]
+          version_no: number
+        }
+        Update: {
+          content_id?: string
+          cover_url?: string | null
+          created_at?: string
+          data?: Json
+          edited_by?: string | null
+          id?: string
+          note?: string | null
+          slug?: string | null
+          status?: Database["public"]["Enums"]["content_status"]
+          version_no?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_versions_content_id_fkey"
+            columns: ["content_id"]
+            isOneToOne: false
+            referencedRelation: "content_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       media_assets: {
         Row: {
           alt_text: string | null
           caption: string | null
           created_at: string
+          deleted_at: string | null
           file_name: string
           folder: string | null
           height: number | null
@@ -267,6 +357,7 @@ export type Database = {
           alt_text?: string | null
           caption?: string | null
           created_at?: string
+          deleted_at?: string | null
           file_name: string
           folder?: string | null
           height?: number | null
@@ -285,6 +376,7 @@ export type Database = {
           alt_text?: string | null
           caption?: string | null
           created_at?: string
+          deleted_at?: string | null
           file_name?: string
           folder?: string | null
           height?: number | null
@@ -298,6 +390,87 @@ export type Database = {
           updated_at?: string
           uploaded_by?: string | null
           width?: number | null
+        }
+        Relationships: []
+      }
+      menu_items: {
+        Row: {
+          created_at: string
+          icon: string | null
+          id: string
+          is_active: boolean
+          label: Json
+          menu_id: string
+          parent_id: string | null
+          position: number
+          target: string
+          updated_at: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          label?: Json
+          menu_id: string
+          parent_id?: string | null
+          position?: number
+          target?: string
+          updated_at?: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          icon?: string | null
+          id?: string
+          is_active?: boolean
+          label?: Json
+          menu_id?: string
+          parent_id?: string | null
+          position?: number
+          target?: string
+          updated_at?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "menu_items_menu_id_fkey"
+            columns: ["menu_id"]
+            isOneToOne: false
+            referencedRelation: "menus"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "menu_items_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "menu_items"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      menus: {
+        Row: {
+          created_at: string
+          id: string
+          label: string
+          location: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label: string
+          location: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string
+          location?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -337,6 +510,48 @@ export type Database = {
         }
         Relationships: []
       }
+      redirects: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          from_path: string
+          hits: number
+          id: string
+          is_active: boolean
+          last_hit_at: string | null
+          note: string | null
+          status_code: number
+          to_path: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          from_path: string
+          hits?: number
+          id?: string
+          is_active?: boolean
+          last_hit_at?: string | null
+          note?: string | null
+          status_code?: number
+          to_path: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          from_path?: string
+          hits?: number
+          id?: string
+          is_active?: boolean
+          last_hit_at?: string | null
+          note?: string | null
+          status_code?: number
+          to_path?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       site_settings: {
         Row: {
           key: string
@@ -357,6 +572,53 @@ export type Database = {
           value?: Json
         }
         Relationships: []
+      }
+      taxonomy_terms: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          kind: Database["public"]["Enums"]["taxonomy_kind"]
+          name: Json
+          parent_id: string | null
+          position: number
+          slug: string
+          type: Database["public"]["Enums"]["content_type"] | null
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          kind: Database["public"]["Enums"]["taxonomy_kind"]
+          name?: Json
+          parent_id?: string | null
+          position?: number
+          slug: string
+          type?: Database["public"]["Enums"]["content_type"] | null
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          kind?: Database["public"]["Enums"]["taxonomy_kind"]
+          name?: Json
+          parent_id?: string | null
+          position?: number
+          slug?: string
+          type?: Database["public"]["Enums"]["content_type"] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "taxonomy_terms_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "taxonomy_terms"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -465,6 +727,7 @@ export type Database = {
         | "media"
         | "learn"
       message_status: "new" | "read" | "replied" | "archived" | "spam"
+      taxonomy_kind: "category" | "tag"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -629,6 +892,7 @@ export const Constants = {
         "learn",
       ],
       message_status: ["new", "read", "replied", "archived", "spam"],
+      taxonomy_kind: ["category", "tag"],
     },
   },
 } as const
