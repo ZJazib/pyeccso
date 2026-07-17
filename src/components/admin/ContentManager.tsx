@@ -291,8 +291,11 @@ function ItemEditor({
         data: row.data ?? {},
         status: publish ? "published" : row.status,
         published_at: publish ? new Date().toISOString() : row.published_at,
+        publish_at: row.publish_at,
+        unpublish_at: row.unpublish_at,
         updated_by: user.user?.id,
       };
+
       let error;
       if (item) {
         ({ error } = await supabase.from("content_items").update(payload).eq("id", item.id));
