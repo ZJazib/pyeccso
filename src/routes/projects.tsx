@@ -3,6 +3,7 @@ import { MapPin, ArrowRight, ChevronDown, Search, Handshake } from "lucide-react
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
+import { useCmsListTranslated } from "@/lib/useCmsContent";
 
 export const Route = createFileRoute("/projects")({
   component: Projects,
@@ -17,37 +18,19 @@ export const Route = createFileRoute("/projects")({
   }),
 });
 
-type ProjectRow = {
-  key: string;
-  tagKey: string;
-  sectorColor: string;
-  location: string;
-  donor: string;
+const SECTOR_COLOR: Record<string, string> = {
+  cashInKind: "bg-sector-emergency",
+  cashAssistance: "bg-sector-emergency",
+  food: "bg-sector-food",
+  foodEducation: "bg-sector-food",
+  livelihoods: "bg-sector-livelihoods",
+  tvet: "bg-sector-livelihoods",
+  capacity: "bg-sector-education",
+  agriculture: "bg-sector-agriculture",
+  protectionHygiene: "bg-sector-child",
+  healthNutrition: "bg-sector-health",
+  healthProtection: "bg-sector-health",
 };
-
-const projects: ProjectRow[] = [
-  { key: "p1", tagKey: "cashInKind", sectorColor: "bg-sector-emergency", location: "Ghazni", donor: "PRT" },
-  { key: "p2", tagKey: "cashInKind", sectorColor: "bg-sector-emergency", location: "Paktia", donor: "MoRR" },
-  { key: "p3", tagKey: "cashAssistance", sectorColor: "bg-sector-emergency", location: "Logar · Paktia · Paktika", donor: "Private Sector / Board" },
-  { key: "p4", tagKey: "cashAssistance", sectorColor: "bg-sector-emergency", location: "Kabul", donor: "Donations / Board" },
-  { key: "p5", tagKey: "food", sectorColor: "bg-sector-food", location: "Ghazni — 5 districts", donor: "WFP / HODKA" },
-  { key: "p6", tagKey: "foodEducation", sectorColor: "bg-sector-food", location: "Ghazni", donor: "PRT" },
-  { key: "p7", tagKey: "food", sectorColor: "bg-sector-food", location: "Jalalabad", donor: "Embassy of Japan" },
-  { key: "p8", tagKey: "food", sectorColor: "bg-sector-food", location: "Laghman", donor: "MoD" },
-  { key: "p9", tagKey: "foodEducation", sectorColor: "bg-sector-food", location: "Logar · Kunar", donor: "PRT" },
-  { key: "p10", tagKey: "food", sectorColor: "bg-sector-food", location: "Nooristan", donor: "PRT" },
-  { key: "p11", tagKey: "food", sectorColor: "bg-sector-food", location: "24 Provinces", donor: "PRT" },
-  { key: "p12", tagKey: "livelihoods", sectorColor: "bg-sector-livelihoods", location: "Logar", donor: "IRD" },
-  { key: "p13", tagKey: "tvet", sectorColor: "bg-sector-livelihoods", location: "Paktika — Waza Khwa", donor: "DAI / LGCD" },
-  { key: "p14", tagKey: "tvet", sectorColor: "bg-sector-livelihoods", location: "Logar", donor: "DAI / LGCD" },
-  { key: "p15", tagKey: "tvet", sectorColor: "bg-sector-livelihoods", location: "Logar", donor: "UNICEF / HODKA" },
-  { key: "p16", tagKey: "capacity", sectorColor: "bg-sector-education", location: "Kabul", donor: "UN Women" },
-  { key: "p17", tagKey: "agriculture", sectorColor: "bg-sector-agriculture", location: "Logar", donor: "DAI / LGCD" },
-  { key: "p18", tagKey: "agriculture", sectorColor: "bg-sector-agriculture", location: "Khost", donor: "PRT" },
-  { key: "p19", tagKey: "protectionHygiene", sectorColor: "bg-sector-child", location: "Ghazni — Andar", donor: "DAI / LGCD" },
-  { key: "p20", tagKey: "healthNutrition", sectorColor: "bg-sector-health", location: "Logar", donor: "DAI / LGCD" },
-  { key: "p21", tagKey: "healthProtection", sectorColor: "bg-sector-health", location: "Logar", donor: "DAI / LGCD" },
-];
 
 function Projects() {
   const { t } = useTranslation();
