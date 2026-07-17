@@ -34,6 +34,7 @@ const SECTOR_COLOR: Record<string, string> = {
 
 function Projects() {
   const { t } = useTranslation();
+  const { items: projects, loading } = useCmsListTranslated("project");
 
   const filters = [
     { label: t("projects.filter.sector"), value: t("projects.filter.allSectors") },
@@ -88,27 +89,37 @@ function Projects() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {projects.map((p) => (
-                <article key={p.key} className="bg-white ring-1 ring-border rounded-lg p-5 hover:shadow-md transition-shadow flex flex-col">
-                  <span className={`inline-block ${p.sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase mb-3 w-fit`}>
-                    {t(`projects.sectorTags.${p.tagKey}`)}
-                  </span>
-                  <h4 className="text-navy-900 font-bold text-sm mb-2 leading-snug">{t(`projects.items.${p.key}.title`)}</h4>
-                  <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{t(`projects.items.${p.key}.body`)}</p>
-                  <div className="mt-auto pt-3 border-t border-border grid grid-cols-2 gap-3 text-xs">
-                    <div>
-                      <div className="text-navy-900/50">{t("common.location")}</div>
-                      <div className="font-semibold text-navy-900 flex items-center gap-1">
-                        <MapPin className="size-3 text-brand-blue" /> {p.location}
+              {loading && projects.length === 0 && (
+                <div className="col-span-full text-sm text-navy-900/60 py-10 text-center">Loading projects…</div>
+              )}
+              {projects.map((p) => {
+                const tag = p.data?.sector_tag as string | undefined;
+                const sectorColor = (tag && SECTOR_COLOR[tag]) || "bg-brand-blue";
+                const location = (p.data?.location as string) ?? "";
+                const donor = (p.data?.partner as string) ?? "";
+                const category = (p.data?.category as string) ?? "";
+                return (
+                  <article key={p.id} className="bg-white ring-1 ring-border rounded-lg p-5 hover:shadow-md transition-shadow flex flex-col">
+                    <span className={`inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase mb-3 w-fit`}>
+                      {category}
+                    </span>
+                    <h4 className="text-navy-900 font-bold text-sm mb-2 leading-snug">{p.t.title}</h4>
+                    <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{p.t.summary}</p>
+                    <div className="mt-auto pt-3 border-t border-border grid grid-cols-2 gap-3 text-xs">
+                      <div>
+                        <div className="text-navy-900/50">{t("common.location")}</div>
+                        <div className="font-semibold text-navy-900 flex items-center gap-1">
+                          <MapPin className="size-3 text-brand-blue" /> {location}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-navy-900/50">{t("common.donorPartner")}</div>
+                        <div className="font-semibold text-navy-900">{donor}</div>
                       </div>
                     </div>
-                    <div>
-                      <div className="text-navy-900/50">{t("common.donorPartner")}</div>
-                      <div className="font-semibold text-navy-900">{p.donor}</div>
-                    </div>
-                  </div>
-                </article>
-              ))}
+                  </article>
+                );
+              })}
             </div>
           </div>
         </div>
