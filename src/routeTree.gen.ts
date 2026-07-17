@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as ProgramsRouteImport } from './routes/programs'
 import { Route as PortalRouteImport } from './routes/portal'
+import { Route as OfficesRouteImport } from './routes/offices'
 import { Route as MediaRouteImport } from './routes/media'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as DonateRouteImport } from './routes/donate'
@@ -22,9 +23,16 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as PublicationsSlugRouteImport } from './routes/publications.$slug'
+import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
+import { Route as ProgramsSlugRouteImport } from './routes/programs.$slug'
 import { Route as PortalTeacherRouteImport } from './routes/portal.teacher'
 import { Route as PortalStudentRouteImport } from './routes/portal.student'
 import { Route as PortalManagerRouteImport } from './routes/portal.manager'
+import { Route as OfficesSlugRouteImport } from './routes/offices.$slug'
+import { Route as NewsSlugRouteImport } from './routes/news.$slug'
+import { Route as EventsSlugRouteImport } from './routes/events.$slug'
+import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
 import { Route as AdminTeamRouteImport } from './routes/admin.team'
@@ -35,6 +43,7 @@ import { Route as AdminProjectsRouteImport } from './routes/admin.projects'
 import { Route as AdminProgramsRouteImport } from './routes/admin.programs'
 import { Route as AdminPartnersRouteImport } from './routes/admin.partners'
 import { Route as AdminPagesRouteImport } from './routes/admin.pages'
+import { Route as AdminOfficesRouteImport } from './routes/admin.offices'
 import { Route as AdminNewsRouteImport } from './routes/admin.news'
 import { Route as AdminMediaCenterRouteImport } from './routes/admin.media-center'
 import { Route as AdminMediaRouteImport } from './routes/admin.media'
@@ -60,6 +69,11 @@ const ProgramsRoute = ProgramsRouteImport.update({
 const PortalRoute = PortalRouteImport.update({
   id: '/portal',
   path: '/portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfficesRoute = OfficesRouteImport.update({
+  id: '/offices',
+  path: '/offices',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MediaRoute = MediaRouteImport.update({
@@ -112,6 +126,21 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const PublicationsSlugRoute = PublicationsSlugRouteImport.update({
+  id: '/publications/$slug',
+  path: '/publications/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ProjectsRoute,
+} as any)
+const ProgramsSlugRoute = ProgramsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => ProgramsRoute,
+} as any)
 const PortalTeacherRoute = PortalTeacherRouteImport.update({
   id: '/teacher',
   path: '/teacher',
@@ -126,6 +155,26 @@ const PortalManagerRoute = PortalManagerRouteImport.update({
   id: '/manager',
   path: '/manager',
   getParentRoute: () => PortalRoute,
+} as any)
+const OfficesSlugRoute = OfficesSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => OfficesRoute,
+} as any)
+const NewsSlugRoute = NewsSlugRouteImport.update({
+  id: '/news/$slug',
+  path: '/news/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EventsSlugRoute = EventsSlugRouteImport.update({
+  id: '/events/$slug',
+  path: '/events/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersSlugRoute = CareersSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => CareersRoute,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
@@ -175,6 +224,11 @@ const AdminPartnersRoute = AdminPartnersRouteImport.update({
 const AdminPagesRoute = AdminPagesRouteImport.update({
   id: '/pages',
   path: '/pages',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminOfficesRoute = AdminOfficesRouteImport.update({
+  id: '/offices',
+  path: '/offices',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminNewsRoute = AdminNewsRouteImport.update({
@@ -237,14 +291,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
-  '/careers': typeof CareersRoute
+  '/careers': typeof CareersRouteWithChildren
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
+  '/offices': typeof OfficesRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
-  '/programs': typeof ProgramsRoute
-  '/projects': typeof ProjectsRoute
+  '/programs': typeof ProgramsRouteWithChildren
+  '/projects': typeof ProjectsRouteWithChildren
   '/admin/applications': typeof AdminApplicationsRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/careers': typeof AdminCareersRoute
@@ -255,6 +310,7 @@ export interface FileRoutesByFullPath {
   '/admin/media': typeof AdminMediaRoute
   '/admin/media-center': typeof AdminMediaCenterRoute
   '/admin/news': typeof AdminNewsRoute
+  '/admin/offices': typeof AdminOfficesRoute
   '/admin/pages': typeof AdminPagesRoute
   '/admin/partners': typeof AdminPartnersRoute
   '/admin/programs': typeof AdminProgramsRoute
@@ -265,9 +321,16 @@ export interface FileRoutesByFullPath {
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/careers/$slug': typeof CareersSlugRoute
+  '/events/$slug': typeof EventsSlugRoute
+  '/news/$slug': typeof NewsSlugRoute
+  '/offices/$slug': typeof OfficesSlugRoute
   '/portal/manager': typeof PortalManagerRoute
   '/portal/student': typeof PortalStudentRoute
   '/portal/teacher': typeof PortalTeacherRoute
+  '/programs/$slug': typeof ProgramsSlugRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
+  '/publications/$slug': typeof PublicationsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/portal/': typeof PortalIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
@@ -275,13 +338,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/careers': typeof CareersRoute
+  '/careers': typeof CareersRouteWithChildren
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
-  '/programs': typeof ProgramsRoute
-  '/projects': typeof ProjectsRoute
+  '/offices': typeof OfficesRouteWithChildren
+  '/programs': typeof ProgramsRouteWithChildren
+  '/projects': typeof ProjectsRouteWithChildren
   '/admin/applications': typeof AdminApplicationsRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/careers': typeof AdminCareersRoute
@@ -292,6 +356,7 @@ export interface FileRoutesByTo {
   '/admin/media': typeof AdminMediaRoute
   '/admin/media-center': typeof AdminMediaCenterRoute
   '/admin/news': typeof AdminNewsRoute
+  '/admin/offices': typeof AdminOfficesRoute
   '/admin/pages': typeof AdminPagesRoute
   '/admin/partners': typeof AdminPartnersRoute
   '/admin/programs': typeof AdminProgramsRoute
@@ -302,9 +367,16 @@ export interface FileRoutesByTo {
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/careers/$slug': typeof CareersSlugRoute
+  '/events/$slug': typeof EventsSlugRoute
+  '/news/$slug': typeof NewsSlugRoute
+  '/offices/$slug': typeof OfficesSlugRoute
   '/portal/manager': typeof PortalManagerRoute
   '/portal/student': typeof PortalStudentRoute
   '/portal/teacher': typeof PortalTeacherRoute
+  '/programs/$slug': typeof ProgramsSlugRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
+  '/publications/$slug': typeof PublicationsSlugRoute
   '/admin': typeof AdminIndexRoute
   '/portal': typeof PortalIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
@@ -314,14 +386,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
-  '/careers': typeof CareersRoute
+  '/careers': typeof CareersRouteWithChildren
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
+  '/offices': typeof OfficesRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
-  '/programs': typeof ProgramsRoute
-  '/projects': typeof ProjectsRoute
+  '/programs': typeof ProgramsRouteWithChildren
+  '/projects': typeof ProjectsRouteWithChildren
   '/admin/applications': typeof AdminApplicationsRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/careers': typeof AdminCareersRoute
@@ -332,6 +405,7 @@ export interface FileRoutesById {
   '/admin/media': typeof AdminMediaRoute
   '/admin/media-center': typeof AdminMediaCenterRoute
   '/admin/news': typeof AdminNewsRoute
+  '/admin/offices': typeof AdminOfficesRoute
   '/admin/pages': typeof AdminPagesRoute
   '/admin/partners': typeof AdminPartnersRoute
   '/admin/programs': typeof AdminProgramsRoute
@@ -342,9 +416,16 @@ export interface FileRoutesById {
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/careers/$slug': typeof CareersSlugRoute
+  '/events/$slug': typeof EventsSlugRoute
+  '/news/$slug': typeof NewsSlugRoute
+  '/offices/$slug': typeof OfficesSlugRoute
   '/portal/manager': typeof PortalManagerRoute
   '/portal/student': typeof PortalStudentRoute
   '/portal/teacher': typeof PortalTeacherRoute
+  '/programs/$slug': typeof ProgramsSlugRoute
+  '/projects/$slug': typeof ProjectsSlugRoute
+  '/publications/$slug': typeof PublicationsSlugRoute
   '/admin/': typeof AdminIndexRoute
   '/portal/': typeof PortalIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
@@ -360,6 +441,7 @@ export interface FileRouteTypes {
     | '/donate'
     | '/learn'
     | '/media'
+    | '/offices'
     | '/portal'
     | '/programs'
     | '/projects'
@@ -373,6 +455,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/media-center'
     | '/admin/news'
+    | '/admin/offices'
     | '/admin/pages'
     | '/admin/partners'
     | '/admin/programs'
@@ -383,9 +466,16 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/testimonials'
     | '/admin/users'
+    | '/careers/$slug'
+    | '/events/$slug'
+    | '/news/$slug'
+    | '/offices/$slug'
     | '/portal/manager'
     | '/portal/student'
     | '/portal/teacher'
+    | '/programs/$slug'
+    | '/projects/$slug'
+    | '/publications/$slug'
     | '/admin/'
     | '/portal/'
     | '/api/public/hesab-session'
@@ -398,6 +488,7 @@ export interface FileRouteTypes {
     | '/donate'
     | '/learn'
     | '/media'
+    | '/offices'
     | '/programs'
     | '/projects'
     | '/admin/applications'
@@ -410,6 +501,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/media-center'
     | '/admin/news'
+    | '/admin/offices'
     | '/admin/pages'
     | '/admin/partners'
     | '/admin/programs'
@@ -420,9 +512,16 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/testimonials'
     | '/admin/users'
+    | '/careers/$slug'
+    | '/events/$slug'
+    | '/news/$slug'
+    | '/offices/$slug'
     | '/portal/manager'
     | '/portal/student'
     | '/portal/teacher'
+    | '/programs/$slug'
+    | '/projects/$slug'
+    | '/publications/$slug'
     | '/admin'
     | '/portal'
     | '/api/public/hesab-session'
@@ -436,6 +535,7 @@ export interface FileRouteTypes {
     | '/donate'
     | '/learn'
     | '/media'
+    | '/offices'
     | '/portal'
     | '/programs'
     | '/projects'
@@ -449,6 +549,7 @@ export interface FileRouteTypes {
     | '/admin/media'
     | '/admin/media-center'
     | '/admin/news'
+    | '/admin/offices'
     | '/admin/pages'
     | '/admin/partners'
     | '/admin/programs'
@@ -459,9 +560,16 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/testimonials'
     | '/admin/users'
+    | '/careers/$slug'
+    | '/events/$slug'
+    | '/news/$slug'
+    | '/offices/$slug'
     | '/portal/manager'
     | '/portal/student'
     | '/portal/teacher'
+    | '/programs/$slug'
+    | '/projects/$slug'
+    | '/publications/$slug'
     | '/admin/'
     | '/portal/'
     | '/api/public/hesab-session'
@@ -471,14 +579,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
-  CareersRoute: typeof CareersRoute
+  CareersRoute: typeof CareersRouteWithChildren
   ContactRoute: typeof ContactRoute
   DonateRoute: typeof DonateRoute
   LearnRoute: typeof LearnRoute
   MediaRoute: typeof MediaRoute
+  OfficesRoute: typeof OfficesRouteWithChildren
   PortalRoute: typeof PortalRouteWithChildren
-  ProgramsRoute: typeof ProgramsRoute
-  ProjectsRoute: typeof ProjectsRoute
+  ProgramsRoute: typeof ProgramsRouteWithChildren
+  ProjectsRoute: typeof ProjectsRouteWithChildren
+  EventsSlugRoute: typeof EventsSlugRoute
+  NewsSlugRoute: typeof NewsSlugRoute
+  PublicationsSlugRoute: typeof PublicationsSlugRoute
   ApiPublicHesabSessionRoute: typeof ApiPublicHesabSessionRoute
 }
 
@@ -503,6 +615,13 @@ declare module '@tanstack/react-router' {
       path: '/portal'
       fullPath: '/portal'
       preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/offices': {
+      id: '/offices'
+      path: '/offices'
+      fullPath: '/offices'
+      preLoaderRoute: typeof OfficesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/media': {
@@ -575,6 +694,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/publications/$slug': {
+      id: '/publications/$slug'
+      path: '/publications/$slug'
+      fullPath: '/publications/$slug'
+      preLoaderRoute: typeof PublicationsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projects/$slug': {
+      id: '/projects/$slug'
+      path: '/$slug'
+      fullPath: '/projects/$slug'
+      preLoaderRoute: typeof ProjectsSlugRouteImport
+      parentRoute: typeof ProjectsRoute
+    }
+    '/programs/$slug': {
+      id: '/programs/$slug'
+      path: '/$slug'
+      fullPath: '/programs/$slug'
+      preLoaderRoute: typeof ProgramsSlugRouteImport
+      parentRoute: typeof ProgramsRoute
+    }
     '/portal/teacher': {
       id: '/portal/teacher'
       path: '/teacher'
@@ -595,6 +735,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/portal/manager'
       preLoaderRoute: typeof PortalManagerRouteImport
       parentRoute: typeof PortalRoute
+    }
+    '/offices/$slug': {
+      id: '/offices/$slug'
+      path: '/$slug'
+      fullPath: '/offices/$slug'
+      preLoaderRoute: typeof OfficesSlugRouteImport
+      parentRoute: typeof OfficesRoute
+    }
+    '/news/$slug': {
+      id: '/news/$slug'
+      path: '/news/$slug'
+      fullPath: '/news/$slug'
+      preLoaderRoute: typeof NewsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/events/$slug': {
+      id: '/events/$slug'
+      path: '/events/$slug'
+      fullPath: '/events/$slug'
+      preLoaderRoute: typeof EventsSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers/$slug': {
+      id: '/careers/$slug'
+      path: '/$slug'
+      fullPath: '/careers/$slug'
+      preLoaderRoute: typeof CareersSlugRouteImport
+      parentRoute: typeof CareersRoute
     }
     '/admin/users': {
       id: '/admin/users'
@@ -664,6 +832,13 @@ declare module '@tanstack/react-router' {
       path: '/pages'
       fullPath: '/admin/pages'
       preLoaderRoute: typeof AdminPagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/offices': {
+      id: '/admin/offices'
+      path: '/offices'
+      fullPath: '/admin/offices'
+      preLoaderRoute: typeof AdminOfficesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/news': {
@@ -757,6 +932,7 @@ interface AdminRouteChildren {
   AdminMediaRoute: typeof AdminMediaRoute
   AdminMediaCenterRoute: typeof AdminMediaCenterRoute
   AdminNewsRoute: typeof AdminNewsRoute
+  AdminOfficesRoute: typeof AdminOfficesRoute
   AdminPagesRoute: typeof AdminPagesRoute
   AdminPartnersRoute: typeof AdminPartnersRoute
   AdminProgramsRoute: typeof AdminProgramsRoute
@@ -781,6 +957,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminMediaRoute: AdminMediaRoute,
   AdminMediaCenterRoute: AdminMediaCenterRoute,
   AdminNewsRoute: AdminNewsRoute,
+  AdminOfficesRoute: AdminOfficesRoute,
   AdminPagesRoute: AdminPagesRoute,
   AdminPartnersRoute: AdminPartnersRoute,
   AdminProgramsRoute: AdminProgramsRoute,
@@ -795,6 +972,28 @@ const AdminRouteChildren: AdminRouteChildren = {
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
+interface CareersRouteChildren {
+  CareersSlugRoute: typeof CareersSlugRoute
+}
+
+const CareersRouteChildren: CareersRouteChildren = {
+  CareersSlugRoute: CareersSlugRoute,
+}
+
+const CareersRouteWithChildren =
+  CareersRoute._addFileChildren(CareersRouteChildren)
+
+interface OfficesRouteChildren {
+  OfficesSlugRoute: typeof OfficesSlugRoute
+}
+
+const OfficesRouteChildren: OfficesRouteChildren = {
+  OfficesSlugRoute: OfficesSlugRoute,
+}
+
+const OfficesRouteWithChildren =
+  OfficesRoute._addFileChildren(OfficesRouteChildren)
 
 interface PortalRouteChildren {
   PortalManagerRoute: typeof PortalManagerRoute
@@ -813,18 +1012,46 @@ const PortalRouteChildren: PortalRouteChildren = {
 const PortalRouteWithChildren =
   PortalRoute._addFileChildren(PortalRouteChildren)
 
+interface ProgramsRouteChildren {
+  ProgramsSlugRoute: typeof ProgramsSlugRoute
+}
+
+const ProgramsRouteChildren: ProgramsRouteChildren = {
+  ProgramsSlugRoute: ProgramsSlugRoute,
+}
+
+const ProgramsRouteWithChildren = ProgramsRoute._addFileChildren(
+  ProgramsRouteChildren,
+)
+
+interface ProjectsRouteChildren {
+  ProjectsSlugRoute: typeof ProjectsSlugRoute
+}
+
+const ProjectsRouteChildren: ProjectsRouteChildren = {
+  ProjectsSlugRoute: ProjectsSlugRoute,
+}
+
+const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
+  ProjectsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
-  CareersRoute: CareersRoute,
+  CareersRoute: CareersRouteWithChildren,
   ContactRoute: ContactRoute,
   DonateRoute: DonateRoute,
   LearnRoute: LearnRoute,
   MediaRoute: MediaRoute,
+  OfficesRoute: OfficesRouteWithChildren,
   PortalRoute: PortalRouteWithChildren,
-  ProgramsRoute: ProgramsRoute,
-  ProjectsRoute: ProjectsRoute,
+  ProgramsRoute: ProgramsRouteWithChildren,
+  ProjectsRoute: ProjectsRouteWithChildren,
+  EventsSlugRoute: EventsSlugRoute,
+  NewsSlugRoute: NewsSlugRoute,
+  PublicationsSlugRoute: PublicationsSlugRoute,
   ApiPublicHesabSessionRoute: ApiPublicHesabSessionRoute,
 }
 export const routeTree = rootRouteImport

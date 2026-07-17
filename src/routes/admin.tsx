@@ -5,7 +5,7 @@ import {
   LayoutDashboard, Users, Image as ImageIcon, Settings, ShieldCheck, LogOut,
   FileText, Newspaper, Calendar, Briefcase, Heart, Mail, GraduationCap,
   UsersRound, Handshake, MessageSquareQuote, BookOpen, FolderKanban, ClipboardList,
-  Menu, X, Home, Trash2,
+  Menu, X, Home, Trash2, MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdminLogin } from "@/components/admin/AdminLogin";
@@ -39,6 +39,7 @@ const NAV: NavSection[] = [
       { to: "/admin/partners", label: "Partners", icon: Handshake },
       { to: "/admin/testimonials", label: "Testimonials", icon: MessageSquareQuote },
       { to: "/admin/publications", label: "Publications", icon: BookOpen },
+      { to: "/admin/offices", label: "Offices", icon: MapPin },
     ],
   },
   {
@@ -205,6 +206,7 @@ function crumbFor(pathname: string): string {
     "/admin/partners": "Partners",
     "/admin/testimonials": "Testimonials",
     "/admin/publications": "Publications",
+    "/admin/offices": "Offices",
     "/admin/careers": "Careers",
     "/admin/donations": "Donations",
     "/admin/contact": "Contact & Messages",

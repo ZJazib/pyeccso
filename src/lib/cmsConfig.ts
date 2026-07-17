@@ -341,4 +341,31 @@ export const CMS_CONFIGS: Record<string, CmsConfig> = {
       { name: "location", label: "Location / Online", type: "text" },
     ],
   },
+  office: {
+    type: "office",
+    label: "Offices",
+    singular: "Office",
+    titleField: "name",
+    listColumns: [
+      { key: "cover_url", label: "", kind: "cover" },
+      { key: "name", label: "Office" },
+      { key: "city", label: "City / Province" },
+      { key: "status", label: "Status", kind: "status" },
+    ],
+    fields: [
+      { name: "cover_url", label: "Cover / photo", type: "image", column: true },
+      { name: "name", label: "Office name", type: "i18n-text", required: true },
+      { name: "summary", label: "Short summary", type: "i18n-textarea" },
+      { name: "body", label: "About this office", type: "i18n-richtext" },
+      { name: "city", label: "City / Province", type: "text" },
+      { name: "address", label: "Street address", type: "textarea" },
+      { name: "phone", label: "Phone", type: "text" },
+      { name: "email", label: "Email", type: "email" },
+      { name: "hours", label: "Opening hours", type: "text" },
+      { name: "map_url", label: "Google Maps embed URL", type: "url" },
+      { name: "lat", label: "Latitude", type: "number" },
+      { name: "lng", label: "Longitude", type: "number" },
+    ],
+  },
 };
+
