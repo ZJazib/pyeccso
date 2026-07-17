@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Plus, Search, Trash2, Pencil, ArrowLeft, Save, Eye, EyeOff, Languages, Monitor, Smartphone } from "lucide-react";
+import { Plus, Search, Trash2, Pencil, ArrowLeft, Save, Eye, EyeOff, Languages, Monitor, Smartphone, Copy, History, Archive, CheckSquare, Square, Download } from "lucide-react";
 import { ImageUpload, GalleryUpload } from "./ImageUpload";
 import { I18nField } from "./I18nField";
 import { LANGUAGES, type Lang } from "@/lib/cmsConfig";
