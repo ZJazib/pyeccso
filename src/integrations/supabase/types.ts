@@ -726,6 +726,7 @@ export type Database = {
         | "donation"
         | "media"
         | "learn"
+        | "office"
       message_status: "new" | "read" | "replied" | "archived" | "spam"
       taxonomy_kind: "category" | "tag"
     }
@@ -890,6 +891,7 @@ export const Constants = {
         "donation",
         "media",
         "learn",
+        "office",
       ],
       message_status: ["new", "read", "replied", "archived", "spam"],
       taxonomy_kind: ["category", "tag"],
