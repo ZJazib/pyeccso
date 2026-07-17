@@ -260,10 +260,13 @@ function ItemEditor({
       cover_url: null,
       data: {},
       published_at: null,
+      publish_at: null,
+      unpublish_at: null,
       created_at: "",
       updated_at: "",
     } as Item)
   );
+
 
   function setField(f: Field, value: any) {
     if (f.column) {
