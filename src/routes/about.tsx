@@ -9,7 +9,7 @@ export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
       { title: "About Us — PYECSO" },
-      { name: "description", content: "PYECSO is a women-led Afghan NGO founded in 2006, registered with the Ministry of Economy (No. 1201), working in education, humanitarian aid and livelihoods." },
+      { name: "description", content: "PYECSO is a youth-led Afghan NGO founded in 2006, registered with the Ministry of Economy (No. 1201), working in education, humanitarian aid and livelihoods." },
       { property: "og:title", content: "About PYECSO" },
       { property: "og:url", content: "/about" },
     ],

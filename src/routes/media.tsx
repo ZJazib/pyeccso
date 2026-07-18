@@ -233,7 +233,7 @@ function Media() {
                 <ul className="space-y-3">
                   {[
                     { outlet: "TOLOnews", title: "PYECSO reaches 24 provinces with humanitarian aid", date: "May 2025" },
-                    { outlet: "Reuters", title: "Women-led NGO expands education access in Afghanistan", date: "Mar 2025" },
+                    { outlet: "Reuters", title: "Youth-led NGO expands education access in Afghanistan", date: "Mar 2025" },
                     { outlet: "Al Jazeera", title: "Community resilience programs delivered by PYECSO", date: "Jan 2025" },
                     { outlet: "BBC Persian", title: "Livelihoods and cash assistance across rural districts", date: "Nov 2024" },
                   ].map((c) => (

@@ -16,9 +16,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "PYECSO — Empowering Afghan Communities Since 2006" },
-      { name: "description", content: "PYECSO is a women-led Afghan NGO founded in 2006, delivering education, humanitarian aid and livelihood programs in partnership with UN agencies and international donors." },
+      { name: "description", content: "PYECSO is a youth-led Afghan NGO founded in 2006, delivering education, humanitarian aid and livelihood programs in partnership with UN agencies and international donors." },
       { property: "og:title", content: "PYECSO — Empowering Afghan Communities Since 2006" },
-      { property: "og:description", content: "PYECSO is a women-led Afghan NGO founded in 2006, delivering education, humanitarian aid and livelihood programs in partnership with UN agencies and international donors." },
+      { property: "og:description", content: "PYECSO is a youth-led Afghan NGO founded in 2006, delivering education, humanitarian aid and livelihood programs in partnership with UN agencies and international donors." },
       { property: "og:url", content: "/" },
     ],
     links: [{ rel: "canonical", href: "/" }],
