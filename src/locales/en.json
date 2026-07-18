@@ -39,12 +39,12 @@
   "hero": {
     "home": {
       "eyebrow": "Serving Afghanistan since 2006",
-      "title": "A women-led Afghan NGO for education, resilience and dignity",
+      "title": "A youth-led Afghan NGO for education, resilience and dignity",
       "description": "PYECSO delivers education, livelihoods, protection and humanitarian assistance in partnership with UN agencies and international donors across 24+ provinces."
     },
     "about": {
       "title": "About PYECSO",
-      "description": "A women-led, non-profit Afghan organization established in 2006, working with communities, government partners and the international humanitarian system."
+      "description": "A youth-led, non-profit Afghan organization established in 2006, working with communities, government partners and the international humanitarian system."
     },
     "programs": {
       "title": "Our Programs",
@@ -60,7 +60,7 @@
     },
     "careers": {
       "title": "Careers",
-      "description": "Join a women-led Afghan team delivering education, protection and humanitarian assistance."
+      "description": "Join a youth-led Afghan team delivering education, protection and humanitarian assistance."
     },
     "contact": {
       "title": "Contact PYECSO",
@@ -100,7 +100,7 @@
       "registered": "Registered NGO",
       "provinces": "Provinces Reached",
       "orgType": "Organization",
-      "womenLed": "Women-led"
+      "womenLed": "Youth-led"
     },
     "cta": {
       "programs": "Our programs",
@@ -108,7 +108,7 @@
     },
     "who": {
       "eyebrow": "Who We Are",
-      "title": "A women-led Afghan NGO delivering programs since 2006",
+      "title": "A youth-led Afghan NGO delivering programs since 2006",
       "p1": "Founded in 2006, the Patriotic Youths Education, Cultural and Social Organization (PYECSO) supports Afghan women, children and youth through education, humanitarian aid and livelihood programs.",
       "p2": "Registered with Afghanistan's Ministry of Economy under No. 1201 and with the Ministry of Labor and Social Affairs, we operate legally and transparently, delivering programs through local staff with deep knowledge of the communities we serve.",
       "link": "About PYECSO"
@@ -156,9 +156,9 @@
   "about": {
     "who": {
       "eyebrow": "Who We Are",
-      "title": "A women-led Afghan NGO serving communities for nearly two decades",
+      "title": "A youth-led Afghan NGO serving communities for nearly two decades",
       "p1": "Founded in 2006, the Patriotic Youths Education, Cultural and Social Organization (PYECSO) began as a grassroots effort and has grown into a trusted national NGO recognized for delivering impactful programs for Afghan women, children and youth.",
-      "p2": "PYECSO is a women-led organization dedicated to supporting communities through education, humanitarian aid and livelihood programs. We operate legally and transparently, registered with Afghanistan's Ministry of Economy under No. 1201 and with the Ministry of Labor and Social Affairs.",
+      "p2": "PYECSO is a youth-led organization dedicated to supporting communities through education, humanitarian aid and livelihood programs. We operate legally and transparently, registered with Afghanistan's Ministry of Economy under No. 1201 and with the Ministry of Labor and Social Affairs.",
       "p3": "Our field staff are local professionals with deep insight into the cultural, social and economic contexts of the regions where we work. This expertise allows us to design culturally sensitive programs that build trust and cooperation with the communities we serve.",
       "cta": "Explore our programs"
     },
@@ -171,7 +171,7 @@
       "regAlso": "Also Registered With",
       "regAlsoV": "Ministry of Labor and Social Affairs",
       "type": "Type",
-      "typeV": "National NGO, women-led",
+      "typeV": "National NGO, youth-led",
       "hq": "Headquarters",
       "hqV": "Kabul, Afghanistan",
       "focus": "Focus",
@@ -584,7 +584,7 @@
     },
     "trust": {
       "title": "Every donation is documented",
-      "body": "PYECSO is a women-led Afghan NGO registered with the Ministry of Economy (No. 1201) and audited annually. All donations are recorded in our finance system and reported to donors. For institutional partnerships or major gifts, please contact"
+      "body": "PYECSO is a youth-led Afghan NGO registered with the Ministry of Economy (No. 1201) and audited annually. All donations are recorded in our finance system and reported to donors. For institutional partnerships or major gifts, please contact"
     },
     "flow": {
       "success": "Thank you! Your HesabPay donation was received. We will email a receipt shortly.",

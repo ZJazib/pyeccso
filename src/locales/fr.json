@@ -39,12 +39,12 @@
   "hero": {
     "home": {
       "eyebrow": "Au service de l'Afghanistan depuis 2006",
-      "title": "Une ONG afghane dirigée par des femmes pour l'éducation, la résilience et la dignité",
+      "title": "Une ONG afghane dirigée par les jeunes pour l'éducation, la résilience et la dignité",
       "description": "PYECSO déploie éducation, moyens de subsistance, protection et aide humanitaire en partenariat avec les agences de l'ONU et les bailleurs internationaux dans plus de 24 provinces."
     },
     "about": {
       "title": "À propos de PYECSO",
-      "description": "Organisation afghane à but non lucratif dirigée par des femmes, créée en 2006, travaillant avec les communautés, les partenaires gouvernementaux et le système humanitaire international."
+      "description": "Organisation afghane à but non lucratif dirigée par les jeunes, créée en 2006, travaillant avec les communautés, les partenaires gouvernementaux et le système humanitaire international."
     },
     "programs": {
       "title": "Nos programmes",
@@ -60,7 +60,7 @@
     },
     "careers": {
       "title": "Carrières",
-      "description": "Rejoignez une équipe afghane dirigée par des femmes qui délivre éducation, protection et aide humanitaire."
+      "description": "Rejoignez une équipe afghane dirigée par les jeunes qui délivre éducation, protection et aide humanitaire."
     },
     "contact": {
       "title": "Contacter PYECSO",
@@ -100,7 +100,7 @@
       "registered": "ONG enregistrée",
       "provinces": "Provinces couvertes",
       "orgType": "Organisation",
-      "womenLed": "Dirigée par des femmes"
+      "womenLed": "Dirigée par les jeunes"
     },
     "cta": {
       "programs": "Nos programmes",
@@ -108,7 +108,7 @@
     },
     "who": {
       "eyebrow": "Qui sommes-nous",
-      "title": "Une ONG afghane dirigée par des femmes qui délivre des programmes depuis 2006",
+      "title": "Une ONG afghane dirigée par les jeunes qui délivre des programmes depuis 2006",
       "p1": "Fondée en 2006, l'Organisation Éducative, Culturelle et Sociale des Jeunes Patriotes (PYECSO) soutient les femmes, enfants et jeunes afghans par l'éducation, l'aide humanitaire et les programmes de moyens de subsistance.",
       "p2": "Enregistrée auprès du Ministère de l'Économie afghan sous le N° 1201 et du Ministère du Travail et des Affaires sociales, nous opérons légalement et de manière transparente, en mettant en œuvre nos programmes via un personnel local ayant une connaissance approfondie des communautés servies.",
       "link": "À propos de PYECSO"
@@ -156,9 +156,9 @@
   "about": {
     "who": {
       "eyebrow": "Qui sommes-nous",
-      "title": "Une ONG afghane dirigée par des femmes au service des communautés depuis près de deux décennies",
+      "title": "Une ONG afghane dirigée par les jeunes au service des communautés depuis près de deux décennies",
       "p1": "Fondée en 2006, l'Organisation Éducative, Culturelle et Sociale des Jeunes Patriotes (PYECSO) est née d'un effort de terrain et s'est développée pour devenir une ONG nationale reconnue pour ses programmes à fort impact pour les femmes, enfants et jeunes afghans.",
-      "p2": "PYECSO est une organisation dirigée par des femmes qui soutient les communautés par l'éducation, l'aide humanitaire et les programmes de subsistance. Nous opérons légalement et de manière transparente, enregistrés auprès du Ministère de l'Économie afghan sous le N° 1201 et du Ministère du Travail.",
+      "p2": "PYECSO est une organisation dirigée par les jeunes qui soutient les communautés par l'éducation, l'aide humanitaire et les programmes de subsistance. Nous opérons légalement et de manière transparente, enregistrés auprès du Ministère de l'Économie afghan sous le N° 1201 et du Ministère du Travail.",
       "p3": "Notre personnel de terrain est composé de professionnels locaux ayant une compréhension approfondie des contextes culturels, sociaux et économiques des régions où nous travaillons. Cette expertise nous permet de concevoir des programmes culturellement pertinents qui bâtissent confiance et coopération avec les communautés.",
       "cta": "Découvrir nos programmes"
     },
@@ -171,7 +171,7 @@
       "regAlso": "Également enregistrée auprès de",
       "regAlsoV": "Ministère du Travail et des Affaires sociales",
       "type": "Type",
-      "typeV": "ONG nationale, dirigée par des femmes",
+      "typeV": "ONG nationale, dirigée par les jeunes",
       "hq": "Siège",
       "hqV": "Kaboul, Afghanistan",
       "focus": "Axes",
@@ -584,7 +584,7 @@
     },
     "trust": {
       "title": "Chaque don est documenté",
-      "body": "PYECSO est une ONG afghane dirigée par des femmes, enregistrée auprès du Ministère de l'Économie (N° 1201) et auditée chaque année. Tous les dons sont enregistrés dans notre système financier et reportés aux bailleurs. Pour les partenariats institutionnels ou dons majeurs, contactez"
+      "body": "PYECSO est une ONG afghane dirigée par les jeunes, enregistrée auprès du Ministère de l'Économie (N° 1201) et auditée chaque année. Tous les dons sont enregistrés dans notre système financier et reportés aux bailleurs. Pour les partenariats institutionnels ou dons majeurs, contactez"
     },
     "flow": {
       "success": "Merci ! Votre don HesabPay a bien été reçu. Nous vous enverrons un reçu par e-mail sous peu.",
