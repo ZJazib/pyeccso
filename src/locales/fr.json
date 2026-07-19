@@ -787,13 +787,18 @@
     "notFound": {
       "title": "Page introuvable",
       "desc": "La page que vous cherchez n'existe pas ou a été déplacée.",
-      "home": "Accueil"
+      "home": "Accueil",
+      "contact": "Nous contacter"
     },
     "error": {
       "title": "Cette page ne s'est pas chargée",
       "desc": "Une erreur est survenue de notre côté. Essayez de rafraîchir ou revenez à l'accueil.",
       "retry": "Réessayer",
       "home": "Accueil"
+    },
+    "loading": {
+      "title": "Chargement",
+      "desc": "Préparation en cours…"
     }
   }
 }
