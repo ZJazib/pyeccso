@@ -367,5 +367,22 @@ export const CMS_CONFIGS: Record<string, CmsConfig> = {
       { name: "lng", label: "Longitude", type: "number" },
     ],
   },
+  sector: {
+    type: "sector",
+    label: "Sectors of Work",
+    singular: "Sector",
+    description: "Categories shown in the 'Our Sectors of Work' section on the home page.",
+    titleField: "title",
+    listColumns: [
+      { key: "title", label: "Sector" },
+      { key: "status", label: "Status", kind: "status" },
+      { key: "updated_at", label: "Updated", kind: "date" },
+    ],
+    fields: [
+      { name: "title", label: "Title", type: "i18n-text", required: true },
+      { name: "summary", label: "Short description", type: "i18n-textarea" },
+      { name: "icon", label: "Icon name (lucide)", type: "text", help: "e.g. GraduationCap, HeartPulse, Leaf, Users", placeholder: "GraduationCap" },
+    ],
+  },
 };
 
