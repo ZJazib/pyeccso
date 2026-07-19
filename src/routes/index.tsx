@@ -26,8 +26,19 @@ export const Route = createFileRoute("/")({
   }),
 });
 
+const SECTOR_ICONS: Record<string, LucideIcon> = {
+  GraduationCap, HeartPulse, Leaf, Users, Banknote, Wheat, Sprout, Shield,
+};
+const SECTOR_COLORS = [
+  "bg-sector-education",
+  "bg-sector-health",
+  "bg-sector-agriculture",
+  "bg-sector-livelihoods",
+];
+
 function Home() {
   const { t } = useTranslation();
+  const { items: sectorsOfWork } = useCmsListTranslated("sector");
 
   const heroStats = [
     { icon: Calendar, value: "2006", label: t("home.stats.founded") },
