@@ -31,6 +31,7 @@ const NAV: NavSection[] = [
     items: [
       { to: "/admin/pages", label: "Pages", icon: FileText },
       { to: "/admin/programs", label: "Programs", icon: FolderKanban },
+      { to: "/admin/sectors", label: "Sectors of Work", icon: LayoutDashboard },
       { to: "/admin/projects", label: "Projects", icon: ClipboardList },
       { to: "/admin/news", label: "News", icon: Newspaper },
       { to: "/admin/events", label: "Events", icon: Calendar },
