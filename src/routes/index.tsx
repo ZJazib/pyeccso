@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  Banknote, Wheat, Sprout, GraduationCap, Leaf, Shield, HeartPulse,
-  MapPin, Calendar, Building2, Users2, ArrowRight, UserPlus,
+  Banknote, Wheat, Sprout, GraduationCap, Leaf, Shield, HeartPulse, Users,
+  MapPin, Calendar, Building2, Users2, ArrowRight, UserPlus, type LucideIcon,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { useTranslation } from "react-i18next";
+import { useCmsListTranslated } from "@/lib/useCmsContent";
 import cardEducation from "@/assets/card-education.jpg";
 import cardLivelihoods from "@/assets/card-livelihoods.jpg";
 import cardEmergency from "@/assets/card-emergency.jpg";
@@ -25,8 +26,19 @@ export const Route = createFileRoute("/")({
   }),
 });
 
+const SECTOR_ICONS: Record<string, LucideIcon> = {
+  GraduationCap, HeartPulse, Leaf, Users, Banknote, Wheat, Sprout, Shield,
+};
+const SECTOR_COLORS = [
+  "bg-sector-education",
+  "bg-sector-health",
+  "bg-sector-agriculture",
+  "bg-sector-livelihoods",
+];
+
 function Home() {
   const { t } = useTranslation();
+  const { items: sectorsOfWork } = useCmsListTranslated("sector");
 
   const heroStats = [
     { icon: Calendar, value: "2006", label: t("home.stats.founded") },
@@ -166,6 +178,35 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {sectorsOfWork.length > 0 && (
+        <section className="py-20 md:py-24">
+          <div className="max-w-7xl mx-auto px-4 md:px-6">
+            <div className="max-w-2xl mb-10">
+              <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">{t("home.sectorsOfWork.eyebrow")}</div>
+              <h2 className="text-navy-900 text-3xl md:text-4xl font-bold tracking-tight">{t("home.sectorsOfWork.title")}</h2>
+              <p className="text-navy-900/70 mt-3">{t("home.sectorsOfWork.body")}</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {sectorsOfWork.slice(0, 4).map((s, i) => {
+                const iconName = (s.data?.icon as string) || "Sprout";
+                const Icon = SECTOR_ICONS[iconName] ?? Sprout;
+                const color = SECTOR_COLORS[i % SECTOR_COLORS.length];
+                return (
+                  <article key={s.id} className="bg-white ring-1 ring-border rounded-lg p-6 hover:shadow-md hover:-translate-y-0.5 transition-all rtl:text-right">
+                    <div className={`size-14 ${color} text-white rounded-lg flex items-center justify-center mb-4`}>
+                      <Icon className="size-6" />
+                    </div>
+                    <h3 className="text-navy-900 font-bold text-lg mb-2 leading-snug">{s.t.title}</h3>
+                    <p className="text-navy-900/70 text-sm leading-relaxed">{s.t.summary}</p>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+
 
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
