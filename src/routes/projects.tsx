@@ -99,26 +99,34 @@ function Projects() {
                 const donor = (p.data?.partner as string) ?? "";
                 const category = (p.data?.category as string) ?? "";
                 return (
-                  <article key={p.id} className="bg-white ring-1 ring-border rounded-lg p-5 hover:shadow-md transition-shadow flex flex-col">
-                    <span className={`inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase mb-3 w-fit`}>
-                      {category}
-                    </span>
-                    <h4 className="text-navy-900 font-bold text-sm mb-2 leading-snug">{p.t.title}</h4>
-                    <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{p.t.summary}</p>
-                    <div className="mt-auto pt-3 border-t border-border grid grid-cols-2 gap-3 text-xs">
-                      <div>
-                        <div className="text-navy-900/50">{t("common.location")}</div>
-                        <div className="font-semibold text-navy-900 flex items-center gap-1">
-                          <MapPin className="size-3 text-brand-blue" /> {location}
+                  <Link
+                    key={p.id}
+                    to="/projects/$slug"
+                    params={{ slug: p.slug ?? "" }}
+                    className="block group"
+                  >
+                    <article className="h-full bg-white ring-1 ring-border rounded-lg p-5 hover:shadow-md group-hover:-translate-y-0.5 transition-all flex flex-col">
+                      <span className={`inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase mb-3 w-fit`}>
+                        {category}
+                      </span>
+                      <h4 className="text-navy-900 font-bold text-sm mb-2 leading-snug group-hover:text-brand-blue transition-colors">{p.t.title}</h4>
+                      <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{p.t.summary}</p>
+                      <div className="mt-auto pt-3 border-t border-border grid grid-cols-2 gap-3 text-xs">
+                        <div>
+                          <div className="text-navy-900/50">{t("common.location")}</div>
+                          <div className="font-semibold text-navy-900 flex items-center gap-1">
+                            <MapPin className="size-3 text-brand-blue" /> {location}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-navy-900/50">{t("common.donorPartner")}</div>
+                          <div className="font-semibold text-navy-900">{donor}</div>
                         </div>
                       </div>
-                      <div>
-                        <div className="text-navy-900/50">{t("common.donorPartner")}</div>
-                        <div className="font-semibold text-navy-900">{donor}</div>
-                      </div>
-                    </div>
-                  </article>
+                    </article>
+                  </Link>
                 );
+
               })}
             </div>
           </div>
