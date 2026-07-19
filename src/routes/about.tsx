@@ -130,12 +130,12 @@ function About() {
           <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">{t("about.clusters.eyebrow")}</div>
           <p className="text-navy-900/70 text-sm mb-6 max-w-3xl">{t("about.clusters.body")}</p>
           <div className="bg-white ring-1 ring-border rounded-lg p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {clusters.map(({ key, icon: Icon, color }) => (
-              <div key={key} className="flex items-start gap-3 rtl:flex-row-reverse rtl:text-right">
-                <div className={`shrink-0 size-11 ${color} text-white rounded-lg flex items-center justify-center shadow-sm`}>
-                  <Icon className="size-5" />
+            {clusters.map(({ key, logo, bg }) => (
+              <div key={key} className="flex flex-col items-center text-center gap-4">
+                <div className={`${bg} ring-1 ring-border rounded-lg h-20 w-full flex items-center justify-center p-3`}>
+                  <img src={logo} alt={t(`home.clusters.${key}`)} className="max-h-full max-w-full object-contain" loading="lazy" />
                 </div>
-                <div className="text-navy-900 font-semibold text-sm leading-snug pt-1">
+                <div className="text-navy-900 font-semibold text-sm leading-snug">
                   {t(`home.clusters.${key}`)}
                 </div>
               </div>
