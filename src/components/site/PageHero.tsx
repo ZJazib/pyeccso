@@ -21,7 +21,11 @@ export function PageHero({ title, description, breadcrumb, actions }: PageHeroPr
           className="w-full h-full object-cover object-right opacity-60"
           width={1920}
           height={900}
+          loading="eager"
+          fetchPriority="high"
+          decoding="sync"
         />
+
         <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-900/85 to-navy-900/30" />
       </div>
       <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-24">

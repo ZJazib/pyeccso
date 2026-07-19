@@ -66,7 +66,11 @@ function Home() {
           src={heroImage}
           alt="Afghan schoolgirl in classroom"
           className="absolute inset-0 w-full h-full object-cover object-center"
+          loading="eager"
+          fetchPriority="high"
+          decoding="sync"
         />
+
         <div
           aria-hidden="true"
           className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-900/20 rtl:from-navy-950 rtl:via-navy-950/95 rtl:to-navy-950/60"
