@@ -109,26 +109,6 @@ function Media() {
               </ul>
             </div>
 
-            <div className="bg-white ring-1 ring-border rounded-lg overflow-hidden">
-              <div className="px-5 py-3 border-b border-border flex items-center gap-2">
-                <Download className="size-4 text-brand-blue" />
-                <h3 className="text-brand-blue font-bold text-sm">{t("media.downloads.title")}</h3>
-              </div>
-              <ul>
-                {downloads.map((d) => (
-                  <li key={d.key} className="px-5 py-3 flex items-center gap-3 border-b border-border last:border-0">
-                    <d.icon className="size-5 text-brand-blue shrink-0" />
-                    <div>
-                      <div className="text-sm font-semibold text-navy-900">{t(`media.downloads.${d.key}`)}</div>
-                      <div className="text-xs text-navy-900/60">{d.meta}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <div className="p-4">
-                <button className="w-full border border-brand-blue text-brand-blue rounded-md py-2 text-sm font-semibold">{t("media.downloads.viewAll")}</button>
-              </div>
-            </div>
           </aside>
 
           <div className="lg:col-span-3 space-y-12">
