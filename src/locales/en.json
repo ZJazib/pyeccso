@@ -787,13 +787,18 @@
     "notFound": {
       "title": "Page not found",
       "desc": "The page you're looking for doesn't exist or has been moved.",
-      "home": "Go home"
+      "home": "Go home",
+      "contact": "Contact us"
     },
     "error": {
       "title": "This page didn't load",
       "desc": "Something went wrong on our end. You can try refreshing or head back home.",
       "retry": "Try again",
       "home": "Go home"
+    },
+    "loading": {
+      "title": "Loading",
+      "desc": "Preparing your experience…"
     }
   }
 }
