@@ -18,24 +18,21 @@ export const Route = createFileRoute("/programs")({
   }),
 });
 
+const SECTOR_ICONS: Record<string, LucideIcon> = {
+  GraduationCap, HeartPulse, Leaf, Users, Banknote, Wheat, Sprout, Shield,
+};
+const SECTOR_COLORS = [
+  "bg-sector-education",
+  "bg-sector-health",
+  "bg-sector-agriculture",
+  "bg-sector-livelihoods",
+];
+
 function Programs() {
   const { t } = useTranslation();
-  const { items: sectors } = useCmsListTranslated("program");
+  const { items: sectorsOfWork } = useCmsListTranslated("sector");
   const { items: allProjects } = useCmsListTranslated("project");
   const highlights = allProjects.filter((p) => p.data?.featured);
-
-  const ICON_MAP: Record<string, LucideIcon> = {
-    Banknote, Wheat, Sprout, GraduationCap, Leaf, Shield, HeartPulse,
-  };
-  const SECTOR_COLOR: Record<string, string> = {
-    Banknote: "bg-sector-emergency",
-    Wheat: "bg-sector-food",
-    Sprout: "bg-sector-livelihoods",
-    GraduationCap: "bg-sector-education",
-    Leaf: "bg-sector-agriculture",
-    Shield: "bg-sector-child",
-    HeartPulse: "bg-sector-health",
-  };
 
   return (
     <SiteLayout>
@@ -45,31 +42,34 @@ function Programs() {
         breadcrumb={[{ label: t("nav.home"), to: "/" }, { label: t("hero.programs.title") }]}
       />
 
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="max-w-2xl mb-10">
-            <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">{t("programs.sectorsHead.eyebrow")}</div>
-            <h2 className="text-navy-900 text-3xl md:text-4xl font-bold tracking-tight">{t("programs.sectorsHead.title")}</h2>
-            <p className="text-navy-900/70 mt-3">{t("programs.sectorsHead.body")}</p>
+      {sectorsOfWork.length > 0 && (
+        <section className="py-20 md:py-24">
+          <div className="max-w-7xl mx-auto px-4 md:px-6">
+            <div className="max-w-2xl mb-10">
+              <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">{t("home.sectorsOfWork.eyebrow")}</div>
+              <h2 className="text-navy-900 text-3xl md:text-4xl font-bold tracking-tight">{t("home.sectorsOfWork.title")}</h2>
+              <p className="text-navy-900/70 mt-3">{t("home.sectorsOfWork.body")}</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {sectorsOfWork.slice(0, 4).map((s, i) => {
+                const iconName = (s.data?.icon as string) || "Sprout";
+                const Icon = SECTOR_ICONS[iconName] ?? Sprout;
+                const color = SECTOR_COLORS[i % SECTOR_COLORS.length];
+                return (
+                  <article key={s.id} className="bg-white ring-1 ring-border rounded-lg p-6 hover:shadow-md hover:-translate-y-0.5 transition-all rtl:text-right">
+                    <div className={`size-14 ${color} text-white rounded-lg flex items-center justify-center mb-4`}>
+                      <Icon className="size-6" />
+                    </div>
+                    <h3 className="text-navy-900 font-bold text-lg mb-2 leading-snug">{s.t.title}</h3>
+                    <p className="text-navy-900/70 text-sm leading-relaxed">{s.t.summary}</p>
+                  </article>
+                );
+              })}
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {sectors.map((s) => {
-              const iconName = (s.data?.icon as string) || "Sprout";
-              const Icon = ICON_MAP[iconName] ?? Sprout;
-              const color = SECTOR_COLOR[iconName] ?? "bg-brand-blue";
-              return (
-                <article key={s.id} className="bg-white ring-1 ring-border rounded-lg p-6 hover:shadow-md transition-shadow">
-                  <div className={`size-12 ${color} text-white rounded-md flex items-center justify-center mb-4`}>
-                    <Icon className="size-6" />
-                  </div>
-                  <h3 className="text-navy-900 font-bold mb-2">{s.t.title}</h3>
-                  <p className="text-navy-900/70 text-sm leading-relaxed">{s.t.summary}</p>
-                </article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
+
 
       <section className="py-16 bg-surface-alt">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
