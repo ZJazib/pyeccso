@@ -141,21 +141,9 @@ function RootComponent() {
     return () => i18n.off("languageChanged", handler);
   }, [i18n]);
 
-  // Auto-detect country on first visit and switch language for visitors
-  // outside Afghanistan (unless they've already picked a language).
-  useEffect(() => {
-    if (hasUserLanguageChoice()) return;
-    let cancelled = false;
-    detectGeo().then((geo) => {
-      if (cancelled) return;
-      if (shouldApplyGeoLanguage(geo) && geo.language !== i18n.language) {
-        i18n.changeLanguage(geo.language);
-      }
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [i18n]);
+  // Language default is English; users can switch manually via the language
+  // switcher and their choice persists in localStorage.
+
 
   return (
     <QueryClientProvider client={queryClient}>
