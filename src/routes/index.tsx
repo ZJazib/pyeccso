@@ -3,6 +3,7 @@ import {
   Banknote, Wheat, Sprout, GraduationCap, Leaf, Shield, HeartPulse, Users,
   MapPin, Calendar, Building2, Users2, ArrowRight, UserPlus, type LucideIcon,
 } from "lucide-react";
+
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { useTranslation } from "react-i18next";
 import { useCmsListTranslated } from "@/lib/useCmsContent";
@@ -47,15 +48,8 @@ function Home() {
     { icon: Users2, value: t("home.stats.womenLed"), label: t("home.stats.orgType") },
   ];
 
-  const sectors = [
-    { icon: Banknote, label: t("sectors.cash"), color: "bg-sector-emergency" },
-    { icon: Wheat, label: t("sectors.food"), color: "bg-sector-food" },
-    { icon: Sprout, label: t("sectors.livelihoods"), color: "bg-sector-livelihoods" },
-    { icon: GraduationCap, label: t("sectors.education"), color: "bg-sector-education" },
-    { icon: Leaf, label: t("sectors.agriculture"), color: "bg-sector-agriculture" },
-    { icon: Shield, label: t("sectors.protection"), color: "bg-sector-child" },
-    { icon: HeartPulse, label: t("sectors.health"), color: "bg-sector-health" },
-  ];
+
+
 
   const highlights = [
     { img: cardEmergency, tag: t("home.highlights.cash.tag"), title: t("home.highlights.cash.title"), body: t("home.highlights.cash.body") },
@@ -155,29 +149,6 @@ function Home() {
         </div>
       </section>
 
-      <section className="py-20 bg-surface-alt">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
-            <div className="max-w-xl">
-              <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">{t("home.sectorsSection.eyebrow")}</div>
-              <h2 className="text-navy-900 text-3xl md:text-4xl font-bold tracking-tight">{t("home.sectorsSection.title")}</h2>
-            </div>
-            <Link to="/programs" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-2">
-              {t("home.sectorsSection.all")} <ArrowRight className="size-4" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-            {sectors.map((s) => (
-              <div key={s.label} className="bg-white ring-1 ring-border rounded-lg p-5 text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
-                <div className={`size-12 ${s.color} text-white rounded-full mx-auto mb-3 flex items-center justify-center`}>
-                  <s.icon className="size-5" />
-                </div>
-                <div className="text-navy-900 text-sm font-semibold leading-tight">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {sectorsOfWork.length > 0 && (
         <section className="py-20 md:py-24">
