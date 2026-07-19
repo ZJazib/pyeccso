@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  Banknote, Wheat, Sprout, GraduationCap, Leaf, Shield, HeartPulse,
-  MapPin, Calendar, Building2, Users2, ArrowRight, UserPlus,
+  Banknote, Wheat, Sprout, GraduationCap, Leaf, Shield, HeartPulse, Users,
+  MapPin, Calendar, Building2, Users2, ArrowRight, UserPlus, type LucideIcon,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { useTranslation } from "react-i18next";
+import { useCmsListTranslated } from "@/lib/useCmsContent";
 import cardEducation from "@/assets/card-education.jpg";
 import cardLivelihoods from "@/assets/card-livelihoods.jpg";
 import cardEmergency from "@/assets/card-emergency.jpg";
