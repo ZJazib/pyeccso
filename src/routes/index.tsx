@@ -155,29 +155,6 @@ function Home() {
         </div>
       </section>
 
-      <section className="py-20 bg-surface-alt">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="flex items-end justify-between mb-10 flex-wrap gap-4">
-            <div className="max-w-xl">
-              <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">{t("home.sectorsSection.eyebrow")}</div>
-              <h2 className="text-navy-900 text-3xl md:text-4xl font-bold tracking-tight">{t("home.sectorsSection.title")}</h2>
-            </div>
-            <Link to="/programs" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-2">
-              {t("home.sectorsSection.all")} <ArrowRight className="size-4" />
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4">
-            {sectors.map((s) => (
-              <div key={s.label} className="bg-white ring-1 ring-border rounded-lg p-5 text-center hover:shadow-md hover:-translate-y-0.5 transition-all">
-                <div className={`size-12 ${s.color} text-white rounded-full mx-auto mb-3 flex items-center justify-center`}>
-                  <s.icon className="size-5" />
-                </div>
-                <div className="text-navy-900 text-sm font-semibold leading-tight">{s.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {sectorsOfWork.length > 0 && (
         <section className="py-20 md:py-24">
