@@ -19,17 +19,42 @@ import { applyLanguageSideEffects } from "../lib/i18n";
 function NotFoundComponent() {
   const { t } = useTranslation();
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">{t("app.notFound.title")}</h2>
-        <p className="mt-2 text-sm text-muted-foreground">{t("app.notFound.desc")}</p>
-        <div className="mt-6">
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-primary/5 px-4 py-16">
+      {/* Decorative blobs */}
+      <div className="pointer-events-none absolute -top-24 -left-24 h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-brand-blue/10 blur-3xl" />
+
+      <div className="relative z-10 mx-auto w-full max-w-xl text-center">
+        <div className="mx-auto mb-8 flex h-24 w-24 items-center justify-center rounded-2xl bg-white shadow-lg ring-1 ring-border">
+          <img src="/pyecso-logo.png" alt="PYECSO" className="h-16 w-16 object-contain" />
+        </div>
+
+        <div className="relative inline-block">
+          <h1 className="bg-gradient-to-r from-primary via-brand-blue to-primary bg-clip-text text-[7rem] font-extrabold leading-none tracking-tighter text-transparent sm:text-[9rem]">
+            404
+          </h1>
+          <div className="pointer-events-none absolute inset-x-0 -bottom-2 mx-auto h-2 w-24 rounded-full bg-primary/40 blur-sm" />
+        </div>
+
+        <h2 className="mt-4 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+          {t("app.notFound.title")}
+        </h2>
+        <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground sm:text-base">
+          {t("app.notFound.desc")}
+        </p>
+
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <Link
             to="/"
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="inline-flex items-center justify-center rounded-md bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-md"
           >
             {t("app.notFound.home")}
+          </Link>
+          <Link
+            to="/contact"
+            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-5 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-accent"
+          >
+            {t("app.notFound.contact")}
           </Link>
         </div>
       </div>
