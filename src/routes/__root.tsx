@@ -14,7 +14,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import "../lib/i18n";
 import { applyLanguageSideEffects } from "../lib/i18n";
-import { detectGeo, hasUserLanguageChoice, shouldApplyGeoLanguage } from "../lib/geo";
+
 
 function NotFoundComponent() {
   const { t } = useTranslation();
