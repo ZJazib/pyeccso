@@ -85,23 +85,52 @@ function About() {
         </div>
       </section>
 
-      <section className="py-20 bg-surface-alt">
-        <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="max-w-2xl mb-10">
-            <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">{t("about.vmost.eyebrow")}</div>
-            <h2 className="text-navy-900 text-3xl md:text-4xl font-bold tracking-tight">{t("about.vmost.title")}</h2>
+      <section className="py-24 md:py-32 bg-surface-alt">
+        <div className="max-w-6xl mx-auto px-4 md:px-6">
+          <div className="text-center mb-24">
+            <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-4">{t("about.vmost.eyebrow")}</div>
+            <h2 className="text-navy-900 text-4xl md:text-5xl font-black tracking-tight leading-[1.05] max-w-3xl mx-auto">
+              {t("about.vmost.title")}
+            </h2>
+            <div className="h-1 w-16 bg-brand-blue mx-auto mt-8" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-            {vmost.map((v) => (
-              <div key={v.key} className="bg-white ring-1 ring-border rounded-lg p-6">
-                <v.icon className="size-8 text-brand-blue mb-4" />
-                <h3 className="text-navy-900 font-bold mb-2">{t(`about.vmost.${v.key}.title`)}</h3>
-                <p className="text-navy-900/70 text-sm leading-relaxed">{t(`about.vmost.${v.key}.body`)}</p>
-              </div>
-            ))}
+
+          <div className="space-y-24 md:space-y-32">
+            {vmost.map((v, i) => {
+              const reversed = i % 2 === 1;
+              return (
+                <div
+                  key={v.key}
+                  className={`flex flex-col ${reversed ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-10 md:gap-16 lg:gap-20`}
+                >
+                  <div className="flex-1 w-full">
+                    <span className="block text-brand-blue/25 text-6xl md:text-7xl font-black leading-none mb-3 tabular-nums">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="text-navy-900 text-3xl md:text-4xl font-bold mb-5">
+                      {t(`about.vmost.${v.key}.title`)}
+                    </h3>
+                    <p className="text-navy-900/75 text-lg leading-relaxed">
+                      {t(`about.vmost.${v.key}.body`)}
+                    </p>
+                  </div>
+                  <div className="flex-1 w-full">
+                    <div className="aspect-[4/3] rounded-sm shadow-2xl relative overflow-hidden bg-navy-900 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-gradient-to-br from-navy-900 via-[#1e3a5f] to-brand-blue opacity-90" />
+                      <div className="absolute -bottom-8 -right-6 text-white/10 text-[10rem] font-black leading-none select-none tabular-nums">
+                        {String(i + 1).padStart(2, "0")}
+                      </div>
+                      <v.icon className="size-20 text-white/90 relative z-10" strokeWidth={1.25} />
+                      <div className="absolute bottom-8 left-8 w-16 h-0.5 bg-white/60 z-10" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
+
 
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12">
