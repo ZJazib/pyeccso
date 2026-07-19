@@ -4,6 +4,11 @@ import educationLogo from "@/assets/clusters/education.png.asset.json";
 import genderLogo from "@/assets/clusters/gender.jpg.asset.json";
 import foodLogo from "@/assets/clusters/food.png.asset.json";
 import protectionLogo from "@/assets/clusters/protection.png.asset.json";
+import visionImg from "@/assets/framework/vision.jpg";
+import missionImg from "@/assets/framework/mission.jpg";
+import objectivesImg from "@/assets/framework/objectives.jpg";
+import strategyImg from "@/assets/framework/strategy.jpg";
+import valuesImg from "@/assets/framework/values.jpg";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
@@ -25,11 +30,11 @@ function About() {
   const { t } = useTranslation();
 
   const vmost = [
-    { icon: Eye, key: "vision" },
-    { icon: Target, key: "mission" },
-    { icon: Layers, key: "objectives" },
-    { icon: Compass, key: "strategy" },
-    { icon: Gem, key: "values" },
+    { icon: Eye, key: "vision", img: visionImg },
+    { icon: Target, key: "mission", img: missionImg },
+    { icon: Layers, key: "objectives", img: objectivesImg },
+    { icon: Compass, key: "strategy", img: strategyImg },
+    { icon: Gem, key: "values", img: valuesImg },
   ] as const;
 
   const glanceRows = [
@@ -115,13 +120,23 @@ function About() {
                     </p>
                   </div>
                   <div className="flex-1 w-full">
-                    <div className="aspect-[4/3] rounded-sm shadow-2xl relative overflow-hidden bg-navy-900 flex items-center justify-center">
-                      <div className="absolute inset-0 bg-gradient-to-br from-navy-900 via-[#1e3a5f] to-brand-blue opacity-90" />
-                      <div className="absolute -bottom-8 -right-6 text-white/10 text-[10rem] font-black leading-none select-none tabular-nums">
+                    <div className="aspect-[4/3] rounded-sm shadow-2xl relative overflow-hidden bg-navy-900">
+                      <img
+                        src={v.img}
+                        alt={t(`about.vmost.${v.key}.title`)}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        loading="lazy"
+                        width={1200}
+                        height={900}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-tr from-navy-900/80 via-navy-900/30 to-transparent" />
+                      <div className="absolute -bottom-8 -right-6 text-white/15 text-[10rem] font-black leading-none select-none tabular-nums">
                         {String(i + 1).padStart(2, "0")}
                       </div>
-                      <v.icon className="size-20 text-white/90 relative z-10" strokeWidth={1.25} />
-                      <div className="absolute bottom-8 left-8 w-16 h-0.5 bg-white/60 z-10" />
+                      <div className="absolute top-6 left-6 size-12 rounded-full bg-white/15 backdrop-blur-md ring-1 ring-white/30 flex items-center justify-center z-10">
+                        <v.icon className="size-6 text-white" strokeWidth={1.5} />
+                      </div>
+                      <div className="absolute bottom-8 left-8 w-16 h-0.5 bg-white/70 z-10" />
                     </div>
                   </div>
                 </div>
