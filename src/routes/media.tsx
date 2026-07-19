@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  Image as ImageIcon, PlayCircle, FileText, Newspaper, Tv, BookOpen,
-  Download, ArrowRight, Camera, ChevronRight, Mail, Phone,
+  Image as ImageIcon, FileText, Newspaper, BookOpen,
+  Download, ArrowRight, Camera, ChevronRight, Mail,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 
@@ -30,15 +30,12 @@ export const Route = createFileRoute("/media")({
 function Media() {
   const { t } = useTranslation();
 
-  type TabKey = "photos" | "videos" | "press" | "news" | "coverage" | "publications";
+  type TabKey = "photos" | "news" | "publications";
   const [activeTab, setActiveTab] = useState<TabKey>("photos");
 
   const tabs: { icon: typeof ImageIcon; key: TabKey }[] = [
     { icon: ImageIcon, key: "photos" },
-    { icon: PlayCircle, key: "videos" },
-    { icon: FileText, key: "press" },
     { icon: Newspaper, key: "news" },
-    { icon: Tv, key: "coverage" },
     { icon: BookOpen, key: "publications" },
   ];
 
@@ -52,14 +49,6 @@ function Media() {
     { icon: FileText, key: "kit", meta: "PDF, 1.8 MB" },
   ] as const;
 
-  const videos = [
-    { img: cardEducation, duration: "03:45", key: "v1" },
-    { img: cardLivelihoods, duration: "04:12", key: "v2" },
-    { img: cardWomen, duration: "02:58", key: "v3" },
-    { img: cardWash, duration: "03:10", key: "v4" },
-  ] as const;
-
-  const releaseKeys = ["r1","r2","r3","r4"] as const;
   const storyImgs = { s1: cardHealth, s2: cardEducation, s3: cardWash } as const;
   const storyKeys = ["s1","s2","s3"] as const;
 
@@ -73,7 +62,7 @@ function Media() {
 
       <div className="relative -mt-12 md:-mt-14 z-10">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="bg-white rounded-lg shadow-xl ring-1 ring-black/5 grid grid-cols-3 md:grid-cols-6 divide-x divide-border">
+          <div className="bg-white rounded-lg shadow-xl ring-1 ring-black/5 grid grid-cols-3 divide-x divide-border">
             {tabs.map((tab) => {
               const isActive = tab.key === activeTab;
               return (
@@ -112,26 +101,6 @@ function Media() {
               </ul>
             </div>
 
-            <div className="bg-white ring-1 ring-border rounded-lg overflow-hidden">
-              <div className="px-5 py-3 border-b border-border flex items-center gap-2">
-                <Download className="size-4 text-brand-blue" />
-                <h3 className="text-brand-blue font-bold text-sm">{t("media.downloads.title")}</h3>
-              </div>
-              <ul>
-                {downloads.map((d) => (
-                  <li key={d.key} className="px-5 py-3 flex items-center gap-3 border-b border-border last:border-0">
-                    <d.icon className="size-5 text-brand-blue shrink-0" />
-                    <div>
-                      <div className="text-sm font-semibold text-navy-900">{t(`media.downloads.${d.key}`)}</div>
-                      <div className="text-xs text-navy-900/60">{d.meta}</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <div className="p-4">
-                <button className="w-full border border-brand-blue text-brand-blue rounded-md py-2 text-sm font-semibold">{t("media.downloads.viewAll")}</button>
-              </div>
-            </div>
           </aside>
 
           <div className="lg:col-span-3 space-y-12">
@@ -156,59 +125,6 @@ function Media() {
               </div>
             )}
 
-            {activeTab === "videos" && (
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-navy-900 text-xl font-bold">{t("media.sections.videos")}</h3>
-                  <a href="#" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5">{t("media.sections.viewAllVideos")} <ArrowRight className="size-3.5" /></a>
-                </div>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {videos.map((v) => (
-                    <div key={v.key} className="group cursor-pointer">
-                      <div className="relative aspect-video rounded-lg overflow-hidden mb-2">
-                        <img src={v.img} alt="" className="w-full h-full object-cover" loading="lazy" />
-                        <div className="absolute inset-0 bg-navy-950/30 flex items-center justify-center">
-                          <div className="size-12 rounded-full bg-white/90 flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <PlayCircle className="size-6 text-brand-blue" />
-                          </div>
-                        </div>
-                        <span className="absolute bottom-2 right-2 bg-navy-950/80 text-white text-[10px] px-1.5 py-0.5 rounded">{v.duration}</span>
-                      </div>
-                      <h4 className="text-navy-900 text-sm font-semibold leading-snug mb-1">{t(`media.videos.${v.key}.title`)}</h4>
-                      <p className="text-navy-900/60 text-xs">{t(`media.videos.${v.key}.date`)}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {activeTab === "press" && (
-              <div>
-                <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.sections.press")}</h3>
-                <div className="space-y-3">
-                  {releaseKeys.map((r) => (
-                    <article key={r} className="bg-white ring-1 ring-border rounded-lg p-4 flex gap-4 hover:shadow-sm transition-shadow">
-                      <img src={cardEducation} alt="" className="size-20 object-cover rounded-md shrink-0" loading="lazy" />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-3 mb-1">
-                          <h4 className="text-navy-900 font-semibold text-sm leading-snug">{t(`media.releases.${r}.title`)}</h4>
-                          <span className="text-xs text-navy-900/60 whitespace-nowrap">{t(`media.releases.${r}.date`)}</span>
-                        </div>
-                        <p className="text-navy-900/70 text-xs leading-relaxed line-clamp-2">{t(`media.releases.${r}.body`)}</p>
-                        <a href="#" className="text-brand-blue text-xs font-semibold inline-flex items-center gap-1 mt-2">
-                          <FileText className="size-3" /> PDF
-                        </a>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-                <div className="text-center mt-4">
-                  <button className="border border-brand-blue text-brand-blue rounded-md px-5 py-2 text-sm font-semibold inline-flex items-center gap-2">
-                    {t("media.sections.morePress")} <ArrowRight className="size-4" />
-                  </button>
-                </div>
-              </div>
-            )}
 
             {activeTab === "news" && (
               <div>
@@ -227,29 +143,6 @@ function Media() {
               </div>
             )}
 
-            {activeTab === "coverage" && (
-              <div>
-                <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.tabs.coverage")}</h3>
-                <ul className="space-y-3">
-                  {[
-                    { outlet: "TOLOnews", title: "PYECSO reaches 24 provinces with humanitarian aid", date: "May 2025" },
-                    { outlet: "Reuters", title: "Youth-led NGO expands education access in Afghanistan", date: "Mar 2025" },
-                    { outlet: "Al Jazeera", title: "Community resilience programs delivered by PYECSO", date: "Jan 2025" },
-                    { outlet: "BBC Persian", title: "Livelihoods and cash assistance across rural districts", date: "Nov 2024" },
-                  ].map((c) => (
-                    <li key={c.title} className="bg-white ring-1 ring-border rounded-lg p-4 flex items-start gap-4">
-                      <Tv className="size-5 text-brand-blue shrink-0 mt-0.5" />
-                      <div className="flex-1 min-w-0">
-                        <div className="text-xs font-bold text-brand-blue uppercase tracking-wider mb-1">{c.outlet}</div>
-                        <div className="text-navy-900 text-sm font-semibold leading-snug">{c.title}</div>
-                        <div className="text-navy-900/60 text-xs mt-1">{c.date}</div>
-                      </div>
-                      <a href="#" className="text-brand-blue text-xs font-semibold shrink-0 inline-flex items-center gap-1">Read <ArrowRight className="size-3" /></a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
 
             {activeTab === "publications" && (
               <div>
