@@ -48,15 +48,8 @@ function Home() {
     { icon: Users2, value: t("home.stats.womenLed"), label: t("home.stats.orgType") },
   ];
 
-  const sectors = [
-    { icon: Banknote, label: t("sectors.cash"), color: "bg-sector-emergency" },
-    { icon: Wheat, label: t("sectors.food"), color: "bg-sector-food" },
-    { icon: Sprout, label: t("sectors.livelihoods"), color: "bg-sector-livelihoods" },
-    { icon: GraduationCap, label: t("sectors.education"), color: "bg-sector-education" },
-    { icon: Leaf, label: t("sectors.agriculture"), color: "bg-sector-agriculture" },
-    { icon: Shield, label: t("sectors.protection"), color: "bg-sector-child" },
-    { icon: HeartPulse, label: t("sectors.health"), color: "bg-sector-health" },
-  ];
+
+
 
   const highlights = [
     { img: cardEmergency, tag: t("home.highlights.cash.tag"), title: t("home.highlights.cash.title"), body: t("home.highlights.cash.body") },
