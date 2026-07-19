@@ -35,10 +35,7 @@ function Media() {
 
   const tabs: { icon: typeof ImageIcon; key: TabKey }[] = [
     { icon: ImageIcon, key: "photos" },
-    { icon: PlayCircle, key: "videos" },
-    { icon: FileText, key: "press" },
     { icon: Newspaper, key: "news" },
-    { icon: Tv, key: "coverage" },
     { icon: BookOpen, key: "publications" },
   ];
 
