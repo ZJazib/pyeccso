@@ -42,11 +42,11 @@ function About() {
   ];
 
   const coreKeys = ["trustees", "management", "director", "program", "ops", "finance", "meal", "fundraising", "reporting", "field"] as const;
-  const clusters: { key: string; icon: LucideIcon; color: string }[] = [
-    { key: "education", icon: GraduationCap, color: "bg-brand-blue" },
-    { key: "gender", icon: Users, color: "bg-brand-red" },
-    { key: "food", icon: Utensils, color: "bg-brand-green" },
-    { key: "protection", icon: ShieldCheck, color: "bg-navy-900" },
+  const clusters: { key: string; logo: string; bg: string }[] = [
+    { key: "education", logo: educationLogo.url, bg: "bg-white" },
+    { key: "gender", logo: genderLogo.url, bg: "bg-white" },
+    { key: "food", logo: foodLogo.url, bg: "bg-white" },
+    { key: "protection", logo: protectionLogo.url, bg: "bg-white" },
   ];
 
   return (
