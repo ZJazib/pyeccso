@@ -151,6 +151,11 @@
       "title": "Soutenez le travail de PYECSO",
       "body": "Votre contribution aide à apporter éducation, protection et aide humanitaire aux familles à travers l'Afghanistan.",
       "button": "Faire un don"
+    },
+    "sectorsOfWork": {
+      "eyebrow": "Ce que nous faisons",
+      "title": "Nos secteurs d’intervention",
+      "body": "Quatre domaines clés guident tous les programmes de PYECSO en Afghanistan."
     }
   },
   "about": {
@@ -594,11 +599,20 @@
         "title": "Projets soutenus par votre don",
         "body": "Chaque contribution finance l'un des six domaines de programme de PYECSO. Cliquez sur « Faire un don » pour donner via HesabPay, en espèces à notre bureau de Kaboul ou par virement bancaire."
       },
-      "card": { "donateNow": "Faire un don", "raised": "collecté", "goal": "objectif", "donors": "donateurs" },
+      "card": {
+        "donateNow": "Faire un don",
+        "raised": "collecté",
+        "goal": "objectif",
+        "donors": "donateurs"
+      },
       "modal": {
         "donateTo": "Don pour",
         "close": "Fermer",
-        "tabs": { "hesab": "HesabPay", "cash": "Espèces en main", "bank": "Virement bancaire" },
+        "tabs": {
+          "hesab": "HesabPay",
+          "cash": "Espèces en main",
+          "bank": "Virement bancaire"
+        },
         "hesab": {
           "intro": "Choisissez un montant, puis passez au paiement sécurisé HesabPay.",
           "currencyNote": "Montants affichés en {{currency}} — HesabPay traite le paiement en Afghani (AFN) au taux du jour.",

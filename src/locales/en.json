@@ -151,6 +151,11 @@
       "title": "Support PYECSO's work",
       "body": "Your contribution helps deliver education, protection and humanitarian assistance to families across Afghanistan.",
       "button": "Donate now"
+    },
+    "sectorsOfWork": {
+      "eyebrow": "What We Do",
+      "title": "Our Sectors of Work",
+      "body": "Four core areas guide every PYECSO program in Afghanistan."
     }
   },
   "about": {
@@ -594,11 +599,20 @@
         "title": "Projects supported by your donation",
         "body": "Every contribution funds one of PYECSO's six program areas. Click \"Donate now\" to give via HesabPay, cash by hand at our Kabul office, or bank transfer."
       },
-      "card": { "donateNow": "Donate now", "raised": "raised", "goal": "goal", "donors": "donors" },
+      "card": {
+        "donateNow": "Donate now",
+        "raised": "raised",
+        "goal": "goal",
+        "donors": "donors"
+      },
       "modal": {
         "donateTo": "Donate to",
         "close": "Close",
-        "tabs": { "hesab": "HesabPay", "cash": "Cash by Hand", "bank": "Bank Transfer" },
+        "tabs": {
+          "hesab": "HesabPay",
+          "cash": "Cash by Hand",
+          "bank": "Bank Transfer"
+        },
         "hesab": {
           "intro": "Choose an amount, then continue to HesabPay's secure checkout.",
           "currencyNote": "Amounts shown in {{currency}} — HesabPay processes the payment in Afghani (AFN) at the live exchange rate.",
