@@ -32,11 +32,15 @@ if (!i18n.isInitialized) {
         ar: { translation: ar },
         fr: { translation: fr },
       },
+      lng:
+        typeof window !== "undefined"
+          ? (localStorage.getItem("pyecso.lang") ?? "en")
+          : "en",
       fallbackLng: "en",
       supportedLngs: ["en", "fa", "ps", "ar", "fr"],
       interpolation: { escapeValue: false },
       detection: {
-        order: ["localStorage", "navigator", "htmlTag"],
+        order: ["localStorage"],
         caches: ["localStorage"],
         lookupLocalStorage: "pyecso.lang",
       },
