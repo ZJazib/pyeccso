@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Eye, Target, Compass, Layers, Gem } from "lucide-react";
+import { ArrowRight, Eye, Target, Compass, Layers, Gem, GraduationCap, Users, Utensils, ShieldCheck, type LucideIcon } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
@@ -38,7 +38,12 @@ function About() {
   ];
 
   const coreKeys = ["trustees", "management", "director", "program", "ops", "finance", "meal", "fundraising", "reporting", "field"] as const;
-  const clusterKeys = ["education", "gender", "food", "protection"] as const;
+  const clusters: { key: string; icon: LucideIcon; color: string }[] = [
+    { key: "education", icon: GraduationCap, color: "bg-brand-blue" },
+    { key: "gender", icon: Users, color: "bg-brand-red" },
+    { key: "food", icon: Utensils, color: "bg-brand-green" },
+    { key: "protection", icon: ShieldCheck, color: "bg-navy-900" },
+  ];
 
   return (
     <SiteLayout>
@@ -121,9 +126,14 @@ function About() {
           <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">{t("about.clusters.eyebrow")}</div>
           <p className="text-navy-900/70 text-sm mb-6 max-w-3xl">{t("about.clusters.body")}</p>
           <div className="bg-white ring-1 ring-border rounded-lg p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {clusterKeys.map((k) => (
-              <div key={k} className="text-navy-900 font-semibold text-sm leading-snug">
-                {t(`home.clusters.${k}`)}
+            {clusters.map(({ key, icon: Icon, color }) => (
+              <div key={key} className="flex items-start gap-3 rtl:flex-row-reverse rtl:text-right">
+                <div className={`shrink-0 size-11 ${color} text-white rounded-lg flex items-center justify-center shadow-sm`}>
+                  <Icon className="size-5" />
+                </div>
+                <div className="text-navy-900 font-semibold text-sm leading-snug pt-1">
+                  {t(`home.clusters.${key}`)}
+                </div>
               </div>
             ))}
           </div>
