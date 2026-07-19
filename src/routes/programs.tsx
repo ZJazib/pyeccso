@@ -84,24 +84,35 @@ function Programs() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {highlights.slice(0, 6).map((p) => (
-              <article key={p.id} className="bg-white ring-1 ring-border rounded-lg p-6 flex flex-col">
-                <span className="inline-block bg-brand-blue text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase mb-3 w-fit">
-                  {(p.data?.category as string) ?? ""}
-                </span>
-                <h4 className="text-navy-900 font-bold mb-2 leading-snug">{p.t.title}</h4>
-                <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{p.t.summary}</p>
-                <dl className="grid grid-cols-2 gap-3 text-xs mt-auto pt-4 border-t border-border">
-                  <div>
-                    <dt className="text-navy-900/50">{t("common.location")}</dt>
-                    <dd className="text-navy-900 font-semibold">{(p.data?.location as string) ?? ""}</dd>
+              <Link
+                key={p.id}
+                to="/projects/$slug"
+                params={{ slug: p.slug ?? "" }}
+                className="block group"
+              >
+                <article className="h-full bg-white ring-1 ring-border rounded-lg p-6 flex flex-col hover:shadow-md group-hover:-translate-y-0.5 transition-all">
+                  <span className="inline-block bg-brand-blue text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase mb-3 w-fit">
+                    {(p.data?.category as string) ?? ""}
+                  </span>
+                  <h4 className="text-navy-900 font-bold mb-2 leading-snug group-hover:text-brand-blue transition-colors">{p.t.title}</h4>
+                  <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{p.t.summary}</p>
+                  <dl className="grid grid-cols-2 gap-3 text-xs mt-auto pt-4 border-t border-border">
+                    <div>
+                      <dt className="text-navy-900/50">{t("common.location")}</dt>
+                      <dd className="text-navy-900 font-semibold">{(p.data?.location as string) ?? ""}</dd>
+                    </div>
+                    <div>
+                      <dt className="text-navy-900/50">{t("common.donorPartner")}</dt>
+                      <dd className="text-navy-900 font-semibold">{(p.data?.partner as string) ?? ""}</dd>
+                    </div>
+                  </dl>
+                  <div className="mt-4 text-brand-blue text-xs font-semibold inline-flex items-center gap-1">
+                    {t("common.readMore", { defaultValue: "View details" })} <ArrowRight className="size-3" />
                   </div>
-                  <div>
-                    <dt className="text-navy-900/50">{t("common.donorPartner")}</dt>
-                    <dd className="text-navy-900 font-semibold">{(p.data?.partner as string) ?? ""}</dd>
-                  </div>
-                </dl>
-              </article>
+                </article>
+              </Link>
             ))}
+
           </div>
         </div>
       </section>
