@@ -1,5 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowRight, Eye, Target, Compass, Layers, Gem, GraduationCap, Users, Utensils, ShieldCheck, type LucideIcon } from "lucide-react";
+import { ArrowRight, Eye, Target, Compass, Layers, Gem } from "lucide-react";
+import educationLogo from "@/assets/clusters/education.png.asset.json";
+import genderLogo from "@/assets/clusters/gender.jpg.asset.json";
+import foodLogo from "@/assets/clusters/food.svg.asset.json";
+import protectionLogo from "@/assets/clusters/protection.png.asset.json";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
