@@ -9,10 +9,8 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import cardEducation from "@/assets/card-education.jpg";
-import cardLivelihoods from "@/assets/card-livelihoods.jpg";
 import cardWash from "@/assets/card-wash.jpg";
 import cardHealth from "@/assets/card-health.jpg";
-import cardWomen from "@/assets/card-women.jpg";
 
 export const Route = createFileRoute("/media")({
   component: Media,
@@ -30,11 +28,10 @@ export const Route = createFileRoute("/media")({
 function Media() {
   const { t } = useTranslation();
 
-  type TabKey = "photos" | "news" | "publications";
-  const [activeTab, setActiveTab] = useState<TabKey>("photos");
+  type TabKey = "news" | "publications";
+  const [activeTab, setActiveTab] = useState<TabKey>("news");
 
   const tabs: { icon: typeof ImageIcon; key: TabKey }[] = [
-    { icon: ImageIcon, key: "photos" },
     { icon: Newspaper, key: "news" },
     { icon: BookOpen, key: "publications" },
   ];
@@ -56,7 +53,7 @@ function Media() {
 
       <div className="relative -mt-12 md:-mt-14 z-10">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="bg-white rounded-lg shadow-xl ring-1 ring-black/5 grid grid-cols-3 divide-x divide-border">
+          <div className="bg-white rounded-lg shadow-xl ring-1 ring-black/5 grid grid-cols-2 divide-x divide-border">
             {tabs.map((tab) => {
               const isActive = tab.key === activeTab;
               return (
@@ -98,26 +95,6 @@ function Media() {
           </aside>
 
           <div className="lg:col-span-3 space-y-12">
-            {activeTab === "photos" && (
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-navy-900 text-xl font-bold">{t("media.sections.photos")}</h3>
-                  <a href="#" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5">{t("media.sections.viewAllPhotos")} <ArrowRight className="size-3.5" /></a>
-                </div>
-                <div className="grid grid-cols-3 grid-rows-2 gap-3 h-[400px]">
-                  <div className="row-span-2 relative rounded-lg overflow-hidden"><img src={cardEducation} alt="" className="w-full h-full object-cover" /></div>
-                  <div className="relative rounded-lg overflow-hidden"><img src={cardLivelihoods} alt="" className="w-full h-full object-cover" /></div>
-                  <div className="relative rounded-lg overflow-hidden"><img src={cardWash} alt="" className="w-full h-full object-cover" /></div>
-                  <div className="relative rounded-lg overflow-hidden"><img src={cardHealth} alt="" className="w-full h-full object-cover" /></div>
-                  <div className="relative rounded-lg overflow-hidden group cursor-pointer">
-                    <img src={cardWomen} alt="" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-navy-950/60 flex items-center justify-center text-white font-bold text-center">
-                      +245<br /><span className="text-xs font-normal">{t("media.sections.morePhotos")}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
 
 
             {activeTab === "news" && (
