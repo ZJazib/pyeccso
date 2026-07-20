@@ -25,11 +25,11 @@ function About() {
   const { t } = useTranslation();
 
   const vmost = [
-    { icon: Eye, key: "vision", img: visionImg },
-    { icon: Target, key: "mission", img: missionImg },
-    { icon: Layers, key: "objectives", img: objectivesImg },
-    { icon: Compass, key: "strategy", img: strategyImg },
-    { icon: Gem, key: "values", img: valuesImg },
+    { icon: Eye, key: "vision" },
+    { icon: Target, key: "mission" },
+    { icon: Layers, key: "objectives" },
+    { icon: Compass, key: "strategy" },
+    { icon: Gem, key: "values" },
   ] as const;
 
   const glanceRows = [
