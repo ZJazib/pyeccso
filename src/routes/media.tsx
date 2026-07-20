@@ -42,12 +42,6 @@ function Media() {
 
   const catKeys = ["all","education","livelihoods","health","protection","wash","emergency","agriculture","women","youth","events"] as const;
 
-  const downloads = [
-    { icon: ImageIcon, key: "logo", meta: "PNG, SVG" },
-    { icon: FileText, key: "brand", meta: "PDF, 2.4 MB" },
-    { icon: Camera, key: "photoLib", meta: "ZIP, 45 MB" },
-    { icon: FileText, key: "kit", meta: "PDF, 1.8 MB" },
-  ] as const;
 
   const storyImgs = { s1: cardHealth, s2: cardEducation, s3: cardWash } as const;
   const storyKeys = ["s1","s2","s3"] as const;
