@@ -9,10 +9,8 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import cardEducation from "@/assets/card-education.jpg";
-import cardLivelihoods from "@/assets/card-livelihoods.jpg";
 import cardWash from "@/assets/card-wash.jpg";
 import cardHealth from "@/assets/card-health.jpg";
-import cardWomen from "@/assets/card-women.jpg";
 
 export const Route = createFileRoute("/media")({
   component: Media,
