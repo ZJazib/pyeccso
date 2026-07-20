@@ -41,6 +41,7 @@ function Projects() {
   const [province, setProvince] = useState("");
   const [donor, setDonor] = useState("");
   const [q, setQ] = useState("");
+  const [sort, setSort] = useState<"newest" | "oldest" | "az" | "za" | "impact">("newest");
 
   const uniq = (arr: (string | undefined)[]) =>
     Array.from(new Set(arr.map((v) => (v ?? "").trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b));
@@ -51,7 +52,7 @@ function Projects() {
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    return projects.filter((p) => {
+    const list = projects.filter((p) => {
       const cat = ((p.data?.category as string) || (p.data?.sector_tag as string) || "").trim();
       const loc = ((p.data?.location as string) ?? "").trim();
       const par = ((p.data?.partner as string) ?? "").trim();
@@ -64,7 +65,29 @@ function Projects() {
       }
       return true;
     });
-  }, [projects, sector, province, donor, q]);
+
+    const impactOf = (p: typeof list[number]) => {
+      const raw = (p.data?.beneficiaries ?? p.data?.impact ?? p.data?.people_reached ?? 0) as string | number;
+      const n = typeof raw === "number" ? raw : parseInt(String(raw).replace(/[^\d]/g, ""), 10);
+      return Number.isFinite(n) ? n : 0;
+    };
+    const dateOf = (p: typeof list[number]) => {
+      const raw = (p.data?.start_date ?? p.data?.date ?? p.data?.year ?? p.published_at ?? p.updated_at ?? 0) as string | number;
+      const ts = typeof raw === "number" ? raw : Date.parse(String(raw));
+      return Number.isFinite(ts) ? ts : 0;
+    };
+    const title = (p: typeof list[number]) => (p.t.title ?? "").toLowerCase();
+
+    const sorted = [...list];
+    switch (sort) {
+      case "newest": sorted.sort((a, b) => dateOf(b) - dateOf(a)); break;
+      case "oldest": sorted.sort((a, b) => dateOf(a) - dateOf(b)); break;
+      case "az":     sorted.sort((a, b) => title(a).localeCompare(title(b))); break;
+      case "za":     sorted.sort((a, b) => title(b).localeCompare(title(a))); break;
+      case "impact": sorted.sort((a, b) => impactOf(b) - impactOf(a)); break;
+    }
+    return sorted;
+  }, [projects, sector, province, donor, q, sort]);
 
   const filterControls: { label: string; value: string; onChange: (v: string) => void; all: string; options: string[] }[] = [
     { label: t("projects.filter.sector"), value: sector, onChange: setSector, all: t("projects.filter.allSectors"), options: sectors },
@@ -137,8 +160,26 @@ function Projects() {
                   className="w-full bg-white border border-border rounded-md pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
                 />
               </div>
-              <div className="text-sm text-navy-900/70">{filtered.length} {t("projects.listedSuffix")}</div>
+              <div className="flex items-center gap-3">
+                <label className="text-xs text-navy-900/60 hidden sm:block">{t("projects.sort.label", "Sort by")}</label>
+                <div className="relative">
+                  <select
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value as typeof sort)}
+                    className="appearance-none bg-white border border-border rounded-md pl-3 pr-8 py-2 text-sm text-navy-900 focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
+                  >
+                    <option value="newest">{t("projects.sort.newest", "Newest first")}</option>
+                    <option value="oldest">{t("projects.sort.oldest", "Oldest first")}</option>
+                    <option value="az">{t("projects.sort.az", "Title A–Z")}</option>
+                    <option value="za">{t("projects.sort.za", "Title Z–A")}</option>
+                    <option value="impact">{t("projects.sort.impact", "Highest impact")}</option>
+                  </select>
+                  <ChevronDown className="size-4 text-navy-900/50 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+                <div className="text-sm text-navy-900/70">{filtered.length} {t("projects.listedSuffix")}</div>
+              </div>
             </div>
+
 
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
