@@ -56,12 +56,13 @@ const HESAB_PAY_NUMBER = "+93 700 000 000";
 const HESAB_PAY_ACCOUNT = "PYECSO";
 
 const BANK = {
-  accountName: "Pamir Youth and Elderly Care Social Organization (PYECSO)",
-  accountNumber: "0000 0000 0000 0000",
-  bankName: "Afghanistan International Bank (AIB)",
-  swift: "AFIBAFKA",
-  branch: "Shahr-e-Naw, Kabul",
+  accountName: "PYECSO (Patriotic Youths Education Cultural and Social Organization)",
+  accountNumber: "99758601",
+  bankName: "New Kabul Bank",
+  swift: "KABUAFKA",
+  branch: "Shahr-e-Naw, Kabul, Afghanistan",
 };
+
 
 const CAMPAIGNS = [
   {
