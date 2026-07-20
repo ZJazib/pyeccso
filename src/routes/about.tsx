@@ -41,7 +41,6 @@ function About() {
     { k: t("about.glance.focus"), v: t("about.glance.focusV") },
   ];
 
-  const coreKeys = ["trustees", "management", "director", "program", "ops", "finance", "meal", "fundraising", "reporting", "field"] as const;
   const clusters: { key: string; logo: string; bg: string }[] = [
     { key: "education", logo: educationLogo.url, bg: "bg-white" },
     { key: "gender", logo: genderLogo.url, bg: "bg-white" },
@@ -154,23 +153,12 @@ function About() {
 
 
       <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-2 gap-12">
-          <div>
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="max-w-3xl">
             <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">{t("about.gov.eyebrow")}</div>
             <h2 className="text-navy-900 text-3xl md:text-4xl font-bold tracking-tight mb-5">{t("about.gov.title")}</h2>
             <p className="text-navy-900/75 leading-relaxed mb-4">{t("about.gov.p1")}</p>
             <p className="text-navy-900/75 leading-relaxed">{t("about.gov.p2")}</p>
-          </div>
-          <div className="bg-surface-alt ring-1 ring-border rounded-lg p-6">
-            <h3 className="text-navy-900 font-bold mb-4 text-sm uppercase tracking-wider">{t("about.gov.coreTitle")}</h3>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2 text-sm text-navy-900/80">
-              {coreKeys.map((k) => (
-                <li key={k} className="flex items-center gap-2 py-1 border-b border-border/60">
-                  <span className="size-1.5 rounded-full bg-brand-blue" />
-                  {t(`about.gov.core.${k}`)}
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </section>
