@@ -97,26 +97,6 @@ function Media() {
           </aside>
 
           <div className="lg:col-span-3 space-y-12">
-            {activeTab === "photos" && (
-              <div>
-                <div className="flex items-center justify-between mb-5">
-                  <h3 className="text-navy-900 text-xl font-bold">{t("media.sections.photos")}</h3>
-                  <a href="#" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1.5">{t("media.sections.viewAllPhotos")} <ArrowRight className="size-3.5" /></a>
-                </div>
-                <div className="grid grid-cols-3 grid-rows-2 gap-3 h-[400px]">
-                  <div className="row-span-2 relative rounded-lg overflow-hidden"><img src={cardEducation} alt="" className="w-full h-full object-cover" /></div>
-                  <div className="relative rounded-lg overflow-hidden"><img src={cardLivelihoods} alt="" className="w-full h-full object-cover" /></div>
-                  <div className="relative rounded-lg overflow-hidden"><img src={cardWash} alt="" className="w-full h-full object-cover" /></div>
-                  <div className="relative rounded-lg overflow-hidden"><img src={cardHealth} alt="" className="w-full h-full object-cover" /></div>
-                  <div className="relative rounded-lg overflow-hidden group cursor-pointer">
-                    <img src={cardWomen} alt="" className="w-full h-full object-cover" />
-                    <div className="absolute inset-0 bg-navy-950/60 flex items-center justify-center text-white font-bold text-center">
-                      +245<br /><span className="text-xs font-normal">{t("media.sections.morePhotos")}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
 
 
             {activeTab === "news" && (
