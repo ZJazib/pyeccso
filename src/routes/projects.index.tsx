@@ -72,7 +72,7 @@ function Projects() {
       return Number.isFinite(n) ? n : 0;
     };
     const dateOf = (p: typeof list[number]) => {
-      const raw = (p.data?.start_date ?? p.data?.date ?? p.data?.year ?? p.updated_at ?? p.created_at ?? 0) as string | number;
+      const raw = (p.data?.start_date ?? p.data?.date ?? p.data?.year ?? p.published_at ?? p.updated_at ?? 0) as string | number;
       const ts = typeof raw === "number" ? raw : Date.parse(String(raw));
       return Number.isFinite(ts) ? ts : 0;
     };
