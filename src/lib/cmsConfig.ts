@@ -13,6 +13,7 @@ export type FieldType =
   | "select"
   | "image"
   | "gallery"
+  | "media-gallery"
   | "i18n-text"
   | "i18n-textarea"
   | "i18n-richtext"
