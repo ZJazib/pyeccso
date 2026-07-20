@@ -374,8 +374,8 @@ function Donate() {
           <h3 className="text-xl md:text-2xl font-bold mb-3">{t("donate.trust.title")}</h3>
           <p className="text-white/70 text-sm md:text-base leading-relaxed">
             {t("donate.trust.body")}{" "}
-            <a href="mailto:director@pyecso.org.af" className="text-white underline">
-              director@pyecso.org.af
+            <a href="mailto:donation@pyecso.org.af" className="text-white underline">
+              donation@pyecso.org.af
             </a>
             .
           </p>
