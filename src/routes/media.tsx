@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  Image as ImageIcon, FileText, Newspaper, BookOpen,
-  Download, ArrowRight, Camera, ChevronRight, Mail,
+  Image as ImageIcon, Newspaper, BookOpen,
+  ArrowRight, Camera, ChevronRight, Mail,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 
@@ -42,12 +42,6 @@ function Media() {
 
   const catKeys = ["all","education","livelihoods","health","protection","wash","emergency","agriculture","women","youth","events"] as const;
 
-  const downloads = [
-    { icon: ImageIcon, key: "logo", meta: "PNG, SVG" },
-    { icon: FileText, key: "brand", meta: "PDF, 2.4 MB" },
-    { icon: Camera, key: "photoLib", meta: "ZIP, 45 MB" },
-    { icon: FileText, key: "kit", meta: "PDF, 1.8 MB" },
-  ] as const;
 
   const storyImgs = { s1: cardHealth, s2: cardEducation, s3: cardWash } as const;
   const storyKeys = ["s1","s2","s3"] as const;
@@ -147,22 +141,6 @@ function Media() {
             {activeTab === "publications" && (
               <div>
                 <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.tabs.publications")}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {downloads.map((d) => (
-                    <div key={d.key} className="bg-white ring-1 ring-border rounded-lg p-5 flex items-start gap-4 hover:shadow-md transition-shadow">
-                      <div className="size-12 rounded-md bg-brand-blue-wash text-brand-blue flex items-center justify-center shrink-0">
-                        <d.icon className="size-5" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-navy-900 font-semibold text-sm">{t(`media.downloads.${d.key}`)}</div>
-                        <div className="text-navy-900/60 text-xs mt-0.5">{d.meta}</div>
-                        <a href="#" className="inline-flex items-center gap-1 text-brand-blue text-xs font-semibold mt-2">
-                          <Download className="size-3" /> Download
-                        </a>
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
             )}
           </div>
