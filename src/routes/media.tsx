@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import {
-  Image as ImageIcon, FileText, Newspaper, BookOpen,
-  Download, ArrowRight, Camera, ChevronRight, Mail,
+  Image as ImageIcon, Newspaper, BookOpen,
+  ArrowRight, Camera, ChevronRight, Mail,
 } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 
