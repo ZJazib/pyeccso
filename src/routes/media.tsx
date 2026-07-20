@@ -55,7 +55,7 @@ function Media() {
 
       <div className="relative -mt-12 md:-mt-14 z-10">
         <div className="max-w-7xl mx-auto px-4 md:px-6">
-          <div className="bg-white rounded-lg shadow-xl ring-1 ring-black/5 grid grid-cols-3 divide-x divide-border">
+          <div className="bg-white rounded-lg shadow-xl ring-1 ring-black/5 grid grid-cols-2 divide-x divide-border">
             {tabs.map((tab) => {
               const isActive = tab.key === activeTab;
               return (
