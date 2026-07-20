@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPin, ArrowRight, ChevronDown, Search, Handshake } from "lucide-react";
+import { MapPin, ArrowRight, ChevronDown, Search, Handshake, X } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import { useCmsListTranslated } from "@/lib/useCmsContent";
+import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/projects/")({
   component: Projects,
@@ -36,11 +37,43 @@ function Projects() {
   const { t } = useTranslation();
   const { items: projects, loading } = useCmsListTranslated("project");
 
-  const filters = [
-    { label: t("projects.filter.sector"), value: t("projects.filter.allSectors") },
-    { label: t("projects.filter.province"), value: t("projects.filter.allProvinces") },
-    { label: t("projects.filter.donor"), value: t("projects.filter.allDonors") },
+  const [sector, setSector] = useState("");
+  const [province, setProvince] = useState("");
+  const [donor, setDonor] = useState("");
+  const [q, setQ] = useState("");
+
+  const uniq = (arr: (string | undefined)[]) =>
+    Array.from(new Set(arr.map((v) => (v ?? "").trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b));
+
+  const sectors = useMemo(() => uniq(projects.map((p) => (p.data?.category as string) || (p.data?.sector_tag as string))), [projects]);
+  const provinces = useMemo(() => uniq(projects.map((p) => p.data?.location as string)), [projects]);
+  const donors = useMemo(() => uniq(projects.map((p) => p.data?.partner as string)), [projects]);
+
+  const filtered = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    return projects.filter((p) => {
+      const cat = ((p.data?.category as string) || (p.data?.sector_tag as string) || "").trim();
+      const loc = ((p.data?.location as string) ?? "").trim();
+      const par = ((p.data?.partner as string) ?? "").trim();
+      if (sector && cat !== sector) return false;
+      if (province && loc !== province) return false;
+      if (donor && par !== donor) return false;
+      if (needle) {
+        const hay = `${p.t.title ?? ""} ${p.t.summary ?? ""} ${cat} ${loc} ${par}`.toLowerCase();
+        if (!hay.includes(needle)) return false;
+      }
+      return true;
+    });
+  }, [projects, sector, province, donor, q]);
+
+  const filterControls: { label: string; value: string; onChange: (v: string) => void; all: string; options: string[] }[] = [
+    { label: t("projects.filter.sector"), value: sector, onChange: setSector, all: t("projects.filter.allSectors"), options: sectors },
+    { label: t("projects.filter.province"), value: province, onChange: setProvince, all: t("projects.filter.allProvinces"), options: provinces },
+    { label: t("projects.filter.donor"), value: donor, onChange: setDonor, all: t("projects.filter.allDonors"), options: donors },
   ];
+
+  const activeCount = [sector, province, donor, q].filter(Boolean).length;
+  const clearAll = () => { setSector(""); setProvince(""); setDonor(""); setQ(""); };
 
   return (
     <SiteLayout>
@@ -54,14 +87,28 @@ function Projects() {
         <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-4 gap-8">
           <aside className="space-y-6">
             <div className="bg-white ring-1 ring-border rounded-lg p-6">
-              <h3 className="text-brand-blue font-bold mb-5">{t("projects.filter.title")}</h3>
+              <div className="flex items-center justify-between mb-5">
+                <h3 className="text-brand-blue font-bold">{t("projects.filter.title")}</h3>
+                {activeCount > 0 && (
+                  <button onClick={clearAll} className="text-xs text-navy-900/60 hover:text-brand-blue inline-flex items-center gap-1">
+                    <X className="size-3" /> Clear
+                  </button>
+                )}
+              </div>
               <div className="space-y-4">
-                {filters.map((f) => (
+                {filterControls.map((f) => (
                   <div key={f.label}>
                     <label className="text-xs text-navy-900/70 block mb-1">{f.label}</label>
                     <div className="relative">
-                      <select className="w-full appearance-none bg-white border border-border rounded-md px-3 py-2.5 text-sm text-navy-900 pr-8">
-                        <option>{f.value}</option>
+                      <select
+                        value={f.value}
+                        onChange={(e) => f.onChange(e.target.value)}
+                        className="w-full appearance-none bg-white border border-border rounded-md px-3 py-2.5 text-sm text-navy-900 pr-8 focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
+                      >
+                        <option value="">{f.all}</option>
+                        {f.options.map((opt) => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
                       </select>
                       <ChevronDown className="size-4 text-navy-900/50 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     </div>
@@ -83,16 +130,28 @@ function Projects() {
             <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
               <div className="relative flex-1 max-w-md">
                 <Search className="size-4 text-navy-900/40 absolute left-3 top-1/2 -translate-y-1/2" />
-                <input placeholder={t("projects.searchPlaceholder")} className="w-full bg-white border border-border rounded-md pl-9 pr-3 py-2.5 text-sm" />
+                <input
+                  value={q}
+                  onChange={(e) => setQ(e.target.value)}
+                  placeholder={t("projects.searchPlaceholder")}
+                  className="w-full bg-white border border-border rounded-md pl-9 pr-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue/30"
+                />
               </div>
-              <div className="text-sm text-navy-900/70">{projects.length} {t("projects.listedSuffix")}</div>
+              <div className="text-sm text-navy-900/70">{filtered.length} {t("projects.listedSuffix")}</div>
             </div>
+
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {loading && projects.length === 0 && (
                 <div className="col-span-full text-sm text-navy-900/60 py-10 text-center">Loading projects…</div>
               )}
-              {projects.map((p) => {
+              {!loading && filtered.length === 0 && projects.length > 0 && (
+                <div className="col-span-full text-sm text-navy-900/60 py-10 text-center">
+                  No projects match your filters.{" "}
+                  <button onClick={clearAll} className="text-brand-blue font-semibold hover:underline">Clear filters</button>
+                </div>
+              )}
+              {filtered.map((p) => {
                 const tag = p.data?.sector_tag as string | undefined;
                 const sectorColor = (tag && SECTOR_COLOR[tag]) || "bg-brand-blue";
                 const location = (p.data?.location as string) ?? "";
