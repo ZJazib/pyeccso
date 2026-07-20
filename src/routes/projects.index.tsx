@@ -187,9 +187,64 @@ function Projects() {
                 <div className="col-span-full text-sm text-navy-900/60 py-10 text-center">Loading projects…</div>
               )}
               {!loading && filtered.length === 0 && projects.length > 0 && (
-                <div className="col-span-full text-sm text-navy-900/60 py-10 text-center">
-                  No projects match your filters.{" "}
-                  <button onClick={clearAll} className="text-brand-blue font-semibold hover:underline">Clear filters</button>
+                <div className="col-span-full">
+                  <div className="bg-white ring-1 ring-border rounded-lg p-8 md:p-10 text-center max-w-2xl mx-auto">
+                    <div className="mx-auto size-14 rounded-full bg-brand-blue-wash text-brand-blue flex items-center justify-center mb-4">
+                      <Search className="size-6" />
+                    </div>
+                    <h4 className="text-navy-900 font-bold text-lg mb-1">
+                      {t("projects.empty.title", "No projects match your filters")}
+                    </h4>
+                    <p className="text-navy-900/60 text-sm mb-5">
+                      {t("projects.empty.body", "Try broadening your search or removing a filter to see more results.")}
+                    </p>
+
+                    {(sector || province || donor || q) && (
+                      <div className="flex flex-wrap items-center justify-center gap-2 mb-5">
+                        {q && (
+                          <button onClick={() => setQ("")} className="inline-flex items-center gap-1.5 bg-brand-blue-wash text-brand-blue text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-brand-blue hover:text-white transition-colors">
+                            "{q}" <X className="size-3" />
+                          </button>
+                        )}
+                        {sector && (
+                          <button onClick={() => setSector("")} className="inline-flex items-center gap-1.5 bg-brand-blue-wash text-brand-blue text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-brand-blue hover:text-white transition-colors">
+                            {sector} <X className="size-3" />
+                          </button>
+                        )}
+                        {province && (
+                          <button onClick={() => setProvince("")} className="inline-flex items-center gap-1.5 bg-brand-blue-wash text-brand-blue text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-brand-blue hover:text-white transition-colors">
+                            {province} <X className="size-3" />
+                          </button>
+                        )}
+                        {donor && (
+                          <button onClick={() => setDonor("")} className="inline-flex items-center gap-1.5 bg-brand-blue-wash text-brand-blue text-xs font-semibold px-3 py-1.5 rounded-full hover:bg-brand-blue hover:text-white transition-colors">
+                            {donor} <X className="size-3" />
+                          </button>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="text-xs text-navy-900/60 mb-5 text-left inline-block">
+                      <div className="font-semibold text-navy-900/80 mb-1.5">{t("projects.empty.suggestionsTitle", "Suggestions")}</div>
+                      <ul className="space-y-1 list-disc list-inside">
+                        <li>{t("projects.empty.tipSpelling", "Check spelling or use fewer keywords")}</li>
+                        <li>{t("projects.empty.tipRemove", "Remove one filter at a time")}</li>
+                        <li>{t("projects.empty.tipBroaden", "Try a different sector, province, or donor")}</li>
+                      </ul>
+                    </div>
+
+                    <div className="flex items-center justify-center gap-3 flex-wrap">
+                      <button
+                        onClick={clearAll}
+                        className="inline-flex items-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white rounded-md px-5 py-2.5 text-sm font-semibold"
+                      >
+                        <X className="size-4" /> {t("projects.empty.reset", "Reset filters")}
+                      </button>
+                      <Link to="/contact" className="inline-flex items-center gap-2 text-brand-blue text-sm font-semibold hover:underline">
+                        {t("projects.empty.contact", "Contact us")} <ArrowRight className="size-4" />
+                      </Link>
+                    </div>
+                  </div>
                 </div>
               )}
               {filtered.map((p) => {
