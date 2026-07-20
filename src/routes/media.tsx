@@ -30,11 +30,10 @@ export const Route = createFileRoute("/media")({
 function Media() {
   const { t } = useTranslation();
 
-  type TabKey = "photos" | "news" | "publications";
-  const [activeTab, setActiveTab] = useState<TabKey>("photos");
+  type TabKey = "news" | "publications";
+  const [activeTab, setActiveTab] = useState<TabKey>("news");
 
   const tabs: { icon: typeof ImageIcon; key: TabKey }[] = [
-    { icon: ImageIcon, key: "photos" },
     { icon: Newspaper, key: "news" },
     { icon: BookOpen, key: "publications" },
   ];
