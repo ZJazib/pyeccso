@@ -41,7 +41,6 @@ function About() {
     { k: t("about.glance.focus"), v: t("about.glance.focusV") },
   ];
 
-  const coreKeys = ["trustees", "management", "director", "program", "ops", "finance", "meal", "fundraising", "reporting", "field"] as const;
   const clusters: { key: string; logo: string; bg: string }[] = [
     { key: "education", logo: educationLogo.url, bg: "bg-white" },
     { key: "gender", logo: genderLogo.url, bg: "bg-white" },
