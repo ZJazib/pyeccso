@@ -41,6 +41,7 @@ function Projects() {
   const [province, setProvince] = useState("");
   const [donor, setDonor] = useState("");
   const [q, setQ] = useState("");
+  const [sort, setSort] = useState<"newest" | "oldest" | "az" | "za" | "impact">("newest");
 
   const uniq = (arr: (string | undefined)[]) =>
     Array.from(new Set(arr.map((v) => (v ?? "").trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b));
