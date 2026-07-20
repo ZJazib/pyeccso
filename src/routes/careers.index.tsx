@@ -4,6 +4,8 @@ import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import { Briefcase, MapPin, Clock } from "lucide-react";
 import { useCmsListTranslated } from "@/lib/useCmsContent";
+import { useState } from "react";
+import { ApplyModal } from "@/components/careers/ApplyModal";
 
 export const Route = createFileRoute("/careers/")({
   component: Careers,
@@ -21,6 +23,8 @@ export const Route = createFileRoute("/careers/")({
 function Careers() {
   const { t } = useTranslation();
   const { items: openings, loading } = useCmsListTranslated("career");
+  const [active, setActive] = useState<{ id: string; title: string; location: string } | null>(null);
+
   return (
     <SiteLayout>
       <PageHero
@@ -50,22 +54,28 @@ function Careers() {
                       {type && <span className="flex items-center gap-1"><Clock className="size-3.5" /> {type}</span>}
                     </div>
                   </div>
-                  <a
-                    href={`mailto:careers@pyecso.org.af?subject=${encodeURIComponent(
-                      `Application: ${o.t.title} (${location})`,
-                    )}&body=${encodeURIComponent(
-                      `Dear PYECSO HR,\n\nI would like to apply for the position of ${o.t.title} based in ${location}.\n\nPlease find my CV attached.\n\nName:\nPhone:\nProvince:\n\nThank you,`,
-                    )}`}
+                  <button
+                    type="button"
+                    onClick={() => setActive({ id: o.id, title: o.t.title ?? "Open position", location })}
                     className="bg-brand-blue text-white rounded-md px-5 py-2 text-sm font-semibold hover:bg-brand-blue/90 transition-colors inline-flex items-center justify-center"
                   >
                     {t("careers.apply")}
-                  </a>
+                  </button>
                 </div>
               );
             })}
           </div>
         </div>
       </section>
+
+      <ApplyModal
+        open={!!active}
+        onOpenChange={(v) => { if (!v) setActive(null); }}
+        jobTitle={active?.title ?? ""}
+        jobLocation={active?.location}
+        jobId={active?.id}
+      />
     </SiteLayout>
   );
 }
+
