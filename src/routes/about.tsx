@@ -86,8 +86,8 @@ function About() {
       </section>
 
       <section className="py-24 md:py-32 bg-surface-alt">
-        <div className="max-w-6xl mx-auto px-4 md:px-6">
-          <div className="text-center mb-24">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="text-center mb-16">
             <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-4">{t("about.vmost.eyebrow")}</div>
             <h2 className="text-navy-900 text-4xl md:text-5xl font-black tracking-tight leading-[1.05] max-w-3xl mx-auto">
               {t("about.vmost.title")}
@@ -95,51 +95,62 @@ function About() {
             <div className="h-1 w-16 bg-brand-blue mx-auto mt-8" />
           </div>
 
-          <div className="space-y-24 md:space-y-32">
-            {vmost.map((v, i) => {
-              const reversed = i % 2 === 1;
-              return (
-                <div
-                  key={v.key}
-                  className={`flex flex-col ${reversed ? "md:flex-row-reverse" : "md:flex-row"} items-center gap-10 md:gap-16 lg:gap-20`}
-                >
-                  <div className="flex-1 w-full">
-                    <span className="block text-brand-blue/25 text-6xl md:text-7xl font-black leading-none mb-3 tabular-nums">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <h3 className="text-navy-900 text-3xl md:text-4xl font-bold mb-5">
-                      {t(`about.vmost.${v.key}.title`)}
-                    </h3>
-                    <p className="text-navy-900/75 text-lg leading-relaxed">
-                      {t(`about.vmost.${v.key}.body`)}
-                    </p>
-                  </div>
-                  <div className="flex-1 w-full">
-                    <div className="aspect-[4/3] rounded-sm shadow-2xl relative overflow-hidden bg-navy-900">
-                      <img
-                        src={v.img}
-                        alt={t(`about.vmost.${v.key}.title`)}
-                        className="absolute inset-0 w-full h-full object-cover"
-                        loading="lazy"
-                        width={1200}
-                        height={900}
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-tr from-navy-900/80 via-navy-900/30 to-transparent" />
-                      <div className="absolute -bottom-8 -right-6 text-white/15 text-[10rem] font-black leading-none select-none tabular-nums">
-                        {String(i + 1).padStart(2, "0")}
-                      </div>
-                      <div className="absolute top-6 left-6 size-12 rounded-full bg-white/15 backdrop-blur-md ring-1 ring-white/30 flex items-center justify-center z-10">
-                        <v.icon className="size-6 text-white" strokeWidth={1.5} />
-                      </div>
-                      <div className="absolute bottom-8 left-8 w-16 h-0.5 bg-white/70 z-10" />
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+          <div className="grid grid-cols-1 md:grid-cols-6 gap-6">
+            {/* 01 Vision — feature card */}
+            <div className="md:col-span-4 bg-navy-900 p-8 md:p-12 rounded-3xl relative overflow-hidden border border-white/10 group">
+              <div className="absolute -top-10 -right-10 text-[180px] font-black text-white/5 pointer-events-none select-none tabular-nums leading-none">01</div>
+              <div className="relative z-10">
+                <span className="inline-flex items-center gap-2 px-3 py-1 bg-brand-blue text-white text-xs font-semibold rounded-full mb-6 uppercase tracking-widest">
+                  <Eye className="size-3.5" strokeWidth={2} /> {t("about.vmost.eyebrow")}
+                </span>
+                <h3 className="text-white text-3xl md:text-4xl font-bold mb-4">{t("about.vmost.vision.title")}</h3>
+                <p className="text-white/75 text-lg leading-relaxed max-w-xl">{t("about.vmost.vision.body")}</p>
+              </div>
+            </div>
+
+            {/* 02 Mission */}
+            <div className="md:col-span-2 bg-white p-8 rounded-3xl ring-1 ring-border shadow-sm hover:shadow-md transition-all relative overflow-hidden">
+              <div className="flex items-start justify-between mb-4">
+                <Target className="size-6 text-brand-blue" strokeWidth={1.75} />
+                <span className="text-brand-blue/25 text-5xl font-black tabular-nums leading-none">02</span>
+              </div>
+              <h3 className="text-navy-900 text-2xl font-bold mb-3">{t("about.vmost.mission.title")}</h3>
+              <p className="text-navy-900/75 leading-relaxed">{t("about.vmost.mission.body")}</p>
+            </div>
+
+            {/* 03 Objectives */}
+            <div className="md:col-span-2 bg-navy-900/90 p-8 rounded-3xl border border-white/5 hover:bg-navy-900 transition-all relative overflow-hidden">
+              <div className="flex items-start justify-between mb-4">
+                <Layers className="size-6 text-white" strokeWidth={1.75} />
+                <span className="text-white/25 text-5xl font-black tabular-nums leading-none">03</span>
+              </div>
+              <h3 className="text-white text-2xl font-bold mb-3">{t("about.vmost.objectives.title")}</h3>
+              <p className="text-white/75 leading-relaxed">{t("about.vmost.objectives.body")}</p>
+            </div>
+
+            {/* 04 Strategy */}
+            <div className="md:col-span-2 bg-white p-8 rounded-3xl ring-1 ring-border shadow-sm hover:shadow-md transition-all relative overflow-hidden">
+              <div className="flex items-start justify-between mb-4">
+                <Compass className="size-6 text-brand-blue" strokeWidth={1.75} />
+                <span className="text-brand-blue/25 text-5xl font-black tabular-nums leading-none">04</span>
+              </div>
+              <h3 className="text-navy-900 text-2xl font-bold mb-3">{t("about.vmost.strategy.title")}</h3>
+              <p className="text-navy-900/75 leading-relaxed">{t("about.vmost.strategy.body")}</p>
+            </div>
+
+            {/* 05 Values */}
+            <div className="md:col-span-2 bg-brand-blue p-8 rounded-3xl border border-white/10 text-white shadow-xl relative overflow-hidden">
+              <div className="flex items-start justify-between mb-4">
+                <Gem className="size-6 text-white" strokeWidth={1.75} />
+                <span className="text-white/35 text-5xl font-black tabular-nums leading-none">05</span>
+              </div>
+              <h3 className="text-white text-2xl font-bold mb-3">{t("about.vmost.values.title")}</h3>
+              <p className="text-white/85 leading-relaxed">{t("about.vmost.values.body")}</p>
+            </div>
           </div>
         </div>
       </section>
+
 
 
       <section className="py-20">
