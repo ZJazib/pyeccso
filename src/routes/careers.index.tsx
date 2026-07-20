@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { Briefcase, MapPin, Clock } from "lucide-react";
 import { useCmsListTranslated } from "@/lib/useCmsContent";
 
-export const Route = createFileRoute("/careers")({
+export const Route = createFileRoute("/careers/")({
   component: Careers,
   head: () => ({
     meta: [

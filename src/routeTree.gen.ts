@@ -9,19 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ProjectsRouteImport } from './routes/projects'
-import { Route as ProgramsRouteImport } from './routes/programs'
 import { Route as PortalRouteImport } from './routes/portal'
-import { Route as OfficesRouteImport } from './routes/offices'
 import { Route as MediaRouteImport } from './routes/media'
 import { Route as LearnRouteImport } from './routes/learn'
 import { Route as DonateRouteImport } from './routes/donate'
 import { Route as ContactRouteImport } from './routes/contact'
-import { Route as CareersRouteImport } from './routes/careers'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProjectsIndexRouteImport } from './routes/projects.index'
+import { Route as ProgramsIndexRouteImport } from './routes/programs.index'
 import { Route as PortalIndexRouteImport } from './routes/portal.index'
+import { Route as OfficesIndexRouteImport } from './routes/offices.index'
+import { Route as CareersIndexRouteImport } from './routes/careers.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as PublicationsSlugRouteImport } from './routes/publications.$slug'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
@@ -57,24 +57,9 @@ import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminApplicationsRouteImport } from './routes/admin.applications'
 import { Route as ApiPublicHesabSessionRouteImport } from './routes/api/public/hesab-session'
 
-const ProjectsRoute = ProjectsRouteImport.update({
-  id: '/projects',
-  path: '/projects',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ProgramsRoute = ProgramsRouteImport.update({
-  id: '/programs',
-  path: '/programs',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PortalRoute = PortalRouteImport.update({
   id: '/portal',
   path: '/portal',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OfficesRoute = OfficesRouteImport.update({
-  id: '/offices',
-  path: '/offices',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MediaRoute = MediaRouteImport.update({
@@ -97,11 +82,6 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CareersRoute = CareersRouteImport.update({
-  id: '/careers',
-  path: '/careers',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -117,10 +97,30 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProjectsIndexRoute = ProjectsIndexRouteImport.update({
+  id: '/projects/',
+  path: '/projects/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProgramsIndexRoute = ProgramsIndexRouteImport.update({
+  id: '/programs/',
+  path: '/programs/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PortalIndexRoute = PortalIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PortalRoute,
+} as any)
+const OfficesIndexRoute = OfficesIndexRouteImport.update({
+  id: '/offices/',
+  path: '/offices/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CareersIndexRoute = CareersIndexRouteImport.update({
+  id: '/careers/',
+  path: '/careers/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
@@ -133,14 +133,14 @@ const PublicationsSlugRoute = PublicationsSlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ProjectsRoute,
+  id: '/projects/$slug',
+  path: '/projects/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const ProgramsSlugRoute = ProgramsSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => ProgramsRoute,
+  id: '/programs/$slug',
+  path: '/programs/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const PortalTeacherRoute = PortalTeacherRouteImport.update({
   id: '/teacher',
@@ -158,9 +158,9 @@ const PortalManagerRoute = PortalManagerRouteImport.update({
   getParentRoute: () => PortalRoute,
 } as any)
 const OfficesSlugRoute = OfficesSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => OfficesRoute,
+  id: '/offices/$slug',
+  path: '/offices/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const NewsSlugRoute = NewsSlugRouteImport.update({
   id: '/news/$slug',
@@ -173,9 +173,9 @@ const EventsSlugRoute = EventsSlugRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const CareersSlugRoute = CareersSlugRouteImport.update({
-  id: '/$slug',
-  path: '/$slug',
-  getParentRoute: () => CareersRoute,
+  id: '/careers/$slug',
+  path: '/careers/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AdminUsersRoute = AdminUsersRouteImport.update({
   id: '/users',
@@ -297,15 +297,11 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
-  '/careers': typeof CareersRouteWithChildren
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
-  '/offices': typeof OfficesRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
-  '/programs': typeof ProgramsRouteWithChildren
-  '/projects': typeof ProjectsRouteWithChildren
   '/admin/applications': typeof AdminApplicationsRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/careers': typeof AdminCareersRoute
@@ -339,20 +335,20 @@ export interface FileRoutesByFullPath {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/publications/$slug': typeof PublicationsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/careers/': typeof CareersIndexRoute
+  '/offices/': typeof OfficesIndexRoute
   '/portal/': typeof PortalIndexRoute
+  '/programs/': typeof ProgramsIndexRoute
+  '/projects/': typeof ProjectsIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/careers': typeof CareersRouteWithChildren
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
-  '/offices': typeof OfficesRouteWithChildren
-  '/programs': typeof ProgramsRouteWithChildren
-  '/projects': typeof ProjectsRouteWithChildren
   '/admin/applications': typeof AdminApplicationsRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/careers': typeof AdminCareersRoute
@@ -386,7 +382,11 @@ export interface FileRoutesByTo {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/publications/$slug': typeof PublicationsSlugRoute
   '/admin': typeof AdminIndexRoute
+  '/careers': typeof CareersIndexRoute
+  '/offices': typeof OfficesIndexRoute
   '/portal': typeof PortalIndexRoute
+  '/programs': typeof ProgramsIndexRoute
+  '/projects': typeof ProjectsIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
 export interface FileRoutesById {
@@ -394,15 +394,11 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
-  '/careers': typeof CareersRouteWithChildren
   '/contact': typeof ContactRoute
   '/donate': typeof DonateRoute
   '/learn': typeof LearnRoute
   '/media': typeof MediaRoute
-  '/offices': typeof OfficesRouteWithChildren
   '/portal': typeof PortalRouteWithChildren
-  '/programs': typeof ProgramsRouteWithChildren
-  '/projects': typeof ProjectsRouteWithChildren
   '/admin/applications': typeof AdminApplicationsRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/careers': typeof AdminCareersRoute
@@ -436,7 +432,11 @@ export interface FileRoutesById {
   '/projects/$slug': typeof ProjectsSlugRoute
   '/publications/$slug': typeof PublicationsSlugRoute
   '/admin/': typeof AdminIndexRoute
+  '/careers/': typeof CareersIndexRoute
+  '/offices/': typeof OfficesIndexRoute
   '/portal/': typeof PortalIndexRoute
+  '/programs/': typeof ProgramsIndexRoute
+  '/projects/': typeof ProjectsIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
 }
 export interface FileRouteTypes {
@@ -445,15 +445,11 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/admin'
-    | '/careers'
     | '/contact'
     | '/donate'
     | '/learn'
     | '/media'
-    | '/offices'
     | '/portal'
-    | '/programs'
-    | '/projects'
     | '/admin/applications'
     | '/admin/audit'
     | '/admin/careers'
@@ -487,20 +483,20 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/publications/$slug'
     | '/admin/'
+    | '/careers/'
+    | '/offices/'
     | '/portal/'
+    | '/programs/'
+    | '/projects/'
     | '/api/public/hesab-session'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/careers'
     | '/contact'
     | '/donate'
     | '/learn'
     | '/media'
-    | '/offices'
-    | '/programs'
-    | '/projects'
     | '/admin/applications'
     | '/admin/audit'
     | '/admin/careers'
@@ -534,22 +530,22 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/publications/$slug'
     | '/admin'
+    | '/careers'
+    | '/offices'
     | '/portal'
+    | '/programs'
+    | '/projects'
     | '/api/public/hesab-session'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/admin'
-    | '/careers'
     | '/contact'
     | '/donate'
     | '/learn'
     | '/media'
-    | '/offices'
     | '/portal'
-    | '/programs'
-    | '/projects'
     | '/admin/applications'
     | '/admin/audit'
     | '/admin/careers'
@@ -583,7 +579,11 @@ export interface FileRouteTypes {
     | '/projects/$slug'
     | '/publications/$slug'
     | '/admin/'
+    | '/careers/'
+    | '/offices/'
     | '/portal/'
+    | '/programs/'
+    | '/projects/'
     | '/api/public/hesab-session'
   fileRoutesById: FileRoutesById
 }
@@ -591,49 +591,32 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
-  CareersRoute: typeof CareersRouteWithChildren
   ContactRoute: typeof ContactRoute
   DonateRoute: typeof DonateRoute
   LearnRoute: typeof LearnRoute
   MediaRoute: typeof MediaRoute
-  OfficesRoute: typeof OfficesRouteWithChildren
   PortalRoute: typeof PortalRouteWithChildren
-  ProgramsRoute: typeof ProgramsRouteWithChildren
-  ProjectsRoute: typeof ProjectsRouteWithChildren
+  CareersSlugRoute: typeof CareersSlugRoute
   EventsSlugRoute: typeof EventsSlugRoute
   NewsSlugRoute: typeof NewsSlugRoute
+  OfficesSlugRoute: typeof OfficesSlugRoute
+  ProgramsSlugRoute: typeof ProgramsSlugRoute
+  ProjectsSlugRoute: typeof ProjectsSlugRoute
   PublicationsSlugRoute: typeof PublicationsSlugRoute
+  CareersIndexRoute: typeof CareersIndexRoute
+  OfficesIndexRoute: typeof OfficesIndexRoute
+  ProgramsIndexRoute: typeof ProgramsIndexRoute
+  ProjectsIndexRoute: typeof ProjectsIndexRoute
   ApiPublicHesabSessionRoute: typeof ApiPublicHesabSessionRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/projects': {
-      id: '/projects'
-      path: '/projects'
-      fullPath: '/projects'
-      preLoaderRoute: typeof ProjectsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/programs': {
-      id: '/programs'
-      path: '/programs'
-      fullPath: '/programs'
-      preLoaderRoute: typeof ProgramsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/portal': {
       id: '/portal'
       path: '/portal'
       fullPath: '/portal'
       preLoaderRoute: typeof PortalRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/offices': {
-      id: '/offices'
-      path: '/offices'
-      fullPath: '/offices'
-      preLoaderRoute: typeof OfficesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/media': {
@@ -664,13 +647,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/careers': {
-      id: '/careers'
-      path: '/careers'
-      fullPath: '/careers'
-      preLoaderRoute: typeof CareersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin': {
       id: '/admin'
       path: '/admin'
@@ -692,12 +668,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/projects/': {
+      id: '/projects/'
+      path: '/projects'
+      fullPath: '/projects/'
+      preLoaderRoute: typeof ProjectsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/programs/': {
+      id: '/programs/'
+      path: '/programs'
+      fullPath: '/programs/'
+      preLoaderRoute: typeof ProgramsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/portal/': {
       id: '/portal/'
       path: '/'
       fullPath: '/portal/'
       preLoaderRoute: typeof PortalIndexRouteImport
       parentRoute: typeof PortalRoute
+    }
+    '/offices/': {
+      id: '/offices/'
+      path: '/offices'
+      fullPath: '/offices/'
+      preLoaderRoute: typeof OfficesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/careers/': {
+      id: '/careers/'
+      path: '/careers'
+      fullPath: '/careers/'
+      preLoaderRoute: typeof CareersIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/admin/': {
       id: '/admin/'
@@ -715,17 +719,17 @@ declare module '@tanstack/react-router' {
     }
     '/projects/$slug': {
       id: '/projects/$slug'
-      path: '/$slug'
+      path: '/projects/$slug'
       fullPath: '/projects/$slug'
       preLoaderRoute: typeof ProjectsSlugRouteImport
-      parentRoute: typeof ProjectsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/programs/$slug': {
       id: '/programs/$slug'
-      path: '/$slug'
+      path: '/programs/$slug'
       fullPath: '/programs/$slug'
       preLoaderRoute: typeof ProgramsSlugRouteImport
-      parentRoute: typeof ProgramsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/portal/teacher': {
       id: '/portal/teacher'
@@ -750,10 +754,10 @@ declare module '@tanstack/react-router' {
     }
     '/offices/$slug': {
       id: '/offices/$slug'
-      path: '/$slug'
+      path: '/offices/$slug'
       fullPath: '/offices/$slug'
       preLoaderRoute: typeof OfficesSlugRouteImport
-      parentRoute: typeof OfficesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/news/$slug': {
       id: '/news/$slug'
@@ -771,10 +775,10 @@ declare module '@tanstack/react-router' {
     }
     '/careers/$slug': {
       id: '/careers/$slug'
-      path: '/$slug'
+      path: '/careers/$slug'
       fullPath: '/careers/$slug'
       preLoaderRoute: typeof CareersSlugRouteImport
-      parentRoute: typeof CareersRoute
+      parentRoute: typeof rootRouteImport
     }
     '/admin/users': {
       id: '/admin/users'
@@ -994,28 +998,6 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
-interface CareersRouteChildren {
-  CareersSlugRoute: typeof CareersSlugRoute
-}
-
-const CareersRouteChildren: CareersRouteChildren = {
-  CareersSlugRoute: CareersSlugRoute,
-}
-
-const CareersRouteWithChildren =
-  CareersRoute._addFileChildren(CareersRouteChildren)
-
-interface OfficesRouteChildren {
-  OfficesSlugRoute: typeof OfficesSlugRoute
-}
-
-const OfficesRouteChildren: OfficesRouteChildren = {
-  OfficesSlugRoute: OfficesSlugRoute,
-}
-
-const OfficesRouteWithChildren =
-  OfficesRoute._addFileChildren(OfficesRouteChildren)
-
 interface PortalRouteChildren {
   PortalManagerRoute: typeof PortalManagerRoute
   PortalStudentRoute: typeof PortalStudentRoute
@@ -1033,58 +1015,28 @@ const PortalRouteChildren: PortalRouteChildren = {
 const PortalRouteWithChildren =
   PortalRoute._addFileChildren(PortalRouteChildren)
 
-interface ProgramsRouteChildren {
-  ProgramsSlugRoute: typeof ProgramsSlugRoute
-}
-
-const ProgramsRouteChildren: ProgramsRouteChildren = {
-  ProgramsSlugRoute: ProgramsSlugRoute,
-}
-
-const ProgramsRouteWithChildren = ProgramsRoute._addFileChildren(
-  ProgramsRouteChildren,
-)
-
-interface ProjectsRouteChildren {
-  ProjectsSlugRoute: typeof ProjectsSlugRoute
-}
-
-const ProjectsRouteChildren: ProjectsRouteChildren = {
-  ProjectsSlugRoute: ProjectsSlugRoute,
-}
-
-const ProjectsRouteWithChildren = ProjectsRoute._addFileChildren(
-  ProjectsRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
-  CareersRoute: CareersRouteWithChildren,
   ContactRoute: ContactRoute,
   DonateRoute: DonateRoute,
   LearnRoute: LearnRoute,
   MediaRoute: MediaRoute,
-  OfficesRoute: OfficesRouteWithChildren,
   PortalRoute: PortalRouteWithChildren,
-  ProgramsRoute: ProgramsRouteWithChildren,
-  ProjectsRoute: ProjectsRouteWithChildren,
+  CareersSlugRoute: CareersSlugRoute,
   EventsSlugRoute: EventsSlugRoute,
   NewsSlugRoute: NewsSlugRoute,
+  OfficesSlugRoute: OfficesSlugRoute,
+  ProgramsSlugRoute: ProgramsSlugRoute,
+  ProjectsSlugRoute: ProjectsSlugRoute,
   PublicationsSlugRoute: PublicationsSlugRoute,
+  CareersIndexRoute: CareersIndexRoute,
+  OfficesIndexRoute: OfficesIndexRoute,
+  ProgramsIndexRoute: ProgramsIndexRoute,
+  ProjectsIndexRoute: ProjectsIndexRoute,
   ApiPublicHesabSessionRoute: ApiPublicHesabSessionRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
