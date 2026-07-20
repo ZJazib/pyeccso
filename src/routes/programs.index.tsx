@@ -5,7 +5,7 @@ import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import { useCmsListTranslated } from "@/lib/useCmsContent";
 
-export const Route = createFileRoute("/programs")({
+export const Route = createFileRoute("/programs/")({
   component: Programs,
   head: () => ({
     meta: [
