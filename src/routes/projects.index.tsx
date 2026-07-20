@@ -5,6 +5,7 @@ import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import { useCmsListTranslated } from "@/lib/useCmsContent";
 import { useMemo, useState } from "react";
+import { resolveProjectCover } from "@/lib/projectCover";
 
 export const Route = createFileRoute("/projects/")({
   component: Projects,
@@ -253,6 +254,7 @@ function Projects() {
                 const location = (p.data?.location as string) ?? "";
                 const donor = (p.data?.partner as string) ?? "";
                 const category = (p.data?.category as string) ?? "";
+                const cover = resolveProjectCover(p as any);
                 return (
                   <Link
                     key={p.id}
@@ -260,22 +262,34 @@ function Projects() {
                     params={{ slug: p.slug ?? "" }}
                     className="block group"
                   >
-                    <article className="h-full bg-white ring-1 ring-border rounded-lg p-5 hover:shadow-md group-hover:-translate-y-0.5 transition-all flex flex-col">
-                      <span className={`inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase mb-3 w-fit`}>
-                        {category}
-                      </span>
-                      <h4 className="text-navy-900 font-bold text-sm mb-2 leading-snug group-hover:text-brand-blue transition-colors">{p.t.title}</h4>
-                      <p className="text-navy-900/70 text-sm leading-relaxed mb-4">{p.t.summary}</p>
-                      <div className="mt-auto pt-3 border-t border-border grid grid-cols-2 gap-3 text-xs">
-                        <div>
-                          <div className="text-navy-900/50">{t("common.location")}</div>
-                          <div className="font-semibold text-navy-900 flex items-center gap-1">
-                            <MapPin className="size-3 text-brand-blue" /> {location}
+                    <article className="h-full bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md group-hover:-translate-y-0.5 transition-all flex flex-col">
+                      <div className="aspect-[16/9] overflow-hidden bg-navy-900/5 relative">
+                        <img
+                          src={cover}
+                          alt={p.t.title}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                        {category && (
+                          <span className={`absolute top-3 left-3 inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase`}>
+                            {category}
+                          </span>
+                        )}
+                      </div>
+                      <div className="p-5 flex flex-col flex-1">
+                        <h4 className="text-navy-900 font-bold text-sm mb-2 leading-snug group-hover:text-brand-blue transition-colors">{p.t.title}</h4>
+                        <p className="text-navy-900/70 text-sm leading-relaxed mb-4 line-clamp-3">{p.t.summary}</p>
+                        <div className="mt-auto pt-3 border-t border-border grid grid-cols-2 gap-3 text-xs">
+                          <div>
+                            <div className="text-navy-900/50">{t("common.location")}</div>
+                            <div className="font-semibold text-navy-900 flex items-center gap-1">
+                              <MapPin className="size-3 text-brand-blue" /> {location}
+                            </div>
                           </div>
-                        </div>
-                        <div>
-                          <div className="text-navy-900/50">{t("common.donorPartner")}</div>
-                          <div className="font-semibold text-navy-900">{donor}</div>
+                          <div>
+                            <div className="text-navy-900/50">{t("common.donorPartner")}</div>
+                            <div className="font-semibold text-navy-900">{donor}</div>
+                          </div>
                         </div>
                       </div>
                     </article>
