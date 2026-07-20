@@ -52,7 +52,7 @@ function Projects() {
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
-    return projects.filter((p) => {
+    const list = projects.filter((p) => {
       const cat = ((p.data?.category as string) || (p.data?.sector_tag as string) || "").trim();
       const loc = ((p.data?.location as string) ?? "").trim();
       const par = ((p.data?.partner as string) ?? "").trim();
@@ -65,7 +65,29 @@ function Projects() {
       }
       return true;
     });
-  }, [projects, sector, province, donor, q]);
+
+    const impactOf = (p: typeof list[number]) => {
+      const raw = (p.data?.beneficiaries ?? p.data?.impact ?? p.data?.people_reached ?? 0) as string | number;
+      const n = typeof raw === "number" ? raw : parseInt(String(raw).replace(/[^\d]/g, ""), 10);
+      return Number.isFinite(n) ? n : 0;
+    };
+    const dateOf = (p: typeof list[number]) => {
+      const raw = (p.data?.start_date ?? p.data?.date ?? p.data?.year ?? p.updated_at ?? p.created_at ?? 0) as string | number;
+      const ts = typeof raw === "number" ? raw : Date.parse(String(raw));
+      return Number.isFinite(ts) ? ts : 0;
+    };
+    const title = (p: typeof list[number]) => (p.t.title ?? "").toLowerCase();
+
+    const sorted = [...list];
+    switch (sort) {
+      case "newest": sorted.sort((a, b) => dateOf(b) - dateOf(a)); break;
+      case "oldest": sorted.sort((a, b) => dateOf(a) - dateOf(b)); break;
+      case "az":     sorted.sort((a, b) => title(a).localeCompare(title(b))); break;
+      case "za":     sorted.sort((a, b) => title(b).localeCompare(title(a))); break;
+      case "impact": sorted.sort((a, b) => impactOf(b) - impactOf(a)); break;
+    }
+    return sorted;
+  }, [projects, sector, province, donor, q, sort]);
 
   const filterControls: { label: string; value: string; onChange: (v: string) => void; all: string; options: string[] }[] = [
     { label: t("projects.filter.sector"), value: sector, onChange: setSector, all: t("projects.filter.allSectors"), options: sectors },
