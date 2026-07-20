@@ -5,6 +5,7 @@ import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import { useCmsListTranslated } from "@/lib/useCmsContent";
 import { useMemo, useState } from "react";
+import { resolveProjectCover } from "@/lib/projectCover";
 
 export const Route = createFileRoute("/projects/")({
   component: Projects,
