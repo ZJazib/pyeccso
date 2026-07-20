@@ -145,7 +145,13 @@ function Projects() {
               {loading && projects.length === 0 && (
                 <div className="col-span-full text-sm text-navy-900/60 py-10 text-center">Loading projects…</div>
               )}
-              {projects.map((p) => {
+              {!loading && filtered.length === 0 && projects.length > 0 && (
+                <div className="col-span-full text-sm text-navy-900/60 py-10 text-center">
+                  No projects match your filters.{" "}
+                  <button onClick={clearAll} className="text-brand-blue font-semibold hover:underline">Clear filters</button>
+                </div>
+              )}
+              {filtered.map((p) => {
                 const tag = p.data?.sector_tag as string | undefined;
                 const sectorColor = (tag && SECTOR_COLOR[tag]) || "bg-brand-blue";
                 const location = (p.data?.location as string) ?? "";
