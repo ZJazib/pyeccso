@@ -129,3 +129,124 @@ export function GalleryUpload({
     </div>
   );
 }
+
+function isVideoUrl(url: string): boolean {
+  if (/\.(mp4|webm|mov|m4v|ogg)(\?|#|$)/i.test(url)) return true;
+  if (/youtube\.com|youtu\.be|vimeo\.com/i.test(url)) return true;
+  return false;
+}
+
+export function MediaGalleryUpload({
+  value,
+  onChange,
+  folder = "content/media-gallery",
+}: {
+  value?: string[];
+  onChange: (urls: string[]) => void;
+  folder?: string;
+}) {
+  const arr = value ?? [];
+  const [uploading, setUploading] = useState(false);
+  const [urlInput, setUrlInput] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  async function uploadFiles(files: FileList) {
+    setUploading(true);
+    const uploaded: string[] = [];
+    try {
+      for (const file of Array.from(files)) {
+        const path = `${folder}/${Date.now()}-${file.name.replace(/[^a-z0-9.-]/gi, "_")}`;
+        const { error } = await supabase.storage.from("media").upload(path, file, { upsert: false });
+        if (error) throw error;
+        const { data } = await supabase.storage.from("media").createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
+        if (data?.signedUrl) uploaded.push(data.signedUrl);
+      }
+      if (uploaded.length) {
+        onChange([...arr, ...uploaded]);
+        toast.success(`Uploaded ${uploaded.length} file${uploaded.length > 1 ? "s" : ""}`);
+      }
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setUploading(false);
+    }
+  }
+
+  return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+        {arr.map((url, i) => {
+          const video = isVideoUrl(url);
+          const isFileVideo = /\.(mp4|webm|mov|m4v|ogg)(\?|#|$)/i.test(url);
+          return (
+            <div key={i} className="relative rounded overflow-hidden border border-slate-200 dark:border-white/10 group bg-black/5">
+              {video ? (
+                isFileVideo ? (
+                  <video src={url} className="w-full aspect-square object-cover" muted playsInline />
+                ) : (
+                  <div className="w-full aspect-square grid place-items-center text-[10px] text-center p-2 opacity-70 break-all">
+                    Video link
+                  </div>
+                )
+              ) : (
+                <img src={url} alt="" className="w-full aspect-square object-cover" />
+              )}
+              <span className="absolute bottom-1 left-1 text-[10px] px-1.5 py-0.5 rounded bg-black/60 text-white">
+                {video ? "Video" : "Photo"}
+              </span>
+              <button
+                type="button"
+                onClick={() => onChange(arr.filter((_, idx) => idx !== i))}
+                className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 text-white grid place-items-center opacity-0 group-hover:opacity-100"
+                aria-label="Remove"
+              >
+                <X className="w-3 h-3" />
+              </button>
+            </div>
+          );
+        })}
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          className="aspect-square border-2 border-dashed border-slate-300 dark:border-white/15 rounded grid place-items-center text-xs opacity-70 hover:opacity-100 hover:border-brand-blue hover:text-brand-blue transition p-2"
+        >
+          {uploading ? "Uploading…" : (
+            <div className="flex flex-col items-center gap-1 text-center">
+              <Upload className="w-5 h-5" />
+              <span>Add photos / videos</span>
+            </div>
+          )}
+        </button>
+      </div>
+      <input
+        ref={fileRef}
+        type="file"
+        accept="image/*,video/*"
+        multiple
+        hidden
+        onChange={(e) => e.target.files?.length && uploadFiles(e.target.files)}
+      />
+      <div className="flex gap-2">
+        <input
+          type="url"
+          placeholder="Or paste image / YouTube / Vimeo URL"
+          value={urlInput}
+          onChange={(e) => setUrlInput(e.target.value)}
+          className="flex-1 text-xs border rounded px-2 py-1 bg-transparent"
+        />
+        <button
+          type="button"
+          onClick={() => {
+            if (!urlInput.trim()) return;
+            onChange([...arr, urlInput.trim()]);
+            setUrlInput("");
+          }}
+          className="text-xs px-3 py-1 border rounded hover:bg-slate-100 dark:hover:bg-white/10"
+        >
+          Add
+        </button>
+      </div>
+    </div>
+  );
+}

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Plus, Search, Trash2, Pencil, ArrowLeft, Save, Eye, EyeOff, Languages, Monitor, Smartphone, Copy, History, Archive, CheckSquare, Square, Download } from "lucide-react";
-import { ImageUpload, GalleryUpload } from "./ImageUpload";
+import { ImageUpload, GalleryUpload, MediaGalleryUpload } from "./ImageUpload";
 import { I18nField } from "./I18nField";
 import { LANGUAGES, type Lang } from "@/lib/cmsConfig";
 
@@ -810,6 +810,8 @@ function FieldRenderer({ field, value, onChange }: { field: Field; value: any; o
       return <ImageUpload value={value} onChange={onChange} folder={`content/${field.name}`} />;
     case "gallery":
       return <GalleryUpload value={value ?? []} onChange={onChange} />;
+    case "media-gallery":
+      return <MediaGalleryUpload value={value ?? []} onChange={onChange} />;
     case "i18n-text":
       return <I18nField kind="text" value={value ?? {}} onChange={onChange} placeholder={field.placeholder} />;
     case "i18n-textarea":
