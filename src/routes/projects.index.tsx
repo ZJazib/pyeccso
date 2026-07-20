@@ -1,9 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { MapPin, ArrowRight, ChevronDown, Search, Handshake } from "lucide-react";
+import { MapPin, ArrowRight, ChevronDown, Search, Handshake, X } from "lucide-react";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import { useCmsListTranslated } from "@/lib/useCmsContent";
+import { useMemo, useState } from "react";
 
 export const Route = createFileRoute("/projects/")({
   component: Projects,
