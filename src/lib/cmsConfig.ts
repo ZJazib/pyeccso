@@ -123,7 +123,7 @@ export const CMS_CONFIGS: Record<string, CmsConfig> = {
       { name: "objectives", label: "Objectives", type: "i18n-textarea", help: "One per line." },
       { name: "activities", label: "Activities", type: "i18n-textarea", help: "One per line." },
       { name: "results", label: "Results & impact", type: "i18n-textarea", help: "One per line." },
-      { name: "gallery", label: "Photo gallery", type: "gallery" },
+      { name: "gallery", label: "Photo & video gallery", type: "media-gallery", help: "Upload photos and videos, or paste YouTube/Vimeo URLs." },
       { name: "video_url", label: "Video URL (YouTube / Vimeo)", type: "url" },
       { name: "contact_email", label: "Contact email", type: "email" },
       { name: "contact_phone", label: "Contact phone", type: "text" },
