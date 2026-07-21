@@ -875,3 +875,44 @@ function slugify(s: string): string {
     .replace(/-+/g, "-")
     .slice(0, 80);
 }
+
+function QuickCoverDialog({ item, onClose, onSaved }: { item: Item; onClose: () => void; onSaved: () => void }) {
+  const [url, setUrl] = useState<string | null>(item.cover_url);
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    setSaving(true);
+    const { data: user } = await supabase.auth.getUser();
+    const { error } = await supabase
+      .from("content_items")
+      .update({ cover_url: url, updated_by: user.user?.id })
+      .eq("id", item.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("Picture updated");
+    onSaved();
+  }
+
+  const title = item.data?.title?.en ?? item.data?.name?.en ?? item.data?.title ?? item.data?.name ?? "item";
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 grid place-items-center p-4" onClick={onClose}>
+      <div
+        className="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-white/10 w-full max-w-lg p-6 space-y-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div>
+          <h2 className="text-lg font-bold">Change picture</h2>
+          <p className="text-xs opacity-60 truncate">{String(title)}</p>
+        </div>
+        <ImageUpload value={url} onChange={setUrl} folder={`content/${item.type}`} />
+        <div className="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-white/10">
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button onClick={save} disabled={saving}>
+            <Save className="w-4 h-4 mr-1" /> {saving ? "Saving…" : "Save picture"}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
