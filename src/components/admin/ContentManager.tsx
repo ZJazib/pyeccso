@@ -61,6 +61,10 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
   const [editing, setEditing] = useState<Item | null>(null);
   const [creating, setCreating] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [quickCover, setQuickCover] = useState<Item | null>(null);
+
+  const hasCoverField = config.fields.some((f) => f.name === "cover_url");
+
 
   async function load() {
     setLoading(true);
