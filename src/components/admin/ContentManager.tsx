@@ -272,11 +272,33 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
                   </td>
                   {(config.listColumns ?? [{ key: "title", label: "Title" }]).map((c) => (
                     <td key={c.key} className="p-3 align-middle">
-                      <ListCell item={item} col={c} config={config} />
+                      {c.kind === "cover" ? (
+                        <button
+                          type="button"
+                          onClick={() => setQuickCover(item)}
+                          title="Click to change picture"
+                          className="block rounded overflow-hidden ring-1 ring-transparent hover:ring-brand-blue transition"
+                        >
+                          {item.cover_url ? (
+                            <img src={item.cover_url} alt="" className="w-10 h-10 rounded object-cover" />
+                          ) : (
+                            <div className="w-10 h-10 rounded bg-slate-100 dark:bg-white/5 grid place-items-center opacity-60">
+                              <ImageIcon className="w-4 h-4" />
+                            </div>
+                          )}
+                        </button>
+                      ) : (
+                        <ListCell item={item} col={c} config={config} />
+                      )}
                     </td>
                   ))}
                   <td className="p-3 text-right">
                     <div className="inline-flex gap-1">
+                      {hasCoverField && (
+                        <button onClick={() => setQuickCover(item)} className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5" title="Change picture">
+                          <ImageIcon className="w-4 h-4" />
+                        </button>
+                      )}
                       <button onClick={() => togglePublish(item)} className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5" title={item.status === "published" ? "Unpublish" : "Publish"}>
                         {item.status === "published" ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -291,6 +313,7 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
                       </button>
                     </div>
                   </td>
+
                 </tr>
               ))}
               {!loading && filtered.length === 0 && (
