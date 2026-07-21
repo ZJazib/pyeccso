@@ -327,7 +327,16 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
           </table>
         </div>
       </div>
+
+      {quickCover && (
+        <QuickCoverDialog
+          item={quickCover}
+          onClose={() => setQuickCover(null)}
+          onSaved={() => { setQuickCover(null); load(); }}
+        />
+      )}
     </div>
+
   );
 }
 
