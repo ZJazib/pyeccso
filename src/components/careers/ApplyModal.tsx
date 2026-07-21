@@ -58,7 +58,7 @@ export function ApplyModal({ open, onOpenChange, jobTitle, jobLocation, jobId }:
       let cvPath = ""; let cvName = "";
       if (file) {
         const safe = file.name.replace(/[^\w.\-]+/g, "_");
-        const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safe}`;
+        const path = `applications/${Date.now()}-${Math.random().toString(36).slice(2, 8)}-${safe}`;
         const { error: upErr } = await supabase.storage
           .from("cv-uploads")
           .upload(path, file, { contentType: file.type || "application/octet-stream", upsert: false });
