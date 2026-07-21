@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { Plus, Search, Trash2, Pencil, ArrowLeft, Save, Eye, EyeOff, Languages, Monitor, Smartphone, Copy, History, Archive, CheckSquare, Square, Download } from "lucide-react";
+import { Plus, Search, Trash2, Pencil, ArrowLeft, Save, Eye, EyeOff, Languages, Monitor, Smartphone, Copy, History, Archive, CheckSquare, Square, Download, ImageIcon } from "lucide-react";
 import { ImageUpload, GalleryUpload, MediaGalleryUpload } from "./ImageUpload";
 import { I18nField } from "./I18nField";
 import { LANGUAGES, type Lang } from "@/lib/cmsConfig";
@@ -61,6 +61,10 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
   const [editing, setEditing] = useState<Item | null>(null);
   const [creating, setCreating] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [quickCover, setQuickCover] = useState<Item | null>(null);
+
+  const hasCoverField = config.fields.some((f) => f.name === "cover_url");
+
 
   async function load() {
     setLoading(true);
@@ -268,11 +272,33 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
                   </td>
                   {(config.listColumns ?? [{ key: "title", label: "Title" }]).map((c) => (
                     <td key={c.key} className="p-3 align-middle">
-                      <ListCell item={item} col={c} config={config} />
+                      {c.kind === "cover" ? (
+                        <button
+                          type="button"
+                          onClick={() => setQuickCover(item)}
+                          title="Click to change picture"
+                          className="block rounded overflow-hidden ring-1 ring-transparent hover:ring-brand-blue transition"
+                        >
+                          {item.cover_url ? (
+                            <img src={item.cover_url} alt="" className="w-10 h-10 rounded object-cover" />
+                          ) : (
+                            <div className="w-10 h-10 rounded bg-slate-100 dark:bg-white/5 grid place-items-center opacity-60">
+                              <ImageIcon className="w-4 h-4" />
+                            </div>
+                          )}
+                        </button>
+                      ) : (
+                        <ListCell item={item} col={c} config={config} />
+                      )}
                     </td>
                   ))}
                   <td className="p-3 text-right">
                     <div className="inline-flex gap-1">
+                      {hasCoverField && (
+                        <button onClick={() => setQuickCover(item)} className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5" title="Change picture">
+                          <ImageIcon className="w-4 h-4" />
+                        </button>
+                      )}
                       <button onClick={() => togglePublish(item)} className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5" title={item.status === "published" ? "Unpublish" : "Publish"}>
                         {item.status === "published" ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
@@ -287,6 +313,7 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
                       </button>
                     </div>
                   </td>
+
                 </tr>
               ))}
               {!loading && filtered.length === 0 && (
@@ -300,7 +327,16 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
           </table>
         </div>
       </div>
+
+      {quickCover && (
+        <QuickCoverDialog
+          item={quickCover}
+          onClose={() => setQuickCover(null)}
+          onSaved={() => { setQuickCover(null); load(); }}
+        />
+      )}
     </div>
+
   );
 }
 
@@ -838,4 +874,45 @@ function slugify(s: string): string {
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-")
     .slice(0, 80);
+}
+
+function QuickCoverDialog({ item, onClose, onSaved }: { item: Item; onClose: () => void; onSaved: () => void }) {
+  const [url, setUrl] = useState<string | null>(item.cover_url);
+  const [saving, setSaving] = useState(false);
+
+  async function save() {
+    setSaving(true);
+    const { data: user } = await supabase.auth.getUser();
+    const { error } = await supabase
+      .from("content_items")
+      .update({ cover_url: url, updated_by: user.user?.id })
+      .eq("id", item.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("Picture updated");
+    onSaved();
+  }
+
+  const title = item.data?.title?.en ?? item.data?.name?.en ?? item.data?.title ?? item.data?.name ?? "item";
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black/60 grid place-items-center p-4" onClick={onClose}>
+      <div
+        className="bg-white dark:bg-navy-900 rounded-xl border border-slate-200 dark:border-white/10 w-full max-w-lg p-6 space-y-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div>
+          <h2 className="text-lg font-bold">Change picture</h2>
+          <p className="text-xs opacity-60 truncate">{String(title)}</p>
+        </div>
+        <ImageUpload value={url} onChange={setUrl} folder={`content/${item.type}`} />
+        <div className="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-white/10">
+          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button onClick={save} disabled={saving}>
+            <Save className="w-4 h-4 mr-1" /> {saving ? "Saving…" : "Save picture"}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
 }
