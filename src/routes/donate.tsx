@@ -495,10 +495,11 @@ function Donate() {
                       <input
                         type="number"
                         min={1}
+                        max={rates ? Math.round(convert(10000, "USD", currency, rates)) : 10000}
                         step={1}
                         value={customAmount}
                         onChange={(e) => setCustomAmount(e.target.value)}
-                        placeholder={rates ? String(localPresets[usdPresets.indexOf(amount)]) : String(amount)}
+                        placeholder={rates ? `up to ${formatMoney(convert(10000, "USD", currency, rates), currency)}` : "up to $10,000"}
                         className="w-full border border-border rounded-md px-3 py-2.5 text-sm"
                       />
                     </div>
