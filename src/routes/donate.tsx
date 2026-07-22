@@ -218,6 +218,12 @@ function Donate() {
       setError(t("donate.flow.modal.hesab.invalidAmount"));
       return;
     }
+    // Cap at 10,000 USD equivalent in the visitor's local currency.
+    const maxLocal = rates ? convert(10000, "USD", currency, rates) : 10000;
+    if (selectedLocal > maxLocal) {
+      setError(`Maximum donation is ${formatMoney(maxLocal, currency)} (≈ $10,000 USD).`);
+      return;
+    }
     if (!rates || !afnAmount) {
       setError(t("donate.flow.modal.hesab.ratesLoading"));
       return;
