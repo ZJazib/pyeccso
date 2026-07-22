@@ -7,13 +7,26 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Save } from "lucide-react";
+import { Save, Plus, Trash2, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/admin/settings")({
   component: SettingsPage,
 });
 
 type Settings = Record<string, any>;
+
+type Location = {
+  name: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  query?: string;
+  lat?: number;
+  lng?: number;
+  zoom?: number;
+};
+
+const EMPTY_LOCATION: Location = { name: "", address: "", phone: "", email: "", query: "", lat: 0, lng: 0, zoom: 11 };
 
 function SettingsPage() {
   const [s, setS] = useState<Settings>({});
@@ -24,6 +37,8 @@ function SettingsPage() {
     const { data } = await supabase.from("site_settings").select("key, value");
     const map: Settings = {};
     (data ?? []).forEach((r: any) => { map[r.key] = r.value; });
+    if (!map.contact) map.contact = { address: "", phone: "", email: "", website: "" };
+    if (!map.locations) map.locations = { items: [] };
     setS(map);
     setLoading(false);
   }
@@ -31,6 +46,29 @@ function SettingsPage() {
 
   function update(key: string, patch: any) {
     setS((prev) => ({ ...prev, [key]: { ...(prev[key] ?? {}), ...patch } }));
+  }
+
+  function updateLocation(idx: number, patch: Partial<Location>) {
+    setS((prev) => {
+      const items = [...(prev.locations?.items ?? [])];
+      items[idx] = { ...items[idx], ...patch };
+      return { ...prev, locations: { ...(prev.locations ?? {}), items } };
+    });
+  }
+
+  function addLocation() {
+    setS((prev) => ({
+      ...prev,
+      locations: { ...(prev.locations ?? {}), items: [...(prev.locations?.items ?? []), { ...EMPTY_LOCATION }] },
+    }));
+  }
+
+  function removeLocation(idx: number) {
+    setS((prev) => {
+      const items = [...(prev.locations?.items ?? [])];
+      items.splice(idx, 1);
+      return { ...prev, locations: { ...(prev.locations ?? {}), items } };
+    });
   }
 
   async function save(key: string) {
@@ -73,6 +111,50 @@ function SettingsPage() {
         <Field label="Favicon URL">
           <Input value={s.general?.favicon_url ?? ""} onChange={(e) => update("general", { favicon_url: e.target.value })} />
         </Field>
+      </Section>
+
+      {/* Contact info (shown on Contact page) */}
+      <Section title="Contact Information" onSave={() => save("contact")} saving={saving}>
+        <p className="text-xs opacity-60 -mt-2">Displayed on the public Contact page.</p>
+        <Field label="Headquarters address">
+          <Textarea rows={2} value={s.contact?.address ?? ""} onChange={(e) => update("contact", { address: e.target.value })} />
+        </Field>
+        <Field label="Phone"><Input value={s.contact?.phone ?? ""} onChange={(e) => update("contact", { phone: e.target.value })} /></Field>
+        <Field label="Email"><Input type="email" value={s.contact?.email ?? ""} onChange={(e) => update("contact", { email: e.target.value })} /></Field>
+        <Field label="Website"><Input value={s.contact?.website ?? ""} onChange={(e) => update("contact", { website: e.target.value })} /></Field>
+      </Section>
+
+      {/* Office locations (map pins on Contact page) */}
+      <Section title="Office Locations" onSave={() => save("locations")} saving={saving}>
+        <p className="text-xs opacity-60 -mt-2">Provincial offices shown on the public Contact page map.</p>
+        <div className="space-y-3">
+          {(s.locations?.items ?? []).map((loc: Location, idx: number) => (
+            <div key={idx} className="rounded-lg border border-slate-200 dark:border-white/10 p-4 space-y-3 bg-slate-50/50 dark:bg-navy-950/40">
+              <div className="flex items-center justify-between">
+                <div className="text-sm font-medium flex items-center gap-2">
+                  <MapPin className="size-4 text-brand-blue" />
+                  {loc.name || `Office ${idx + 1}`}
+                </div>
+                <Button size="sm" variant="ghost" onClick={() => removeLocation(idx)} className="text-red-600 hover:text-red-700">
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <Field label="Name"><Input value={loc.name ?? ""} onChange={(e) => updateLocation(idx, { name: e.target.value })} /></Field>
+                <Field label="Phone"><Input value={loc.phone ?? ""} onChange={(e) => updateLocation(idx, { phone: e.target.value })} /></Field>
+                <Field label="Email"><Input value={loc.email ?? ""} onChange={(e) => updateLocation(idx, { email: e.target.value })} /></Field>
+                <Field label="Map search query"><Input value={loc.query ?? ""} onChange={(e) => updateLocation(idx, { query: e.target.value })} /></Field>
+                <Field label="Latitude"><Input type="number" step="any" value={loc.lat ?? ""} onChange={(e) => updateLocation(idx, { lat: parseFloat(e.target.value) })} /></Field>
+                <Field label="Longitude"><Input type="number" step="any" value={loc.lng ?? ""} onChange={(e) => updateLocation(idx, { lng: parseFloat(e.target.value) })} /></Field>
+                <Field label="Zoom (1-20)"><Input type="number" min={1} max={20} value={loc.zoom ?? 11} onChange={(e) => updateLocation(idx, { zoom: parseInt(e.target.value, 10) })} /></Field>
+              </div>
+              <Field label="Address">
+                <Textarea rows={2} value={loc.address ?? ""} onChange={(e) => updateLocation(idx, { address: e.target.value })} />
+              </Field>
+            </div>
+          ))}
+          <Button size="sm" variant="outline" onClick={addLocation}><Plus className="w-4 h-4 mr-1" /> Add office</Button>
+        </div>
       </Section>
 
       {/* Social */}
