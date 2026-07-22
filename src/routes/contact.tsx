@@ -2,8 +2,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MapPin, Phone, Mail, Globe } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/contact")({
   component: Contact,
@@ -20,13 +21,16 @@ export const Route = createFileRoute("/contact")({
 
 type Province = {
   name: string;
-  query: string;
+  query?: string;
   lat: number;
   lng: number;
   zoom?: number;
+  address?: string;
+  phone?: string;
+  email?: string;
 };
 
-const PROVINCES: Province[] = [
+const FALLBACK_PROVINCES: Province[] = [
   { name: "Kabul (HQ)", query: "Patriotic+Youths+Education+Culture+and+Social+Organization+PYECSO", lat: 34.5409913, lng: 69.1738007, zoom: 17 },
   { name: "Logar", query: "Logar+Province+Afghanistan", lat: 33.9833, lng: 69.0167, zoom: 10 },
   { name: "Ghazni", query: "Ghazni+Afghanistan", lat: 33.5533, lng: 68.4239, zoom: 11 },
@@ -40,9 +44,32 @@ const PROVINCES: Province[] = [
   { name: "Takhar", query: "Taloqan+Takhar+Afghanistan", lat: 36.7361, lng: 69.5347, zoom: 10 },
 ];
 
+type ContactInfo = { address?: string; phone?: string; email?: string; website?: string };
+
 function Contact() {
   const { t } = useTranslation();
-  const [active, setActive] = useState<Province>(PROVINCES[0]);
+  const [provinces, setProvinces] = useState<Province[]>(FALLBACK_PROVINCES);
+  const [contact, setContact] = useState<ContactInfo>({});
+  const [active, setActive] = useState<Province>(FALLBACK_PROVINCES[0]);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase.from("site_settings").select("key, value").in("key", ["contact", "locations"]);
+      const map: Record<string, any> = {};
+      (data ?? []).forEach((r: any) => { map[r.key] = r.value; });
+      if (map.contact) setContact(map.contact);
+      const items: Province[] = map.locations?.items ?? [];
+      if (items.length > 0) {
+        setProvinces(items);
+        setActive(items[0]);
+      }
+    })();
+  }, []);
+
+  const mapSrc = useMemo(() => {
+    const q = active.query || `${active.lat},${active.lng}`;
+    return `https://www.google.com/maps?q=${encodeURIComponent(q)}&ll=${active.lat},${active.lng}&z=${active.zoom ?? 11}&output=embed`;
+  }, [active]);
 
   return (
     <SiteLayout>
@@ -56,10 +83,10 @@ function Contact() {
           <div>
             <h2 className="text-navy-900 text-2xl font-bold mb-6">{t("contact.title")}</h2>
             <ul className="space-y-4 text-navy-900/80">
-              <li className="flex items-start gap-3"><MapPin className="size-5 text-brand-blue mt-0.5" /> {t("contact.address")}</li>
-              <li className="flex items-center gap-3"><Phone className="size-5 text-brand-blue" /> +93 (0) 20 250 0312</li>
-              <li className="flex items-center gap-3"><Mail className="size-5 text-brand-blue" /> info@pyecso.org.af</li>
-              <li className="flex items-center gap-3"><Globe className="size-5 text-brand-blue" /> www.pyecso.org.af</li>
+              <li className="flex items-start gap-3"><MapPin className="size-5 text-brand-blue mt-0.5" /> <span className="whitespace-pre-line">{contact.address || t("contact.address")}</span></li>
+              <li className="flex items-center gap-3"><Phone className="size-5 text-brand-blue" /> {contact.phone || "+93 (0) 20 250 0312"}</li>
+              <li className="flex items-center gap-3"><Mail className="size-5 text-brand-blue" /> {contact.email || "info@pyecso.org.af"}</li>
+              <li className="flex items-center gap-3"><Globe className="size-5 text-brand-blue" /> {contact.website || "www.pyecso.org.af"}</li>
             </ul>
           </div>
           <form className="bg-white ring-1 ring-border rounded-lg p-6 space-y-4" onSubmit={(e) => e.preventDefault()}>
@@ -81,7 +108,7 @@ function Contact() {
           </div>
 
           <div className="flex flex-wrap gap-2 mb-6">
-            {PROVINCES.map((p) => {
+            {provinces.map((p) => {
               const isActive = p.name === active.name;
               return (
                 <button
@@ -100,11 +127,19 @@ function Contact() {
             })}
           </div>
 
+          {(active.address || active.phone || active.email) && (
+            <div className="mb-4 bg-white ring-1 ring-border rounded-lg p-4 grid grid-cols-1 md:grid-cols-3 gap-3 text-sm text-navy-900/80">
+              {active.address && <div className="flex items-start gap-2"><MapPin className="size-4 text-brand-blue mt-0.5" /> <span className="whitespace-pre-line">{active.address}</span></div>}
+              {active.phone && <div className="flex items-center gap-2"><Phone className="size-4 text-brand-blue" /> {active.phone}</div>}
+              {active.email && <div className="flex items-center gap-2"><Mail className="size-4 text-brand-blue" /> {active.email}</div>}
+            </div>
+          )}
+
           <div className="rounded-lg overflow-hidden ring-1 ring-border shadow-sm">
             <iframe
               key={active.name}
               title={`PYECSO Office — ${active.name}`}
-              src={`https://www.google.com/maps?q=${active.query}&ll=${active.lat},${active.lng}&z=${active.zoom ?? 11}&output=embed`}
+              src={mapSrc}
               width="100%"
               height="460"
               style={{ border: 0 }}
