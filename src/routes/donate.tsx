@@ -67,6 +67,18 @@ const BANK = {
 
 const CAMPAIGNS = [
   {
+    slug: "nuristan-flood",
+    image: cardNuristanFlood,
+    tag: "urgent · high priority",
+    overlayTitle: "Nuristan Flood Emergency Appeal",
+    overlayLine: "Rebuilding Lives, Restoring Hope",
+    title: "Nuristan Flood Emergency — Shelter, Food, Medical Aid",
+    goal: 50000,
+    raised: 8420,
+    donors: 213,
+    urgent: true,
+  },
+  {
     slug: "education",
     image: cardEducation,
     tag: "ongoing campaign",
