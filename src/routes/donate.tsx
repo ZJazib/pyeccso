@@ -18,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import cardEducation from "@/assets/card-education.jpg";
+import cardNuristanFlood from "@/assets/card-nuristan-flood.jpg";
 import cardEmergency from "@/assets/card-emergency.jpg";
 import cardLivelihoods from "@/assets/card-livelihoods.jpg";
 import cardHealth from "@/assets/card-health.jpg";
