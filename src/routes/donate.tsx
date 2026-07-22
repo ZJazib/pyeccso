@@ -181,7 +181,7 @@ function Donate() {
 
   // Preset amounts are defined in USD, then displayed in the visitor's
   // local currency and converted to AFN when submitting to HesabPay.
-  const usdPresets = [25, 50, 100, 250, 500];
+  const usdPresets = [50, 100, 500, 1000, 5000];
   const localPresets = useMemo(() => {
     if (!rates) return usdPresets;
     return usdPresets.map((u) => {
