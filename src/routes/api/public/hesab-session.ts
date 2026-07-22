@@ -26,7 +26,7 @@ export const Route = createFileRoute("/api/public/hesab-session")({
             note?: string;
           };
           const amount = Number(body.amount);
-          if (!Number.isFinite(amount) || amount < 1 || amount > 1000000) {
+          if (!Number.isFinite(amount) || amount < 1 || amount > 100000) {
             return new Response(JSON.stringify({ error: "Invalid amount" }), {
               status: 400,
               headers: { "Content-Type": "application/json", ...CORS },

@@ -18,7 +18,6 @@ import {
   X,
 } from "lucide-react";
 import cardEducation from "@/assets/card-education.jpg";
-import cardNuristanFlood from "@/assets/card-nuristan-flood.jpg";
 import cardEmergency from "@/assets/card-emergency.jpg";
 import cardLivelihoods from "@/assets/card-livelihoods.jpg";
 import cardHealth from "@/assets/card-health.jpg";
@@ -66,18 +65,6 @@ const BANK = {
 
 
 const CAMPAIGNS = [
-  {
-    slug: "nuristan-flood",
-    image: cardNuristanFlood,
-    tag: "urgent · high priority",
-    overlayTitle: "Nuristan Flood Emergency Appeal",
-    overlayLine: "Rebuilding Lives, Restoring Hope",
-    title: "Nuristan Flood Emergency — Shelter, Food, Medical Aid",
-    goal: 50000,
-    raised: 8420,
-    donors: 213,
-    urgent: true,
-  },
   {
     slug: "education",
     image: cardEducation,
@@ -181,7 +168,7 @@ function Donate() {
 
   // Preset amounts are defined in USD, then displayed in the visitor's
   // local currency and converted to AFN when submitting to HesabPay.
-  const usdPresets = [50, 100, 500, 1000, 5000];
+  const usdPresets = [25, 50, 100, 250, 500];
   const localPresets = useMemo(() => {
     if (!rates) return usdPresets;
     return usdPresets.map((u) => {
@@ -216,12 +203,6 @@ function Donate() {
     setError(null);
     if (!Number.isFinite(selectedLocal) || selectedLocal < 1) {
       setError(t("donate.flow.modal.hesab.invalidAmount"));
-      return;
-    }
-    // Cap at 10,000 USD equivalent in the visitor's local currency.
-    const maxLocal = rates ? convert(10000, "USD", currency, rates) : 10000;
-    if (selectedLocal > maxLocal) {
-      setError(`Maximum donation is ${formatMoney(maxLocal, currency)} (≈ $10,000 USD).`);
       return;
     }
     if (!rates || !afnAmount) {
@@ -495,11 +476,10 @@ function Donate() {
                       <input
                         type="number"
                         min={1}
-                        max={rates ? Math.round(convert(10000, "USD", currency, rates)) : 10000}
                         step={1}
                         value={customAmount}
                         onChange={(e) => setCustomAmount(e.target.value)}
-                        placeholder={rates ? `up to ${formatMoney(convert(10000, "USD", currency, rates), currency)}` : "up to $10,000"}
+                        placeholder={rates ? String(localPresets[usdPresets.indexOf(amount)]) : String(amount)}
                         className="w-full border border-border rounded-md px-3 py-2.5 text-sm"
                       />
                     </div>
