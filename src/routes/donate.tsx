@@ -70,7 +70,7 @@ const BANK = {
 const CAMPAIGNS = [
   {
     slug: "urgent-aid",
-    image: urgentAid.url,
+    image: URGENT_AID_IMAGE,
     tag: "urgent · high priority",
     overlayTitle: "Emergency Aid for Nuristan Families",
     overlayLine: "Food, clean water & shelter for earthquake-affected villages",
