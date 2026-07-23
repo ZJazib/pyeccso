@@ -317,9 +317,14 @@ function Donate() {
               return (
                 <article
                   key={c.slug}
-                  className="bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-lg hover:ring-brand-blue transition-all flex flex-col"
+                  className={`bg-white ring-1 rounded-lg overflow-hidden hover:shadow-lg transition-all flex flex-col ${
+                    c.urgent
+                      ? "ring-2 ring-brand-red shadow-lg sm:col-span-2 lg:col-span-3"
+                      : "ring-border hover:ring-brand-blue"
+                  }`}
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden">
+                  <div className={`relative overflow-hidden ${c.urgent ? "aspect-[16/7]" : "aspect-[4/3]"}`}>
+
                     <img
                       src={c.image}
                       alt={c.overlayTitle}
