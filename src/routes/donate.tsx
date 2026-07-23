@@ -23,9 +23,11 @@ import cardLivelihoods from "@/assets/card-livelihoods.jpg";
 import cardHealth from "@/assets/card-health.jpg";
 import cardAgriculture from "@/assets/card-agriculture.jpg";
 import cardWomen from "@/assets/card-women.jpg";
+import urgentAid from "@/assets/pyecso-urgent-aid.jpg.asset.json";
 import { useEffect, useMemo, useState } from "react";
 import { getRates, convert, formatMoney } from "@/lib/currency";
 import { detectGeo } from "@/lib/geo";
+
 
 export const Route = createFileRoute("/donate")({
   component: Donate,
@@ -66,6 +68,19 @@ const BANK = {
 
 const CAMPAIGNS = [
   {
+    slug: "urgent-aid",
+    image: urgentAid.url,
+    tag: "urgent · high priority",
+    overlayTitle: "Emergency Aid for Nuristan Families",
+    overlayLine: "Food, clean water & shelter for earthquake-affected villages",
+    title: "URGENT: Life-Saving Aid for Displaced Families",
+    goal: 10000,
+    raised: 1000,
+    donors: 42,
+    urgent: true,
+  },
+  {
+
     slug: "education",
     image: cardEducation,
     tag: "ongoing campaign",
@@ -302,9 +317,14 @@ function Donate() {
               return (
                 <article
                   key={c.slug}
-                  className="bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-lg hover:ring-brand-blue transition-all flex flex-col"
+                  className={`bg-white ring-1 rounded-lg overflow-hidden hover:shadow-lg transition-all flex flex-col ${
+                    c.urgent
+                      ? "ring-2 ring-brand-red shadow-lg sm:col-span-2 lg:col-span-3"
+                      : "ring-border hover:ring-brand-blue"
+                  }`}
                 >
-                  <div className="relative aspect-[4/3] overflow-hidden">
+                  <div className={`relative overflow-hidden ${c.urgent ? "aspect-[16/7]" : "aspect-[4/3]"}`}>
+
                     <img
                       src={c.image}
                       alt={c.overlayTitle}
@@ -476,6 +496,7 @@ function Donate() {
                       <input
                         type="number"
                         min={1}
+                        max={10000}
                         step={1}
                         value={customAmount}
                         onChange={(e) => setCustomAmount(e.target.value)}
