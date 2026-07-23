@@ -68,6 +68,19 @@ const BANK = {
 
 const CAMPAIGNS = [
   {
+    slug: "urgent-aid",
+    image: urgentAid.url,
+    tag: "urgent · high priority",
+    overlayTitle: "Emergency Aid for Nuristan Families",
+    overlayLine: "Food, clean water & shelter for earthquake-affected villages",
+    title: "URGENT: Life-Saving Aid for Displaced Families",
+    goal: 10000,
+    raised: 1000,
+    donors: 42,
+    urgent: true,
+  },
+  {
+
     slug: "education",
     image: cardEducation,
     tag: "ongoing campaign",
