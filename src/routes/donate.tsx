@@ -23,7 +23,8 @@ import cardLivelihoods from "@/assets/card-livelihoods.jpg";
 import cardHealth from "@/assets/card-health.jpg";
 import cardAgriculture from "@/assets/card-agriculture.jpg";
 import cardWomen from "@/assets/card-women.jpg";
-import urgentAid from "@/assets/pyecso-urgent-aid.jpg.asset.json";
+const URGENT_AID_IMAGE =
+  "https://dhszffqmuscluwxzctlp.supabase.co/storage/v1/object/sign/media/campaigns/pyecso-urgent-aid.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yYTU2ZjFhMC1kYjA3LTQ1YWEtYWY2MC0yNjg2NWU5ZDcyOGMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJtZWRpYS9jYW1wYWlnbnMvcHllY3NvLXVyZ2VudC1haWQuanBnIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4NDgxMTM3NCwiZXhwIjoyMTAwMTcxMzc0fQ.wXJpOwGz1huS8MJCZOCPPb_tTBoIfX2YLl-bPDgJRdM";
 import { useEffect, useMemo, useState } from "react";
 import { getRates, convert, formatMoney } from "@/lib/currency";
 import { detectGeo } from "@/lib/geo";
