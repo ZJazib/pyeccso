@@ -79,6 +79,7 @@ const CAMPAIGNS = [
     raised: 1000,
     donors: 42,
     urgent: true,
+  },
 ];
 
 
