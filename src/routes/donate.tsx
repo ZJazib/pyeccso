@@ -496,6 +496,7 @@ function Donate() {
                       <input
                         type="number"
                         min={1}
+                        max={10000}
                         step={1}
                         value={customAmount}
                         onChange={(e) => setCustomAmount(e.target.value)}
