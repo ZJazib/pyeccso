@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Image as ImageIcon, Newspaper, BookOpen,
@@ -8,9 +8,7 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
-import cardEducation from "@/assets/card-education.jpg";
-import cardWash from "@/assets/card-wash.jpg";
-import cardHealth from "@/assets/card-health.jpg";
+import { useCmsListTranslated } from "@/lib/useCmsContent";
 
 export const Route = createFileRoute("/media")({
   component: Media,
@@ -37,11 +35,9 @@ function Media() {
   ];
 
 
+  const { items: newsItems, loading: newsLoading } = useCmsListTranslated("news");
+
   const catKeys = ["all","education","livelihoods","health","protection","wash","emergency","agriculture","women","youth","events"] as const;
-
-
-  const storyImgs = { s1: cardHealth, s2: cardEducation, s3: cardWash } as const;
-  const storyKeys = ["s1","s2","s3"] as const;
 
   return (
     <SiteLayout>
@@ -99,18 +95,35 @@ function Media() {
 
             {activeTab === "news" && (
               <div>
-                <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.sections.stories")}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                  {storyKeys.map((s) => (
-                    <article key={s} className="bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                      <img src={storyImgs[s]} alt="" className="w-full aspect-[4/3] object-cover" loading="lazy" />
-                      <div className="p-4">
-                        <h4 className="text-navy-900 font-semibold text-sm leading-snug mb-1">{t(`media.stories.${s}.title`)}</h4>
-                        <p className="text-navy-900/60 text-xs">{t(`media.stories.${s}.date`)}</p>
-                      </div>
-                    </article>
-                  ))}
-                </div>
+                <h3 className="text-navy-900 dark:text-white text-xl font-bold mb-5">{t("media.sections.stories")}</h3>
+                {newsLoading ? (
+                  <div className="text-navy-900/60 dark:text-white/60 text-sm">Loading…</div>
+                ) : newsItems.length === 0 ? (
+                  <div className="text-navy-900/60 dark:text-white/60 text-sm">No news yet.</div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    {newsItems.map((n) => (
+                      <Link
+                        key={n.id}
+                        to="/news/$slug"
+                        params={{ slug: n.slug ?? "" }}
+                        className="bg-white dark:bg-navy-900 ring-1 ring-border dark:ring-white/10 rounded-lg overflow-hidden hover:shadow-md transition-shadow block"
+                      >
+                        {n.cover_url && (
+                          <img src={n.cover_url} alt={n.t.title} className="w-full aspect-[4/3] object-cover" loading="lazy" />
+                        )}
+                        <div className="p-4">
+                          <h4 className="text-navy-900 dark:text-white font-semibold text-sm leading-snug mb-1 line-clamp-2">{n.t.title}</h4>
+                          {n.published_at && (
+                            <p className="text-navy-900/60 dark:text-white/60 text-xs">
+                              {new Date(n.published_at).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
+                            </p>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
