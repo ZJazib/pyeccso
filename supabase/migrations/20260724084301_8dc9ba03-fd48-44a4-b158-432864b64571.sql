@@ -1,0 +1,10 @@
+CREATE POLICY "Public read media news" ON storage.objects FOR SELECT TO anon, authenticated USING (bucket_id = 'media' AND (storage.foldername(name))[1] = 'news');
+
+UPDATE public.content_items SET data = jsonb_set(data, '{cover_url}', to_jsonb('https://dhszffqmuscluwxzctlp.supabase.co/storage/v1/object/public/media/news/province-nuristan.jpg'::text)) WHERE id = 'ef93f717-3ff9-4a77-8d2c-2fc11daf1e81';
+UPDATE public.content_items SET data = jsonb_set(data, '{cover_url}', to_jsonb('https://dhszffqmuscluwxzctlp.supabase.co/storage/v1/object/public/media/news/province-nangarhar.jpg'::text)) WHERE id = '76013eea-5970-4a4f-addf-5267df3a5f22';
+UPDATE public.content_items SET data = jsonb_set(data, '{cover_url}', to_jsonb('https://dhszffqmuscluwxzctlp.supabase.co/storage/v1/object/public/media/news/province-laghman.jpg'::text)) WHERE id = 'eeaee81c-0155-40de-b1b5-9669e3cf0de0';
+UPDATE public.content_items SET data = jsonb_set(data, '{cover_url}', to_jsonb('https://dhszffqmuscluwxzctlp.supabase.co/storage/v1/object/public/media/news/province-ghazni.jpg'::text)) WHERE id = 'e352868b-1860-4aa3-9d59-005de9944629';
+UPDATE public.content_items SET data = jsonb_set(data, '{cover_url}', to_jsonb('https://dhszffqmuscluwxzctlp.supabase.co/storage/v1/object/public/media/news/province-paktika.jpg'::text)) WHERE id = '6093ee2a-027f-482b-b8d1-b22564c26f3d';
+UPDATE public.content_items SET data = jsonb_set(data, '{cover_url}', to_jsonb('https://dhszffqmuscluwxzctlp.supabase.co/storage/v1/object/public/media/news/province-paktia.jpg'::text)) WHERE id = '8fe19cb1-7fc8-45d5-b930-8add4a1315de';
+UPDATE public.content_items SET data = jsonb_set(data, '{cover_url}', to_jsonb('https://dhszffqmuscluwxzctlp.supabase.co/storage/v1/object/public/media/news/province-wardak.jpg'::text)) WHERE id = 'a99d252e-245d-4cee-bfbb-a5a079e80374';
+UPDATE public.content_items SET data = jsonb_set(data, '{cover_url}', to_jsonb('https://dhszffqmuscluwxzctlp.supabase.co/storage/v1/object/public/media/news/province-kapisa.jpg'::text)) WHERE id = '51786655-c697-481d-846a-47f67675baf6';
