@@ -35,11 +35,9 @@ function Media() {
   ];
 
 
+  const { items: newsItems, loading: newsLoading } = useCmsListTranslated("news");
+
   const catKeys = ["all","education","livelihoods","health","protection","wash","emergency","agriculture","women","youth","events"] as const;
-
-
-  const storyImgs = { s1: cardHealth, s2: cardEducation, s3: cardWash } as const;
-  const storyKeys = ["s1","s2","s3"] as const;
 
   return (
     <SiteLayout>
