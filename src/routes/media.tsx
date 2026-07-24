@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import {
   Image as ImageIcon, Newspaper, BookOpen,
@@ -8,9 +8,7 @@ import { SiteLayout } from "@/components/site/SiteLayout";
 
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
-import cardEducation from "@/assets/card-education.jpg";
-import cardWash from "@/assets/card-wash.jpg";
-import cardHealth from "@/assets/card-health.jpg";
+import { useCmsListTranslated } from "@/lib/useCmsContent";
 
 export const Route = createFileRoute("/media")({
   component: Media,
