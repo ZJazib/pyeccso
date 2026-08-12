@@ -83,6 +83,10 @@ RewriteRule ^ - [L]
 # Never rewrite the PHP API bridge
 RewriteRule ^pyecso-api/ - [L]
 
+# Website API calls -> PHP bridge equivalents
+RewriteRule ^api/public/hesab-session/?$ /pyecso-api/hesab-session.php [L]
+
+
 # Prerendered pages: /about -> /about/index.html
 RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
 RewriteRule ^([^.]+?)/?$ /$1/index.html [L]
