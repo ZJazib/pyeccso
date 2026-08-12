@@ -139,7 +139,7 @@ export function Footer() {
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-5 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
           <p>© {new Date().getFullYear()} PYECSO. {t("footer.rights")}</p>
           <div className="flex items-center gap-6">
-            <Link to="/donate" className="hover:text-white">{t("nav.donate")}</Link>
+            <Link to="/donate" search={{}} className="hover:text-white">{t("nav.donate")}</Link>
             <Link to="/contact" className="hover:text-white">{t("nav.contact")}</Link>
             <Link to="/admin" className="hover:text-white">Admin Portal</Link>
           </div>
