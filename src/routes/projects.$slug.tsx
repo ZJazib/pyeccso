@@ -473,6 +473,7 @@ function ProjectDetail() {
               <div className="flex flex-col gap-2">
                 <Link
                   to="/donate"
+                  search={{ status: undefined }}
                   className="inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white rounded-md px-4 py-2.5 text-sm font-semibold"
                 >
                   <Heart className="size-4" /> Donate

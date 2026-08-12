@@ -99,7 +99,7 @@ function Home() {
               <Link to="/programs" className="bg-brand-blue hover:bg-brand-blue-hover text-white h-12 px-6 rounded-md font-semibold text-sm inline-flex items-center gap-2 transition-colors">
                 {t("home.cta.programs")} <ArrowRight className="size-4" />
               </Link>
-              <Link to="/donate" className="bg-white text-navy-900 h-12 px-6 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-wash transition-colors">
+              <Link to="/donate" search={{ status: undefined }} className="bg-white text-navy-900 h-12 px-6 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-wash transition-colors">
                 {t("home.cta.donate")} <UserPlus className="size-4" />
               </Link>
             </div>
@@ -215,7 +215,7 @@ function Home() {
             <h2 className="text-2xl md:text-3xl font-bold tracking-tight">{t("home.supportCta.title")}</h2>
             <p className="text-white/70 max-w-lg mt-2">{t("home.supportCta.body")}</p>
           </div>
-          <Link to="/donate" className="bg-white text-navy-900 h-12 px-6 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-wash transition-colors">
+          <Link to="/donate" search={{ status: undefined }} className="bg-white text-navy-900 h-12 px-6 rounded-md font-semibold text-sm inline-flex items-center gap-2 hover:bg-brand-blue-wash transition-colors">
             {t("home.supportCta.button")} <ArrowRight className="size-4" />
           </Link>
         </div>

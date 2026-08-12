@@ -65,6 +65,7 @@ export function Header() {
           <LanguageSwitcher variant="inline" />
           <Link
             to="/donate"
+            search={{ status: undefined }}
             className="bg-brand-blue text-white h-10 px-4 rounded-md font-semibold text-sm inline-flex items-center hover:bg-brand-blue-hover transition-colors"
           >
             {t("nav.donate")}
