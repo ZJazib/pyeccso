@@ -24,4 +24,10 @@ return [
     'google' => [
         'client_id' => '',
     ],
+    'hesab' => [
+        // HesabPay API key (leave empty to disable online donations)
+        'api_key' => '',
+        'site_url' => 'https://www.pyecso.org.af',
+    ],
 ];
+
