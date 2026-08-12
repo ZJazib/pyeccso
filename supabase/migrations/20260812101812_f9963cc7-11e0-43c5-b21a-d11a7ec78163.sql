@@ -1,0 +1,1 @@
+UPDATE content_items SET deleted_at = now(), status = 'archived' WHERE type = 'career' AND deleted_at IS NULL RETURNING id, slug, status, deleted_at
