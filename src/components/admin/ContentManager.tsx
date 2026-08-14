@@ -10,6 +10,19 @@ import { Plus, Search, Trash2, Pencil, ArrowLeft, Save, Eye, EyeOff, Languages, 
 import { ImageUpload, GalleryUpload, MediaGalleryUpload } from "./ImageUpload";
 import { I18nField } from "./I18nField";
 import { LANGUAGES, type Lang } from "@/lib/cmsConfig";
+import { notifyCareerPublished } from "@/lib/careerNotify.functions";
+
+/** Fire the "career published" admin notification (best-effort). */
+async function notifyIfCareer(type: string, contentId?: string) {
+  if (type !== "career" || !contentId) return;
+  try {
+    const res = await notifyCareerPublished({ data: { contentId } });
+    if (res?.sent) toast.success("Notification email sent");
+  } catch (e) {
+    console.warn("[career-notify]", e);
+  }
+}
+
 
 type Item = {
   id: string;
