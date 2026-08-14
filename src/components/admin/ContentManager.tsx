@@ -116,6 +116,7 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
       .eq("id", item.id);
     if (error) return toast.error(error.message);
     toast.success(next === "published" ? "Published" : "Unpublished");
+    if (next === "published") await notifyIfCareer(item.type, item.id);
     load();
   }
 
