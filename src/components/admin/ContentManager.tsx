@@ -116,6 +116,7 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
       .eq("id", item.id);
     if (error) return toast.error(error.message);
     toast.success(next === "published" ? "Published" : "Unpublished");
+    if (next === "published") await notifyIfCareer(item.type, item.id);
     load();
   }
 
@@ -162,6 +163,9 @@ export function ContentManager({ typeKey }: { typeKey: keyof typeof CMS_CONFIGS 
     const { error } = await supabase.from("content_items").update(patch).in("id", ids);
     if (error) return toast.error(error.message);
     toast.success(`${ids.length} item(s) updated`);
+    if (action === "publish") {
+      for (const id of ids) await notifyIfCareer(config.type, id);
+    }
     load();
   }
 
