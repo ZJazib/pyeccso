@@ -478,6 +478,7 @@ function ItemEditor({
           edited_by: user.user?.id,
         });
       }
+      if (publish) await notifyIfCareer(config.type, contentId);
       toast.success(publish ? "Saved & published" : "Saved");
       onSaved();
     } catch (err: any) {
