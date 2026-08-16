@@ -172,6 +172,28 @@ function SettingsPage() {
         <Field label="Description"><Textarea rows={3} value={s.footer?.description ?? ""} onChange={(e) => update("footer", { description: e.target.value })} /></Field>
       </Section>
 
+      {/* Notifications */}
+      <Section title="Notifications" onSave={() => save("notifications")} saving={saving}>
+        <div className="flex items-center justify-between">
+          <div>
+            <div className="text-sm font-medium">Email me when a career is published</div>
+            <div className="text-xs opacity-60">Sends a notification whenever a job posting goes live.</div>
+          </div>
+          <Switch
+            checked={!!s.notifications?.career_published_enabled}
+            onCheckedChange={(v) => update("notifications", { career_published_enabled: v })}
+          />
+        </div>
+        <Field label="Notification email">
+          <Input
+            type="email"
+            placeholder="hr@pyecso.org.af"
+            value={s.notifications?.career_published_email ?? ""}
+            onChange={(e) => update("notifications", { career_published_email: e.target.value })}
+          />
+        </Field>
+      </Section>
+
       {/* Maintenance */}
       <Section title="Maintenance Mode" onSave={() => save("maintenance")} saving={saving}>
         <div className="flex items-center justify-between">
