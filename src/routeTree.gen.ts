@@ -55,6 +55,7 @@ import { Route as AdminContactRouteImport } from './routes/admin.contact'
 import { Route as AdminCareersRouteImport } from './routes/admin.careers'
 import { Route as AdminAuditRouteImport } from './routes/admin.audit'
 import { Route as AdminApplicationsRouteImport } from './routes/admin.applications'
+import { Route as ApiPublicPrerenderManifestRouteImport } from './routes/api/public/prerender-manifest'
 import { Route as ApiPublicHesabSessionRouteImport } from './routes/api/public/hesab-session'
 
 const PortalRoute = PortalRouteImport.update({
@@ -287,6 +288,12 @@ const AdminApplicationsRoute = AdminApplicationsRouteImport.update({
   path: '/applications',
   getParentRoute: () => AdminRoute,
 } as any)
+const ApiPublicPrerenderManifestRoute =
+  ApiPublicPrerenderManifestRouteImport.update({
+    id: '/api/public/prerender-manifest',
+    path: '/api/public/prerender-manifest',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHesabSessionRoute = ApiPublicHesabSessionRouteImport.update({
   id: '/api/public/hesab-session',
   path: '/api/public/hesab-session',
@@ -341,6 +348,7 @@ export interface FileRoutesByFullPath {
   '/programs/': typeof ProgramsIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
+  '/api/public/prerender-manifest': typeof ApiPublicPrerenderManifestRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -388,6 +396,7 @@ export interface FileRoutesByTo {
   '/programs': typeof ProgramsIndexRoute
   '/projects': typeof ProjectsIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
+  '/api/public/prerender-manifest': typeof ApiPublicPrerenderManifestRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -438,6 +447,7 @@ export interface FileRoutesById {
   '/programs/': typeof ProgramsIndexRoute
   '/projects/': typeof ProjectsIndexRoute
   '/api/public/hesab-session': typeof ApiPublicHesabSessionRoute
+  '/api/public/prerender-manifest': typeof ApiPublicPrerenderManifestRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -489,6 +499,7 @@ export interface FileRouteTypes {
     | '/programs/'
     | '/projects/'
     | '/api/public/hesab-session'
+    | '/api/public/prerender-manifest'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -536,6 +547,7 @@ export interface FileRouteTypes {
     | '/programs'
     | '/projects'
     | '/api/public/hesab-session'
+    | '/api/public/prerender-manifest'
   id:
     | '__root__'
     | '/'
@@ -585,6 +597,7 @@ export interface FileRouteTypes {
     | '/programs/'
     | '/projects/'
     | '/api/public/hesab-session'
+    | '/api/public/prerender-manifest'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -608,6 +621,7 @@ export interface RootRouteChildren {
   ProgramsIndexRoute: typeof ProgramsIndexRoute
   ProjectsIndexRoute: typeof ProjectsIndexRoute
   ApiPublicHesabSessionRoute: typeof ApiPublicHesabSessionRoute
+  ApiPublicPrerenderManifestRoute: typeof ApiPublicPrerenderManifestRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -934,6 +948,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminApplicationsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/api/public/prerender-manifest': {
+      id: '/api/public/prerender-manifest'
+      path: '/api/public/prerender-manifest'
+      fullPath: '/api/public/prerender-manifest'
+      preLoaderRoute: typeof ApiPublicPrerenderManifestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hesab-session': {
       id: '/api/public/hesab-session'
       path: '/api/public/hesab-session'
@@ -1036,6 +1057,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProgramsIndexRoute: ProgramsIndexRoute,
   ProjectsIndexRoute: ProjectsIndexRoute,
   ApiPublicHesabSessionRoute: ApiPublicHesabSessionRoute,
+  ApiPublicPrerenderManifestRoute: ApiPublicPrerenderManifestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
