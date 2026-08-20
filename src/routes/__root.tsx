@@ -127,7 +127,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/pyecso-logo.png", type: "image/png" },
-      { rel: "preload", as: "image", href: "/pyecso-logo.webp", type: "image/webp", fetchpriority: "high" },
+      { rel: "preload", as: "image", href: "/pyecso-logo.webp", type: "image/webp", fetchPriority: "high" },
       { rel: "preconnect", href: "https://dhszffqmuscluwxzctlp.supabase.co", crossOrigin: "anonymous" },
       { rel: "dns-prefetch", href: "https://dhszffqmuscluwxzctlp.supabase.co" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },

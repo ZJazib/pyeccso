@@ -66,7 +66,11 @@ function Learn() {
 
   function handleApplyClick(p: Program) {
     if (!user) {
-      try { sessionStorage.setItem(PENDING_KEY, p.id); } catch {}
+      try {
+        sessionStorage.setItem(PENDING_KEY, p.id);
+      } catch (e) {
+        void e;
+      }
       setAuthOpen({ next: "apply", program: p });
       return;
     }
@@ -82,7 +86,11 @@ function Learn() {
     const pending = authOpen;
     setAuthOpen(null);
     if (pending?.next === "apply" && pending.program && u.role === "student") {
-      try { sessionStorage.removeItem(PENDING_KEY); } catch {}
+      try {
+        sessionStorage.removeItem(PENDING_KEY);
+      } catch (e) {
+        void e;
+      }
       setSelected(pending.program);
     } else if (pending?.next === "portal") {
       navigate({ to: roleHomePath(u.role) });
@@ -93,12 +101,19 @@ function Learn() {
   useEffect(() => {
     if (!user || user.role !== "student") return;
     let pendingId: string | null = null;
-    try { pendingId = sessionStorage.getItem(PENDING_KEY); } catch {}
+    try {
+      pendingId = sessionStorage.getItem(PENDING_KEY);
+    } catch (e) {
+      void e;
+    }
     if (!pendingId) return;
     const program = programs.find((p) => p.id === pendingId);
-    try { sessionStorage.removeItem(PENDING_KEY); } catch {}
+    try {
+      sessionStorage.removeItem(PENDING_KEY);
+    } catch (e) {
+      void e;
+    }
     if (program) setSelected(program);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
 

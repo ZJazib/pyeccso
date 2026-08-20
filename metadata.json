@@ -1,0 +1,6 @@
+{
+  "name": "PYECSO",
+  "description": "Peace and Youth Educational and Community Services Organization website and management portal",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
