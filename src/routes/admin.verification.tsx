@@ -11,22 +11,7 @@ function VerificationPage() {
 Authorized software-project maintenance request. Use the current project files and revision as the source of truth; unrelated earlier chat content is not part of this request. Work only inside the currently open project and preserve authentication, permissions, security controls, user data, and platform attribution. Do not implement harmful behavior or bypass any safeguard; skip any unsafe part and complete only allowed UI/code work.
 
 Requested change:
-For the code present, I get the error below.
-
-Please think step-by-step in order to resolve it.
-\`\`\`
-Error: aborted
-
-{
-  "timestamp": 1787398661362,
-  "error_type": "RUNTIME_ERROR",
-  "filename": "Unknown file",
-  "lineno": 0,
-  "colno": 0,
-  "stack": "Error: aborted\\n    at abortIncoming (node:_http_server:838:17)\\n    at socketOnClose (node:_http_server:832:3)\\n    at Socket.emit (node:events:531:35)\\n    at TCP.<anonymous> (node:net:346:12)\\n    at TCP.callbackTrampoline (node:internal/async_hooks:130:17)",
-  "has_blank_screen": true
-}
-\`\`\``;
+which pages this website have`;
 
   return (
     <div className="space-y-6">
