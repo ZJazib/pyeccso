@@ -110,12 +110,12 @@ export function UsersPage() {
           .from("user_roles")
           .delete()
           .eq("user_id", userId)
-          .eq("role", role);
+          .eq("role", role as any);
         if (error) throw error;
       } else {
         const { error } = await supabase
           .from("user_roles")
-          .insert({ user_id: userId, role });
+          .insert({ user_id: userId, role: role as any });
         if (error) throw error;
       }
       toast.success(`Role ${currentlyHas ? "revoked" : "granted"}: ${role.replace("_", " ")}`);
@@ -164,7 +164,7 @@ export function UsersPage() {
         // 2. Assign Initial Role
         await supabase
           .from("user_roles")
-          .insert({ user_id: newUserId, role: inviteForm.role });
+          .insert({ user_id: newUserId, role: inviteForm.role as any });
       }
 
       toast.success(`Created account and assigned ${inviteForm.role.replace("_", " ")} role`);
