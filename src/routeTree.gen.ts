@@ -40,6 +40,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin.settings'
 import { Route as AdminTeamRouteImport } from './routes/admin.team'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin.testimonials'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
+import { Route as AdminVerificationRouteImport } from './routes/admin.verification'
 import { Route as CareersIndexRouteImport } from './routes/careers.index'
 import { Route as CareersSlugRouteImport } from './routes/careers.$slug'
 import { Route as EventsSlugRouteImport } from './routes/events.$slug'
@@ -213,6 +214,11 @@ const AdminUsersRoute = AdminUsersRouteImport.update({
   path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminVerificationRoute = AdminVerificationRouteImport.update({
+  id: '/verification',
+  path: '/verification',
+  getParentRoute: () => AdminRoute,
+} as any)
 const CareersIndexRoute = CareersIndexRouteImport.update({
   id: '/careers/',
   path: '/careers/',
@@ -331,6 +337,7 @@ export interface FileRoutesByFullPath {
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/verification': typeof AdminVerificationRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/events/$slug': typeof EventsSlugRoute
   '/news/$slug': typeof NewsSlugRoute
@@ -379,6 +386,7 @@ export interface FileRoutesByTo {
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/verification': typeof AdminVerificationRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/events/$slug': typeof EventsSlugRoute
   '/news/$slug': typeof NewsSlugRoute
@@ -430,6 +438,7 @@ export interface FileRoutesById {
   '/admin/team': typeof AdminTeamRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/users': typeof AdminUsersRoute
+  '/admin/verification': typeof AdminVerificationRoute
   '/careers/$slug': typeof CareersSlugRoute
   '/events/$slug': typeof EventsSlugRoute
   '/news/$slug': typeof NewsSlugRoute
@@ -482,6 +491,7 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/testimonials'
     | '/admin/users'
+    | '/admin/verification'
     | '/careers/$slug'
     | '/events/$slug'
     | '/news/$slug'
@@ -530,6 +540,7 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/testimonials'
     | '/admin/users'
+    | '/admin/verification'
     | '/careers/$slug'
     | '/events/$slug'
     | '/news/$slug'
@@ -580,6 +591,7 @@ export interface FileRouteTypes {
     | '/admin/team'
     | '/admin/testimonials'
     | '/admin/users'
+    | '/admin/verification'
     | '/careers/$slug'
     | '/events/$slug'
     | '/news/$slug'
@@ -843,6 +855,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/verification': {
+      id: '/admin/verification'
+      path: '/verification'
+      fullPath: '/admin/verification'
+      preLoaderRoute: typeof AdminVerificationRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/careers/': {
       id: '/careers/'
       path: '/careers'
@@ -988,6 +1007,7 @@ interface AdminRouteChildren {
   AdminTeamRoute: typeof AdminTeamRoute
   AdminTestimonialsRoute: typeof AdminTestimonialsRoute
   AdminUsersRoute: typeof AdminUsersRoute
+  AdminVerificationRoute: typeof AdminVerificationRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -1014,6 +1034,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminTeamRoute: AdminTeamRoute,
   AdminTestimonialsRoute: AdminTestimonialsRoute,
   AdminUsersRoute: AdminUsersRoute,
+  AdminVerificationRoute: AdminVerificationRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

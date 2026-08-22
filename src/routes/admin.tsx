@@ -72,6 +72,7 @@ const NAV_SECTIONS: NavSection[] = [
       { to: "/admin/media", label: "Media Library", icon: ImageIcon },
       { to: "/admin/users", label: "User Management", icon: Users },
       { to: "/admin/audit", label: "System Audit Log", icon: ShieldCheck },
+      { to: "/admin/verification", label: "Verification & Integrity", icon: ShieldAlert },
       { to: "/admin/settings", label: "Site Settings & HesabPay", icon: Settings },
       { to: "/admin/recycle", label: "Recycle Bin", icon: Trash2 },
     ],
