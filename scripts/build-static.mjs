@@ -92,6 +92,7 @@ const APP_ROUTES = [
   "/admin/media",
   "/admin/users",
   "/admin/audit",
+  "/admin/verification",
   "/admin/recycle",
   "/admin/settings",
   "/portal",
