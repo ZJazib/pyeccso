@@ -320,6 +320,7 @@ function crumbFor(pathname: string): string {
     "/admin/users": "User Management & RBAC",
     "/admin/media": "Media Asset Library",
     "/admin/settings": "Site Settings & HesabPay",
+    "/admin/verification": "System Verification & Maintenance",
     "/admin/audit": "System Audit Trail",
     "/admin/recycle": "Recycle Bin",
     "/admin/pages": "Static Pages",
