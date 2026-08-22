@@ -60,14 +60,12 @@ export function useCmsList(type: string) {
       .order("published_at", { ascending: false })
       .then(({ data, error }) => {
         if (!alive) return;
-        if (error) setError(error.message);
-        setItems((data as any) ?? []);
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (!alive) return;
-        setError(err?.message ?? "Error fetching items");
-        setItems([]);
+        if (error) {
+          setError(error.message);
+          setItems([]);
+        } else {
+          setItems((data as any) ?? []);
+        }
         setLoading(false);
       });
     return () => {
@@ -121,14 +119,12 @@ export function useCmsItem(type: string, slug: string | undefined) {
       .maybeSingle()
       .then(({ data, error }) => {
         if (!alive) return;
-        if (error) setError(error.message);
-        setItem((data as any) ?? null);
-        setLoading(false);
-      })
-      .catch((err) => {
-        if (!alive) return;
-        setError(err?.message ?? "Error fetching item");
-        setItem(null);
+        if (error) {
+          setError(error.message);
+          setItem(null);
+        } else {
+          setItem((data as any) ?? null);
+        }
         setLoading(false);
       });
     return () => { alive = false; };
