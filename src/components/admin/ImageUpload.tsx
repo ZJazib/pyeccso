@@ -1,252 +1,151 @@
-import { useRef, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { Upload, X, ImageIcon } from "lucide-react";
-import { toast } from "sonner";
+import React, { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Image as ImageIcon, Link as LinkIcon, Sparkles, X, Check } from "lucide-react";
+
+interface ImageUploadProps {
+  label: string;
+  value?: string | null;
+  onChange: (url: string) => void;
+  description?: string;
+}
+
+const PRESET_IMAGES = [
+  { label: "Classroom / Education", url: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=1200&q=80" },
+  { label: "Humanitarian Aid / Cash", url: "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1200&q=80" },
+  { label: "Vocational Training / STEM", url: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1200&q=80" },
+  { label: "Agriculture & Water", url: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80" },
+  { label: "Community Meeting", url: "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1200&q=80" },
+  { label: "Youth & Sports", url: "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=1200&q=80" },
+];
 
 export function ImageUpload({
+  label,
   value,
   onChange,
-  folder = "content",
-  className = "",
-}: {
-  value?: string | null;
-  onChange: (url: string | null) => void;
-  folder?: string;
-  className?: string;
-}) {
-  const [uploading, setUploading] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  description,
+}: ImageUploadProps) {
+  const [inputUrl, setInputUrl] = useState(value || "");
+  const [showPresets, setShowPresets] = useState(false);
 
-  async function upload(file: File) {
-    setUploading(true);
-    try {
-      const path = `${folder}/${Date.now()}-${file.name.replace(/[^a-z0-9.-]/gi, "_")}`;
-      const { error } = await supabase.storage.from("media").upload(path, file, { upsert: false });
-      if (error) throw error;
-      const { data } = await supabase.storage.from("media").createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
-      if (!data?.signedUrl) throw new Error("Could not sign URL");
-      onChange(data.signedUrl);
-      toast.success("Uploaded");
-    } catch (err: any) {
-      toast.error(err.message);
-    } finally {
-      setUploading(false);
+  const handleApplyUrl = () => {
+    if (inputUrl.trim()) {
+      onChange(inputUrl.trim());
     }
-  }
+  };
 
-  return (
-    <div className={`space-y-2 ${className}`}>
-      {value ? (
-        <div className="relative w-full max-w-sm rounded-lg overflow-hidden border border-slate-200 dark:border-white/10 group">
-          <img src={value} alt="" className="w-full aspect-video object-cover" />
-          <button
-            type="button"
-            onClick={() => onChange(null)}
-            className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 text-white grid place-items-center opacity-0 group-hover:opacity-100 transition"
-            aria-label="Remove"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      ) : (
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          disabled={uploading}
-          className="w-full max-w-sm aspect-video border-2 border-dashed border-slate-300 dark:border-white/15 rounded-lg grid place-items-center text-sm opacity-70 hover:opacity-100 hover:border-brand-blue hover:text-brand-blue transition"
-        >
-          {uploading ? (
-            <span className="text-xs">Uploading…</span>
-          ) : (
-            <div className="flex flex-col items-center gap-1">
-              <ImageIcon className="w-6 h-6" />
-              <span className="text-xs">Click to upload</span>
-            </div>
-          )}
-        </button>
-      )}
-      <div className="flex gap-2 items-center">
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/*"
-          hidden
-          onChange={(e) => e.target.files?.[0] && upload(e.target.files[0])}
-        />
-        {value && (
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            className="text-xs opacity-70 hover:opacity-100 flex items-center gap-1"
-          >
-            <Upload className="w-3 h-3" /> Replace
-          </button>
-        )}
-        <input
-          type="url"
-          placeholder="Or paste image URL"
-          value={value ?? ""}
-          onChange={(e) => onChange(e.target.value || null)}
-          className="flex-1 text-xs border rounded px-2 py-1 bg-transparent"
-        />
-      </div>
-    </div>
-  );
-}
+  const handleClear = () => {
+    setInputUrl("");
+    onChange("");
+  };
 
-export function GalleryUpload({
-  value,
-  onChange,
-  folder = "content/gallery",
-}: {
-  value?: string[];
-  onChange: (urls: string[]) => void;
-  folder?: string;
-}) {
-  const arr = value ?? [];
   return (
     <div className="space-y-2">
-      <div className="grid grid-cols-3 md:grid-cols-4 gap-2">
-        {arr.map((url, i) => (
-          <div key={i} className="relative rounded overflow-hidden border border-slate-200 dark:border-white/10 group">
-            <img src={url} alt="" className="w-full aspect-square object-cover" />
-            <button
-              type="button"
-              onClick={() => onChange(arr.filter((_, idx) => idx !== i))}
-              className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 text-white grid place-items-center opacity-0 group-hover:opacity-100"
-            >
-              <X className="w-3 h-3" />
-            </button>
-          </div>
-        ))}
-        <ImageUpload
-          value={null}
-          onChange={(url) => url && onChange([...arr, url])}
-          folder={folder}
-          className="col-span-1"
-        />
-      </div>
-    </div>
-  );
-}
-
-function isVideoUrl(url: string): boolean {
-  if (/\.(mp4|webm|mov|m4v|ogg)(\?|#|$)/i.test(url)) return true;
-  if (/youtube\.com|youtu\.be|vimeo\.com/i.test(url)) return true;
-  return false;
-}
-
-export function MediaGalleryUpload({
-  value,
-  onChange,
-  folder = "content/media-gallery",
-}: {
-  value?: string[];
-  onChange: (urls: string[]) => void;
-  folder?: string;
-}) {
-  const arr = value ?? [];
-  const [uploading, setUploading] = useState(false);
-  const [urlInput, setUrlInput] = useState("");
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  async function uploadFiles(files: FileList) {
-    setUploading(true);
-    const uploaded: string[] = [];
-    try {
-      for (const file of Array.from(files)) {
-        const path = `${folder}/${Date.now()}-${file.name.replace(/[^a-z0-9.-]/gi, "_")}`;
-        const { error } = await supabase.storage.from("media").upload(path, file, { upsert: false });
-        if (error) throw error;
-        const { data } = await supabase.storage.from("media").createSignedUrl(path, 60 * 60 * 24 * 365 * 10);
-        if (data?.signedUrl) uploaded.push(data.signedUrl);
-      }
-      if (uploaded.length) {
-        onChange([...arr, ...uploaded]);
-        toast.success(`Uploaded ${uploaded.length} file${uploaded.length > 1 ? "s" : ""}`);
-      }
-    } catch (err: any) {
-      toast.error(err.message);
-    } finally {
-      setUploading(false);
-    }
-  }
-
-  return (
-    <div className="space-y-3">
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
-        {arr.map((url, i) => {
-          const video = isVideoUrl(url);
-          const isFileVideo = /\.(mp4|webm|mov|m4v|ogg)(\?|#|$)/i.test(url);
-          return (
-            <div key={i} className="relative rounded overflow-hidden border border-slate-200 dark:border-white/10 group bg-black/5">
-              {video ? (
-                isFileVideo ? (
-                  <video src={url} className="w-full aspect-square object-cover" muted playsInline />
-                ) : (
-                  <div className="w-full aspect-square grid place-items-center text-[10px] text-center p-2 opacity-70 break-all">
-                    Video link
-                  </div>
-                )
-              ) : (
-                <img src={url} alt="" className="w-full aspect-square object-cover" />
-              )}
-              <span className="absolute bottom-1 left-1 text-[10px] px-1.5 py-0.5 rounded bg-black/60 text-white">
-                {video ? "Video" : "Photo"}
-              </span>
-              <button
-                type="button"
-                onClick={() => onChange(arr.filter((_, idx) => idx !== i))}
-                className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 text-white grid place-items-center opacity-0 group-hover:opacity-100"
-                aria-label="Remove"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </div>
-          );
-        })}
+      <div className="flex items-center justify-between">
+        <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+          {label}
+        </Label>
         <button
           type="button"
-          onClick={() => fileRef.current?.click()}
-          disabled={uploading}
-          className="aspect-square border-2 border-dashed border-slate-300 dark:border-white/15 rounded grid place-items-center text-xs opacity-70 hover:opacity-100 hover:border-brand-blue hover:text-brand-blue transition p-2"
+          onClick={() => setShowPresets(!showPresets)}
+          className="text-xs text-brand-blue dark:text-blue-400 hover:underline flex items-center gap-1 font-medium"
         >
-          {uploading ? "Uploading…" : (
-            <div className="flex flex-col items-center gap-1 text-center">
-              <Upload className="w-5 h-5" />
-              <span>Add photos / videos</span>
-            </div>
-          )}
+          <Sparkles className="w-3.5 h-3.5" />
+          {showPresets ? "Hide Library" : "Choose from Library"}
         </button>
       </div>
-      <input
-        ref={fileRef}
-        type="file"
-        accept="image/*,video/*"
-        multiple
-        hidden
-        onChange={(e) => e.target.files?.length && uploadFiles(e.target.files)}
-      />
+
+      {description && (
+        <p className="text-[11px] text-slate-500 dark:text-slate-400">{description}</p>
+      )}
+
+      {/* Direct URL input with Apply button */}
       <div className="flex gap-2">
-        <input
-          type="url"
-          placeholder="Or paste image / YouTube / Vimeo URL"
-          value={urlInput}
-          onChange={(e) => setUrlInput(e.target.value)}
-          className="flex-1 text-xs border rounded px-2 py-1 bg-transparent"
-        />
-        <button
-          type="button"
-          onClick={() => {
-            if (!urlInput.trim()) return;
-            onChange([...arr, urlInput.trim()]);
-            setUrlInput("");
-          }}
-          className="text-xs px-3 py-1 border rounded hover:bg-slate-100 dark:hover:bg-white/10"
-        >
-          Add
-        </button>
+        <div className="relative flex-1">
+          <LinkIcon className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Input
+            type="url"
+            placeholder="https://images.unsplash.com/photo-... or CDN URL"
+            value={inputUrl}
+            onChange={(e) => {
+              setInputUrl(e.target.value);
+              onChange(e.target.value);
+            }}
+            className="pl-9 text-xs"
+          />
+        </div>
+        {value ? (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleClear}
+            className="text-rose-600 hover:text-rose-700"
+          >
+            <X className="w-4 h-4" />
+          </Button>
+        ) : (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={handleApplyUrl}
+          >
+            <Check className="w-4 h-4" />
+          </Button>
+        )}
       </div>
+
+      {/* Preset Image Picker */}
+      {showPresets && (
+        <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 grid grid-cols-2 sm:grid-cols-3 gap-2">
+          {PRESET_IMAGES.map((preset, idx) => (
+            <button
+              key={idx}
+              type="button"
+              onClick={() => {
+                setInputUrl(preset.url);
+                onChange(preset.url);
+                setShowPresets(false);
+              }}
+              className="group relative rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 hover:border-brand-blue aspect-video text-left"
+            >
+              <img
+                src={preset.url}
+                alt={preset.label}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent p-1.5 flex items-end">
+                <span className="text-[10px] text-white font-medium truncate">
+                  {preset.label}
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Image Preview Box */}
+      {value && (
+        <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 aspect-video max-h-48 bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+          <img
+            src={value}
+            alt="Preview"
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              (e.target as HTMLElement).style.display = "none";
+            }}
+          />
+          <button
+            type="button"
+            onClick={handleClear}
+            className="absolute top-2 right-2 p-1.5 rounded-full bg-black/60 text-white hover:bg-rose-600 transition-colors"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

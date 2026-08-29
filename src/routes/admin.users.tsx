@@ -1,459 +1,299 @@
+import React, { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  fetchUserRoles,
+  setUserRole,
+  removeUserRole,
+  type UserRoleItem,
+  type UserRole,
+} from "@/lib/firebaseCms";
+import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
-  Users, Shield, Plus, X, Search, Filter,
-  CheckCircle2, UserPlus, ShieldAlert, KeyRound, Mail
+  Users,
+  Shield,
+  ShieldCheck,
+  Plus,
+  Edit2,
+  Trash2,
+  Mail,
+  CheckCircle2,
+  UserCheck,
+  RefreshCw,
 } from "lucide-react";
-import type { AppRole, UserProfile } from "@/types/admin";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/users")({
-  component: UsersPage,
+  component: AdminUsers,
 });
 
-const ALL_ROLES: { role: AppRole; label: string; description: string; color: string }[] = [
-  { role: "super_admin", label: "Super Admin", description: "Full root access across all modules, settings, and user permissions", color: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20" },
-  { role: "admin", label: "Admin", description: "Administrative access to CMS content, media, and applications", color: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-500/20" },
-  { role: "content_manager", label: "Content Manager", description: "Manage programs, projects, news, events, and static pages", color: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20" },
-  { role: "editor", label: "Editor", description: "Draft and edit CMS articles, stories, and translations", color: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20" },
-  { role: "media_manager", label: "Media Manager", description: "Upload, categorize, and tag photos, videos, and press releases", color: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20" },
-  { role: "learn_manager", label: "Learn Manager", description: "Manage educational courses, student admissions, and instructors", color: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20" },
-  { role: "teacher", label: "Teacher / Instructor", description: "Manage assigned course content and student rosters", color: "bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20" },
-  { role: "student", label: "Student", description: "Access PYECSO Learn enrolled courses and resources", color: "bg-slate-500/10 text-slate-600 dark:text-slate-400 border-slate-500/20" },
-  { role: "hr_manager", label: "HR Manager", description: "Manage job postings and evaluate candidate applications", color: "bg-pink-500/10 text-pink-600 dark:text-pink-400 border-pink-500/20" },
-  { role: "finance_manager", label: "Finance Manager", description: "Manage donation campaigns and HesabPay transaction logs", color: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20" },
-  { role: "project_manager", label: "Project Manager", description: "Track field projects, provincial activities, and donor reports", color: "bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border-cyan-500/20" },
-  { role: "communications", label: "Communications", description: "Manage public inquiries, newsletters, and media outreach", color: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20" },
-  { role: "viewer", label: "Read-Only Viewer", description: "View-only access without edit or publish permissions", color: "bg-slate-200 dark:bg-white/10 text-slate-600 dark:text-slate-300 border-transparent" },
-];
-
-export function UsersPage() {
-  const [rows, setRows] = useState<UserProfile[]>([]);
+function AdminUsers() {
+  const [users, setUsers] = useState<UserRoleItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [inviting, setInviting] = useState(false);
-  const [query, setQuery] = useState("");
-  const [roleFilter, setRoleFilter] = useState<string>("all");
-  const [selectedUser, setSelectedUser] = useState<UserProfile | null>(null);
+  const [editingUser, setEditingUser] = useState<Partial<UserRoleItem> | null>(null);
+  const [userToRevoke, setUserToRevoke] = useState<UserRoleItem | null>(null);
+  const [revoking, setRevoking] = useState(false);
 
-  const [inviteForm, setInviteForm] = useState<{
-    email: string;
-    full_name: string;
-    phone: string;
-    role: AppRole;
-  }>({
-    email: "",
-    full_name: "",
-    phone: "",
-    role: "content_manager",
-  });
-
-  async function load() {
+  const loadData = async () => {
     setLoading(true);
     try {
-      const { data: profiles, error: pErr } = await supabase
-        .from("profiles")
-        .select("id, email, full_name, phone, mfa_enabled, last_login_at, created_at")
-        .order("created_at", { ascending: false });
-
-      if (pErr) console.warn("Profiles load error:", pErr.message);
-
-      const { data: roleRows, error: rErr } = await supabase
-        .from("user_roles")
-        .select("user_id, role");
-
-      if (rErr) console.warn("Roles load error:", rErr.message);
-
-      const byUser = new Map<string, AppRole[]>();
-      (roleRows ?? []).forEach((r: any) => {
-        const arr = byUser.get(r.user_id) ?? [];
-        arr.push(r.role);
-        byUser.set(r.user_id, arr);
-      });
-
-      setRows(
-        (profiles ?? []).map((p) => ({
-          ...(p as any),
-          roles: byUser.get(p.id) ?? [],
-        }))
-      );
-    } catch (e: any) {
-      toast.error(e?.message ?? "Error loading users");
+      const data = await fetchUserRoles();
+      setUsers(data);
+    } catch (e) {
+      console.warn("Failed to load user roles:", e);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    load();
+    loadData();
   }, []);
 
-  const filtered = useMemo(() => {
-    return rows.filter((u) => {
-      if (roleFilter !== "all" && !u.roles?.includes(roleFilter as AppRole)) return false;
-      if (query.trim()) {
-        const q = query.toLowerCase();
-        const str = `${u.full_name} ${u.email} ${u.phone} ${u.roles?.join(" ")}`.toLowerCase();
-        if (!str.includes(q)) return false;
-      }
-      return true;
-    });
-  }, [rows, roleFilter, query]);
-
-  async function toggleRole(userId: string, role: AppRole, currentlyHas: boolean) {
-    try {
-      if (currentlyHas) {
-        const { error } = await supabase
-          .from("user_roles")
-          .delete()
-          .eq("user_id", userId)
-          .eq("role", role as any);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase
-          .from("user_roles")
-          .insert({ user_id: userId, role: role as any });
-        if (error) throw error;
-      }
-      toast.success(`Role ${currentlyHas ? "revoked" : "granted"}: ${role.replace("_", " ")}`);
-      await load();
-      if (selectedUser && selectedUser.id === userId) {
-        setSelectedUser((prev) =>
-          prev
-            ? {
-                ...prev,
-                roles: currentlyHas
-                  ? (prev.roles ?? []).filter((r) => r !== role)
-                  : [...(prev.roles ?? []), role],
-              }
-            : null
-        );
-      }
-    } catch (e: any) {
-      toast.error(e?.message ?? "Permission error modifying role");
-    }
-  }
-
-  async function handleCreateUser(e: React.FormEvent) {
+  const handleSaveUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!inviteForm.email.trim()) return toast.error("Email is required");
-
-    setLoading(true);
-    try {
-      // 1. Sign up user credentials
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: inviteForm.email.trim(),
-        password: crypto.randomUUID() + "Aa1!",
-        options: {
-          data: {
-            full_name: inviteForm.full_name.trim(),
-            phone: inviteForm.phone.trim(),
-          },
-        },
-      });
-
-      if (authError && !authError.message.toLowerCase().includes("registered")) {
-        throw authError;
-      }
-
-      const newUserId = authData?.user?.id;
-      if (newUserId) {
-        // 2. Assign Initial Role
-        await supabase
-          .from("user_roles")
-          .insert({ user_id: newUserId, role: inviteForm.role as any });
-      }
-
-      toast.success(`Created account and assigned ${inviteForm.role.replace("_", " ")} role`);
-      setInviting(false);
-      setInviteForm({ email: "", full_name: "", phone: "", role: "content_manager" });
-      await load();
-    } catch (err: any) {
-      toast.error(err?.message ?? "Could not create user");
-    } finally {
-      setLoading(false);
+    if (!editingUser || !editingUser.email || !editingUser.role) {
+      toast.error("Email and role are required");
+      return;
     }
-  }
+    try {
+      await setUserRole(
+        editingUser.email.toLowerCase().trim(),
+        editingUser.role,
+        editingUser.displayName || editingUser.email.split("@")[0]
+      );
+      toast.success(`User role assigned successfully!`);
+      setEditingUser(null);
+      await loadData();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to update user role");
+    }
+  };
+
+  const handleConfirmRevoke = async () => {
+    if (!userToRevoke) return;
+    setRevoking(true);
+    try {
+      const ok = await removeUserRole(userToRevoke.userId || userToRevoke.id);
+      if (ok) {
+        toast.success(`Revoked administrative permissions for ${userToRevoke.email}`);
+        setUserToRevoke(null);
+        await loadData();
+      } else {
+        toast.error("Failed to revoke role");
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Error revoking role");
+    } finally {
+      setRevoking(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <Users className="w-6 h-6 text-brand-blue" />
-            User Management & RBAC
+            User Roles & RBAC Management
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Assign and revoke role-based access permissions across all PYECSO modules.
+          <p className="text-xs text-slate-400 mt-1">
+            Grant granular administrative permissions (Super Admin, Editor, Reviewer, Viewer) by Google email address.
           </p>
         </div>
-        <Button onClick={() => setInviting(true)} className="bg-brand-blue hover:bg-brand-blue-hover text-white">
-          <UserPlus className="w-4 h-4 mr-2" />
-          Add / Invite User
-        </Button>
-      </div>
-
-      {/* Filter & Search Bar */}
-      <div className="bg-white dark:bg-navy-900 border border-slate-200 dark:border-white/10 p-4 rounded-xl shadow-xs">
-        <div className="grid sm:grid-cols-2 gap-3">
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-            <Input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by name, email, phone, or role..."
-              className="pl-9"
-            />
-          </div>
-          <div>
-            <select
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-              className="w-full h-10 px-3 rounded-md border border-slate-200 dark:border-white/10 bg-transparent text-sm"
-            >
-              <option value="all">All Roles</option>
-              {ALL_ROLES.map((r) => (
-                <option key={r.role} value={r.role}>
-                  {r.label}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadData}
+            disabled={loading}
+            className="border-slate-700 bg-slate-800 text-slate-200 text-xs"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
+            Refresh
+          </Button>
+          <Button
+            onClick={() =>
+              setEditingUser({
+                email: "",
+                displayName: "",
+                role: "editor",
+              })
+            }
+            className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+          >
+            <Plus className="w-4 h-4 mr-1.5" />
+            Grant Admin Role
+          </Button>
         </div>
       </div>
 
-      {/* Users Table */}
-      <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-navy-900 overflow-hidden shadow-xs">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-slate-50 dark:bg-white/[0.03] text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider border-b border-slate-200 dark:border-white/10">
-              <tr>
-                <th className="text-left p-3.5">User</th>
-                <th className="text-left p-3.5">Contact</th>
-                <th className="text-left p-3.5">Assigned Roles</th>
-                <th className="text-left p-3.5">Last Active</th>
-                <th className="text-right p-3.5">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-white/5">
-              {filtered.map((u) => (
-                <tr key={u.id} className="hover:bg-slate-50/50 dark:hover:bg-white/[0.02] transition">
-                  <td className="p-3.5">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-white/10 flex items-center justify-center font-bold text-xs text-brand-blue shrink-0">
-                        {u.full_name ? u.full_name[0].toUpperCase() : (u.email ? u.email[0].toUpperCase() : "U")}
-                      </div>
-                      <div>
-                        <div className="font-semibold text-slate-900 dark:text-white">
-                          {u.full_name || "Unnamed User"}
-                        </div>
-                        <div className="text-xs text-slate-400 font-mono">
-                          ID: {u.id.slice(0, 8)}…
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="p-3.5">
-                    <div className="text-xs">
-                      <div className="text-slate-800 dark:text-slate-200">{u.email ?? "—"}</div>
-                      <div className="text-slate-400">{u.phone ?? ""}</div>
-                    </div>
-                  </td>
-                  <td className="p-3.5">
-                    <div className="flex flex-wrap gap-1.5 max-w-sm">
-                      {(u.roles ?? []).map((r) => {
-                        const def = ALL_ROLES.find((item) => item.role === r);
-                        return (
-                          <span
-                            key={r}
-                            className={`text-[11px] font-bold px-2 py-0.5 rounded border ${
-                              def?.color ?? "bg-slate-100 text-slate-700"
-                            }`}
-                          >
-                            {def?.label ?? r}
-                          </span>
-                        );
-                      })}
-                      {(!u.roles || u.roles.length === 0) && (
-                        <span className="text-xs text-slate-400 italic">No roles assigned</span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="p-3.5 text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">
-                    {u.last_login_at ? new Date(u.last_login_at).toLocaleDateString() : "Never"}
-                  </td>
-                  <td className="p-3.5 text-right">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSelectedUser(u)}
-                    >
-                      <Shield className="w-3.5 h-3.5 mr-1" />
-                      Manage Roles
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-
-              {filtered.length === 0 && !loading && (
+      <Card className="bg-slate-950 border-slate-800 text-white overflow-hidden">
+        <CardHeader>
+          <CardTitle className="text-base text-white">Active System Roles ({users.length})</CardTitle>
+          <CardDescription className="text-xs text-slate-400">
+            Administrators who sign in with their authorized Google account receive immediate access to the CMS control center.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs text-left">
+              <thead className="bg-slate-900/80 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
                 <tr>
-                  <td colSpan={5} className="p-8 text-center text-slate-400">
-                    No matching users found.
-                  </td>
+                  <th className="px-4 py-3">Administrator</th>
+                  <th className="px-4 py-3">Assigned Role</th>
+                  <th className="px-4 py-3">Granted Date</th>
+                  <th className="px-4 py-3 text-right">Actions</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Role Management Modal */}
-      {selectedUser && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-navy-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="p-5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
-              <div>
-                <h3 className="font-bold text-lg text-slate-900 dark:text-white">
-                  Manage Permissions
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  {selectedUser.full_name} ({selectedUser.email})
-                </p>
-              </div>
-              <Button variant="outline" size="sm" onClick={() => setSelectedUser(null)}>
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <div className="p-5 overflow-y-auto space-y-3">
-              <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">
-                Toggle roles to instantly grant or revoke security capabilities for this account:
-              </p>
-              {ALL_ROLES.map((r) => {
-                const has = (selectedUser.roles ?? []).includes(r.role);
-                return (
-                  <div
-                    key={r.role}
-                    className={`p-3.5 rounded-xl border transition flex items-center justify-between gap-3 ${
-                      has
-                        ? "bg-brand-blue/5 border-brand-blue/30 dark:bg-brand-blue/10"
-                        : "bg-slate-50/50 dark:bg-white/[0.02] border-slate-200 dark:border-white/10"
-                    }`}
-                  >
-                    <div className="space-y-0.5">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-sm text-slate-900 dark:text-white">
-                          {r.label}
-                        </span>
-                        {r.role === "super_admin" && (
-                          <span className="text-[10px] font-bold bg-red-500/10 text-red-600 px-1.5 py-0.2 rounded uppercase">
-                            Root Access
-                          </span>
-                        )}
+              </thead>
+              <tbody className="divide-y divide-slate-800/60">
+                {users.map((u) => (
+                  <tr key={u.id} className="hover:bg-slate-900/40 transition-colors">
+                    <td className="px-4 py-3">
+                      <div className="font-semibold text-white flex items-center gap-2">
+                        <ShieldCheck className="w-4 h-4 text-brand-blue" />
+                        {u.displayName || u.email.split("@")[0]}
                       </div>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
-                        {r.description}
-                      </p>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => toggleRole(selectedUser.id, r.role, has)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition shrink-0 ${
-                        has
-                          ? "bg-red-50 text-red-600 dark:bg-red-500/10 dark:text-red-400 hover:bg-red-100"
-                          : "bg-brand-blue text-white hover:bg-brand-blue-hover"
-                      }`}
-                    >
-                      {has ? "Revoke Role" : "Grant Role"}
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
+                      <div className="text-slate-400 font-mono text-[11px] mt-0.5">
+                        {u.email}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`text-[10px] px-2.5 py-1 rounded-full font-bold uppercase ${
+                          u.role === "super_admin"
+                            ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                            : u.role === "editor"
+                            ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                            : u.role === "reviewer"
+                            ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                            : "bg-slate-800 text-slate-400"
+                        }`}
+                      >
+                        {u.role.replace("_", " ")}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-slate-500 text-[11px]">
+                      {new Date(u.grantedAt).toLocaleDateString()}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-1.5">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setEditingUser(u)}
+                          className="h-7 text-xs text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800 px-2"
+                        >
+                          <Edit2 className="w-3.5 h-3.5 mr-1 text-sky-400" />
+                          Edit
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => setUserToRevoke(u)}
+                          className="h-7 text-xs text-rose-400 hover:text-rose-300 bg-slate-900/60 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 mr-1" />
+                          Revoke
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </div>
-      )}
+        </CardContent>
+      </Card>
 
-      {/* Invite / Add User Modal */}
-      {inviting && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-navy-900 border border-slate-200 dark:border-white/10 rounded-2xl max-w-md w-full shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="p-5 border-b border-slate-200 dark:border-white/10 flex items-center justify-between">
+      {/* Role Assignment Dialog */}
+      {editingUser && (
+        <Dialog
+          open={!!editingUser}
+          onOpenChange={(open) => {
+            if (!open) setEditingUser(null);
+          }}
+        >
+          <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-base font-bold text-white">
+                {editingUser.id ? "Edit User Role" : "Grant New User Role"}
+              </DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSaveUser} className="space-y-4">
               <div>
-                <h3 className="font-bold text-lg text-slate-900 dark:text-white">
-                  Add New User
-                </h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-                  Create a team member profile and assign initial role.
-                </p>
-              </div>
-              <Button variant="outline" size="sm" onClick={() => setInviting(false)}>
-                <X className="w-4 h-4" />
-              </Button>
-            </div>
-
-            <form onSubmit={handleCreateUser} className="p-5 space-y-4">
-              <div>
-                <Label>Email Address *</Label>
+                <Label className="text-xs font-semibold text-slate-300">Administrator Email</Label>
                 <Input
                   type="email"
+                  value={editingUser.email || ""}
+                  onChange={(e) => setEditingUser({ ...editingUser, email: e.target.value })}
+                  placeholder="superadmin@pyecso.org.af or official@pyecso.org.af"
+                  className="text-xs mt-1 font-mono"
                   required
-                  value={inviteForm.email}
-                  onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
-                  placeholder="name@pyecso.org.af"
                 />
               </div>
 
               <div>
-                <Label>Full Name</Label>
+                <Label className="text-xs font-semibold text-slate-300">Full Name / Label</Label>
                 <Input
-                  value={inviteForm.full_name}
-                  onChange={(e) => setInviteForm({ ...inviteForm, full_name: e.target.value })}
-                  placeholder="e.g. Ahmad Tariq"
+                  value={editingUser.displayName || ""}
+                  onChange={(e) => setEditingUser({ ...editingUser, displayName: e.target.value })}
+                  placeholder="Zia Rahman Abid"
+                  className="text-xs mt-1"
                 />
               </div>
 
               <div>
-                <Label>Phone Number</Label>
-                <Input
-                  value={inviteForm.phone}
-                  onChange={(e) => setInviteForm({ ...inviteForm, phone: e.target.value })}
-                  placeholder="+93 7..."
-                />
-              </div>
-
-              <div>
-                <Label>Initial Assigned Role</Label>
+                <Label className="text-xs font-semibold text-slate-300">Role & Access Level</Label>
                 <select
-                  value={inviteForm.role}
-                  onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value as AppRole })}
-                  className="w-full h-10 px-3 rounded-md border border-slate-200 dark:border-white/10 bg-transparent text-sm"
+                  value={editingUser.role || "editor"}
+                  onChange={(e) =>
+                    setEditingUser({ ...editingUser, role: e.target.value as UserRole })
+                  }
+                  className="w-full h-9 rounded-md border border-slate-700 bg-slate-950 px-3 text-xs text-slate-200 mt-1"
                 >
-                  {ALL_ROLES.map((r) => (
-                    <option key={r.role} value={r.role}>
-                      {r.label}
-                    </option>
-                  ))}
+                  <option value="super_admin">Super Admin (Full CRUD, User Roles & System Settings)</option>
+                  <option value="editor">Editor (Publish & Edit Content)</option>
+                  <option value="reviewer">Reviewer (Review & Comment on Submissions)</option>
+                  <option value="viewer">Viewer (Read Only Access)</option>
                 </select>
               </div>
 
-              <div className="pt-2 flex justify-end gap-2">
-                <Button type="button" variant="outline" onClick={() => setInviting(false)}>
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setEditingUser(null)}
+                  className="text-xs"
+                >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white">
-                  Create & Grant Role
+                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold">
+                  Save Role Permissions
                 </Button>
-              </div>
+              </DialogFooter>
             </form>
-          </div>
-        </div>
+          </DialogContent>
+        </Dialog>
       )}
+
+      {/* Revoke Role Confirmation Modal */}
+      <DeleteConfirmDialog
+        open={!!userToRevoke}
+        onOpenChange={(open) => {
+          if (!open) setUserToRevoke(null);
+        }}
+        title={`Revoke Role for "${userToRevoke?.displayName || userToRevoke?.email || 'User'}"?`}
+        description={`This will remove administrative privileges for ${userToRevoke?.email}. They will no longer be able to edit or publish content in the CMS.`}
+        confirmLabel="Revoke Permissions"
+        onConfirm={handleConfirmRevoke}
+        loading={revoking}
+      />
     </div>
   );
 }

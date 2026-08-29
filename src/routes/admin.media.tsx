@@ -1,137 +1,567 @@
+import React, { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  fetchContentItemsByType,
+  saveContentItem,
+  softDeleteContentItem,
+  type FirebaseContentItem,
+  type ContentStatus,
+} from "@/lib/firebaseCms";
+import { I18nField } from "@/components/admin/I18nField";
+import { ImageUpload } from "@/components/admin/ImageUpload";
+import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Newspaper,
+  Calendar,
+  FileText,
+  Image as ImageIcon,
+  Plus,
+  Edit2,
+  Trash2,
+  Download,
+  MapPin,
+  Clock,
+  Search,
+} from "lucide-react";
 import { toast } from "sonner";
-import { Upload, Trash2, Search, Copy } from "lucide-react";
 
 export const Route = createFileRoute("/admin/media")({
-  component: MediaLibrary,
+  component: AdminMedia,
 });
 
-type Asset = {
-  id: string;
-  storage_bucket: string;
-  storage_path: string;
-  file_name: string;
-  mime_type: string | null;
-  size_bytes: number | null;
-  folder: string | null;
-  public_url: string | null;
-  created_at: string;
-};
+function AdminMedia() {
+  const [activeTab, setActiveTab] = useState("news");
+  const [newsList, setNewsList] = useState<FirebaseContentItem[]>([]);
+  const [eventsList, setEventsList] = useState<FirebaseContentItem[]>([]);
+  const [pubsList, setPubsList] = useState<FirebaseContentItem[]>([]);
+  const [editingItem, setEditingItem] = useState<Partial<FirebaseContentItem> | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<FirebaseContentItem | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
-function MediaLibrary() {
-  const [items, setItems] = useState<Asset[]>([]);
-  const [query, setQuery] = useState("");
-  const [folder, setFolder] = useState("/");
-  const [uploading, setUploading] = useState(false);
-  const fileRef = useRef<HTMLInputElement>(null);
-
-  async function load() {
-    const { data } = await supabase
-      .from("media_assets")
-      .select("id, storage_bucket, storage_path, file_name, mime_type, size_bytes, folder, public_url, created_at")
-      .order("created_at", { ascending: false })
-      .limit(200);
-    setItems((data as any) ?? []);
-  }
-  useEffect(() => { load(); }, []);
-
-  async function upload(files: FileList | null) {
-    if (!files || files.length === 0) return;
-    setUploading(true);
-    for (const f of Array.from(files)) {
-      try {
-        const path = `${folder.replace(/^\/|\/$/g, "") || "root"}/${Date.now()}-${f.name}`;
-        const { error: upErr } = await supabase.storage.from("media").upload(path, f, { upsert: false });
-        if (upErr) throw upErr;
-        const { data: signed } = await supabase.storage.from("media").createSignedUrl(path, 60 * 60 * 24 * 365);
-        const { data: session } = await supabase.auth.getUser();
-        await supabase.from("media_assets").insert({
-          storage_bucket: "media",
-          storage_path: path,
-          file_name: f.name,
-          mime_type: f.type,
-          size_bytes: f.size,
-          folder,
-          public_url: signed?.signedUrl ?? null,
-          uploaded_by: session.user?.id,
-        });
-      } catch (err: any) {
-        toast.error(`${f.name}: ${err.message}`);
-      }
+  const loadData = async () => {
+    try {
+      const [news, events, pubs] = await Promise.all([
+        fetchContentItemsByType("news", true),
+        fetchContentItemsByType("event", true),
+        fetchContentItemsByType("publication", true),
+      ]);
+      setNewsList(news);
+      setEventsList(events);
+      setPubsList(pubs);
+    } catch (e) {
+      console.warn("Failed to load media items:", e);
     }
-    setUploading(false);
-    toast.success("Upload complete");
-    load();
-  }
+  };
 
-  async function remove(a: Asset) {
-    if (!confirm(`Delete ${a.file_name}?`)) return;
-    await supabase.storage.from(a.storage_bucket).remove([a.storage_path]);
-    await supabase.from("media_assets").delete().eq("id", a.id);
-    toast.success("Deleted");
-    load();
-  }
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  const filtered = items.filter((i) => i.file_name.toLowerCase().includes(query.toLowerCase()));
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingItem || !editingItem.type) return;
+    try {
+      const res = await saveContentItem({
+        id: editingItem.id,
+        type: editingItem.type,
+        slug: editingItem.slug || `${editingItem.type}-${Date.now()}`,
+        status: editingItem.status || "published",
+        coverUrl: editingItem.coverUrl || null,
+        data: editingItem.data || {},
+      });
+      if (res.success) {
+        toast.success("Media item saved to Firestore!");
+        setEditingItem(null);
+        await loadData();
+      } else {
+        toast.error(res.error || "Failed to save item");
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Error saving item");
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!itemToDelete) return;
+    setDeleting(true);
+    try {
+      const ok = await softDeleteContentItem(itemToDelete.id);
+      if (ok) {
+        toast.success("Item moved to recycle bin successfully");
+        setItemToDelete(null);
+        await loadData();
+      } else {
+        toast.error("Failed to delete item");
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Error deleting item");
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap gap-3 items-end justify-between">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
         <div>
-          <h1 className="text-2xl font-bold">Media Library</h1>
-          <p className="text-sm opacity-70">Upload and organize images, videos, and documents.</p>
+          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+            <Newspaper className="w-6 h-6 text-brand-blue" />
+            Media & Publications Center CMS
+          </h1>
+          <p className="text-xs text-slate-400 mt-1">
+            Manage field news reports, community events calendar, and downloadable PDF research & audit publications.
+          </p>
         </div>
-        <div className="flex gap-2">
-          <div className="relative">
-            <Search className="w-4 h-4 absolute left-2 top-1/2 -translate-y-1/2 opacity-50" />
-            <Input placeholder="Search…" value={query} onChange={(e) => setQuery(e.target.value)} className="pl-8" />
-          </div>
-          <Input placeholder="Folder /" value={folder} onChange={(e) => setFolder(e.target.value)} className="w-32" />
-          <input ref={fileRef} type="file" multiple hidden onChange={(e) => upload(e.target.files)} />
-          <Button onClick={() => fileRef.current?.click()} disabled={uploading}>
-            <Upload className="w-4 h-4 mr-2" /> {uploading ? "Uploading…" : "Upload"}
-          </Button>
-        </div>
+        <Button
+          onClick={() => {
+            if (activeTab === "news") {
+              setEditingItem({
+                type: "news",
+                status: "published",
+                data: {
+                  title: { en: "", dr: "", ps: "" },
+                  summary: { en: "", dr: "", ps: "" },
+                  body: { en: "", dr: "", ps: "" },
+                  category: "Field Update",
+                  author: "PYECSO Media Team",
+                },
+              });
+            } else if (activeTab === "events") {
+              setEditingItem({
+                type: "event",
+                status: "published",
+                data: {
+                  title: { en: "", dr: "", ps: "" },
+                  description: { en: "", dr: "", ps: "" },
+                  eventDate: new Date().toISOString().split("T")[0],
+                  location: "PYECSO Kabul Main Center",
+                  province: "Kabul",
+                },
+              });
+            } else {
+              setEditingItem({
+                type: "publication",
+                status: "published",
+                data: {
+                  title: { en: "", dr: "", ps: "" },
+                  description: { en: "", dr: "", ps: "" },
+                  category: "Annual Audit Report",
+                  pdfUrl: "https://pyecso.org.af/reports/annual-report.pdf",
+                  fileSize: "2.4 MB",
+                  language: "English / Dari",
+                },
+              });
+            }
+          }}
+          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+        >
+          <Plus className="w-4 h-4 mr-1.5" />
+          Add {activeTab === "news" ? "Article" : activeTab === "events" ? "Event" : "Publication"}
+        </Button>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
-        {filtered.map((a) => (
-          <div key={a.id} className="group rounded-lg border border-slate-200 dark:border-white/10 bg-white dark:bg-navy-900 overflow-hidden">
-            <div className="aspect-square bg-slate-100 dark:bg-white/5 grid place-items-center overflow-hidden">
-              {a.mime_type?.startsWith("image/") && a.public_url ? (
-                <img src={a.public_url} alt={a.file_name} className="w-full h-full object-cover" />
-              ) : (
-                <div className="text-xs opacity-60 p-2 text-center break-all">{a.mime_type ?? "file"}</div>
-              )}
-            </div>
-            <div className="p-2">
-              <div className="text-xs truncate">{a.file_name}</div>
-              <div className="text-[10px] opacity-50 flex justify-between mt-1">
-                <span>{a.size_bytes ? Math.round(a.size_bytes / 1024) + " KB" : ""}</span>
-                <span>{a.folder}</span>
-              </div>
-              <div className="flex gap-1 mt-2">
-                <button
-                  onClick={() => { if (a.public_url) { navigator.clipboard.writeText(a.public_url); toast.success("URL copied"); } }}
-                  className="flex-1 text-[11px] px-2 py-1 rounded border border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5"
-                >
-                  <Copy className="w-3 h-3 inline mr-1" /> URL
-                </button>
-                <button onClick={() => remove(a)} className="text-[11px] px-2 py-1 rounded border border-red-200 text-red-600 hover:bg-red-50 dark:border-red-900/50 dark:hover:bg-red-900/20">
-                  <Trash2 className="w-3 h-3" />
-                </button>
-              </div>
-            </div>
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+        <TabsList className="bg-slate-950 border border-slate-800 p-1">
+          <TabsTrigger value="news" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+            News & Press ({newsList.length})
+          </TabsTrigger>
+          <TabsTrigger value="events" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+            Events Calendar ({eventsList.length})
+          </TabsTrigger>
+          <TabsTrigger value="publications" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+            Publications & PDFs ({pubsList.length})
+          </TabsTrigger>
+        </TabsList>
+
+        {/* TAB 1: NEWS */}
+        <TabsContent value="news" className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {newsList.map((article) => (
+              <Card key={article.id} className="bg-slate-950 border-slate-800 text-white flex flex-col overflow-hidden">
+                {article.coverUrl && (
+                  <div className="aspect-video w-full overflow-hidden bg-slate-900">
+                    <img src={article.coverUrl} alt="Cover" className="w-full h-full object-cover" />
+                  </div>
+                )}
+                <CardHeader className="p-4 pb-2">
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+                    <span className="px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 font-semibold">
+                      {article.data?.category || "News"}
+                    </span>
+                    <span>{new Date(article.publishedAt || article.createdAt).toLocaleDateString()}</span>
+                  </div>
+                  <CardTitle className="text-sm font-bold text-white line-clamp-2">
+                    {article.data?.title?.en || "Article"}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 pt-1 flex-1 flex flex-col justify-between text-xs text-slate-400">
+                  <p className="line-clamp-2">{article.data?.summary?.en || article.data?.body?.en}</p>
+                  <div className="mt-3 pt-3 border-t border-slate-800 flex items-center justify-end gap-1">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() =>
+                        setEditingItem({
+                          id: article.id,
+                          type: "news",
+                          slug: article.slug || "",
+                          status: article.status || "published",
+                          coverUrl: article.coverUrl || null,
+                          data: {
+                            title: article.data?.title || { en: "", dr: "", ps: "" },
+                            summary: article.data?.summary || { en: "", dr: "", ps: "" },
+                            body: article.data?.body || { en: "", dr: "", ps: "" },
+                            category: article.data?.category || "Field Update",
+                            author: article.data?.author || "PYECSO Media Team",
+                          },
+                        })
+                      }
+                      className="h-7 text-xs text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800 px-2"
+                    >
+                      <Edit2 className="w-3.5 h-3.5 mr-1 text-sky-400" />
+                      Edit
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setItemToDelete(article)}
+                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-400 bg-slate-900/60 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50"
+                      title="Delete article"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        ))}
-        {filtered.length === 0 && (
-          <div className="col-span-full text-center py-16 opacity-60 text-sm">No media yet.</div>
-        )}
-      </div>
+        </TabsContent>
+
+        {/* TAB 2: EVENTS */}
+        <TabsContent value="events" className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {eventsList.map((ev) => (
+              <Card key={ev.id} className="bg-slate-950 border-slate-800 text-white flex flex-col">
+                <CardHeader className="p-4 pb-2">
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+                    <span className="px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 font-semibold flex items-center gap-1">
+                      <Calendar className="w-3 h-3" />
+                      {ev.data?.eventDate}
+                    </span>
+                    <span className="flex items-center gap-1 text-slate-400">
+                      <MapPin className="w-3 h-3 text-rose-400" />
+                      {ev.data?.province || "Kabul"}
+                    </span>
+                  </div>
+                  <CardTitle className="text-sm font-bold text-white line-clamp-2">
+                    {ev.data?.title?.en || "Event"}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 pt-1 flex-1 flex flex-col justify-between text-xs text-slate-400">
+                  <p className="line-clamp-2">{ev.data?.description?.en}</p>
+                  <div className="mt-3 pt-3 border-t border-slate-800 flex items-center justify-end gap-1">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() =>
+                        setEditingItem({
+                          id: ev.id,
+                          type: "event",
+                          slug: ev.slug || "",
+                          status: ev.status || "published",
+                          coverUrl: ev.coverUrl || null,
+                          data: {
+                            title: ev.data?.title || { en: "", dr: "", ps: "" },
+                            description: ev.data?.description || { en: "", dr: "", ps: "" },
+                            eventDate: ev.data?.eventDate || new Date().toISOString().split("T")[0],
+                            location: ev.data?.location || "PYECSO Kabul Main Center",
+                            province: ev.data?.province || "Kabul",
+                          },
+                        })
+                      }
+                      className="h-7 text-xs text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800 px-2"
+                    >
+                      <Edit2 className="w-3.5 h-3.5 mr-1 text-sky-400" />
+                      Edit
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => setItemToDelete(ev)}
+                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-400 bg-slate-900/60 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50"
+                      title="Delete event"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+
+        {/* TAB 3: PUBLICATIONS */}
+        <TabsContent value="publications" className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {pubsList.map((pub) => (
+              <Card key={pub.id} className="bg-slate-950 border-slate-800 text-white flex flex-col">
+                <CardHeader className="p-4 pb-2">
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 mb-1">
+                    <span className="px-2 py-0.5 rounded bg-teal-500/10 text-teal-400 font-semibold">
+                      {pub.data?.category || "Report"}
+                    </span>
+                    <span className="font-mono text-slate-500">{pub.data?.fileSize || "PDF"}</span>
+                  </div>
+                  <CardTitle className="text-sm font-bold text-white line-clamp-2">
+                    {pub.data?.title?.en || "Publication"}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-4 pt-1 flex-1 flex flex-col justify-between text-xs text-slate-400">
+                  <p className="line-clamp-2">{pub.data?.description?.en}</p>
+                  <div className="mt-3 pt-3 border-t border-slate-800 flex items-center justify-between">
+                    <a
+                      href={pub.data?.pdfUrl || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[11px] text-brand-blue flex items-center gap-1 hover:underline"
+                    >
+                      <Download className="w-3 h-3" />
+                      PDF Document
+                    </a>
+                    <div className="flex items-center gap-1">
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() =>
+                          setEditingItem({
+                            id: pub.id,
+                            type: "publication",
+                            slug: pub.slug || "",
+                            status: pub.status || "published",
+                            data: {
+                              title: pub.data?.title || { en: "", dr: "", ps: "" },
+                              description: pub.data?.description || { en: "", dr: "", ps: "" },
+                              category: pub.data?.category || "Annual Audit Report",
+                              pdfUrl: pub.data?.pdfUrl || "",
+                              fileSize: pub.data?.fileSize || "2.4 MB",
+                              language: pub.data?.language || "English / Dari",
+                            },
+                          })
+                        }
+                        className="h-7 text-xs text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800 px-2"
+                      >
+                        <Edit2 className="w-3.5 h-3.5 mr-1 text-sky-400" />
+                        Edit
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setItemToDelete(pub)}
+                        className="h-7 w-7 p-0 text-slate-400 hover:text-rose-400 bg-slate-900/60 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50"
+                        title="Delete publication"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      {/* Media Edit Dialog */}
+      {editingItem && (
+        <Dialog
+          open={!!editingItem}
+          onOpenChange={(open) => {
+            if (!open) setEditingItem(null);
+          }}
+        >
+          <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="text-base font-bold text-white capitalize">
+                {editingItem.id ? `Edit ${editingItem.type}` : `New ${editingItem.type}`}
+              </DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSave} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <Label className="text-xs font-semibold text-slate-300">URL Slug</Label>
+                  <Input
+                    value={editingItem.slug || ""}
+                    onChange={(e) => setEditingItem({ ...editingItem, slug: e.target.value })}
+                    placeholder="article-slug"
+                    className="text-xs mt-1 font-mono"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-semibold text-slate-300">Publication Status</Label>
+                  <select
+                    value={editingItem.status || "published"}
+                    onChange={(e) =>
+                      setEditingItem({ ...editingItem, status: e.target.value as ContentStatus })
+                    }
+                    className="w-full h-9 rounded-md border border-slate-700 bg-slate-950 px-3 text-xs text-slate-200 mt-1"
+                  >
+                    <option value="published">Published</option>
+                    <option value="draft">Draft</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                </div>
+              </div>
+
+              <I18nField
+                label="Title"
+                value={editingItem.data?.title}
+                onChange={(val) =>
+                  setEditingItem({
+                    ...editingItem,
+                    data: { ...editingItem.data, title: val },
+                  })
+                }
+                required
+              />
+
+              {editingItem.type === "event" && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label className="text-xs font-semibold text-slate-300">Event Date</Label>
+                    <Input
+                      type="date"
+                      value={editingItem.data?.eventDate || ""}
+                      onChange={(e) =>
+                        setEditingItem({
+                          ...editingItem,
+                          data: { ...editingItem.data, eventDate: e.target.value },
+                        })
+                      }
+                      className="text-xs mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs font-semibold text-slate-300">Location / Province</Label>
+                    <Input
+                      value={editingItem.data?.location || ""}
+                      onChange={(e) =>
+                        setEditingItem({
+                          ...editingItem,
+                          data: { ...editingItem.data, location: e.target.value },
+                        })
+                      }
+                      placeholder="PYECSO Kabul Training Hall"
+                      className="text-xs mt-1"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {editingItem.type === "publication" && (
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label className="text-xs font-semibold text-slate-300">PDF Document Link</Label>
+                    <Input
+                      value={editingItem.data?.pdfUrl || ""}
+                      onChange={(e) =>
+                        setEditingItem({
+                          ...editingItem,
+                          data: { ...editingItem.data, pdfUrl: e.target.value },
+                        })
+                      }
+                      placeholder="https://.../report.pdf"
+                      className="text-xs mt-1"
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-xs font-semibold text-slate-300">Report Category</Label>
+                    <Input
+                      value={editingItem.data?.category || "Annual Audit"}
+                      onChange={(e) =>
+                        setEditingItem({
+                          ...editingItem,
+                          data: { ...editingItem.data, category: e.target.value },
+                        })
+                      }
+                      className="text-xs mt-1"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <I18nField
+                label="Summary / Excerpt"
+                value={editingItem.data?.summary || editingItem.data?.description}
+                onChange={(val) =>
+                  setEditingItem({
+                    ...editingItem,
+                    data: { ...editingItem.data, summary: val, description: val },
+                  })
+                }
+                multiline
+                rows={2}
+                required
+              />
+
+              {editingItem.type === "news" && (
+                <I18nField
+                  label="Full Article Content"
+                  value={editingItem.data?.body}
+                  onChange={(val) =>
+                    setEditingItem({
+                      ...editingItem,
+                      data: { ...editingItem.data, body: val },
+                    })
+                  }
+                  multiline
+                  rows={5}
+                />
+              )}
+
+              <ImageUpload
+                label="Feature Media Image"
+                value={editingItem.coverUrl}
+                onChange={(url) => setEditingItem({ ...editingItem, coverUrl: url })}
+              />
+
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setEditingItem(null)}
+                  className="text-xs"
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold">
+                  Save Media Item
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteConfirmDialog
+        open={!!itemToDelete}
+        onOpenChange={(open) => {
+          if (!open) setItemToDelete(null);
+        }}
+        title={`Delete "${itemToDelete?.data?.title?.en || itemToDelete?.slug || 'Selected Item'}"?`}
+        description="This media item will be moved to the Recycle Bin. You can restore it anytime."
+        confirmLabel="Move to Recycle Bin"
+        onConfirm={handleConfirmDelete}
+        loading={deleting}
+      />
     </div>
   );
 }

@@ -1,129 +1,190 @@
+import React, { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  fetchDeletedContentItems,
+  restoreContentItem,
+  hardDeleteContentItem,
+  type FirebaseContentItem,
+} from "@/lib/firebaseCms";
+import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Trash2, RotateCcw, AlertOctagon, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
-import { Undo2, Trash2, RefreshCw } from "lucide-react";
 
 export const Route = createFileRoute("/admin/recycle")({
-  component: RecycleBin,
+  component: AdminRecycle,
 });
 
-type Row = {
-  id: string;
-  type: string;
-  slug: string | null;
-  status: string;
-  data: any;
-  deleted_at: string;
-  updated_at: string;
-};
-
-function RecycleBin() {
-  const [rows, setRows] = useState<Row[]>([]);
+function AdminRecycle() {
+  const [deletedItems, setDeletedItems] = useState<FirebaseContentItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [itemToPurge, setItemToPurge] = useState<FirebaseContentItem | null>(null);
+  const [purging, setPurging] = useState(false);
+  const [restoringId, setRestoringId] = useState<string | null>(null);
 
-  async function load() {
+  const loadData = async () => {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("content_items")
-      .select("id, type, slug, status, data, deleted_at, updated_at")
-      .not("deleted_at", "is", null)
-      .order("deleted_at", { ascending: false })
-      .limit(500);
-    if (error) toast.error(error.message);
-    setRows((data as any) ?? []);
-    setLoading(false);
-  }
-  useEffect(() => { load(); }, []);
+    try {
+      const data = await fetchDeletedContentItems();
+      setDeletedItems(data);
+    } catch (e) {
+      console.warn("Failed to load recycle bin:", e);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  async function restore(id: string) {
-    const { error } = await supabase.from("content_items").update({ deleted_at: null }).eq("id", id);
-    if (error) return toast.error(error.message);
-    toast.success("Restored");
-    load();
-  }
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  async function purge(id: string) {
-    if (!confirm("Permanently delete this item? This cannot be undone.")) return;
-    const { error } = await supabase.from("content_items").delete().eq("id", id);
-    if (error) return toast.error(error.message);
-    toast.success("Permanently deleted");
-    load();
-  }
+  const handleRestore = async (item: FirebaseContentItem) => {
+    setRestoringId(item.id);
+    try {
+      const ok = await restoreContentItem(item.id);
+      if (ok) {
+        toast.success(`"${item.data?.title?.en || item.data?.name?.en || item.slug}" restored successfully!`);
+        await loadData();
+      } else {
+        toast.error("Failed to restore item");
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Error restoring item");
+    } finally {
+      setRestoringId(null);
+    }
+  };
 
-  async function emptyBin() {
-    if (!confirm(`Permanently delete all ${rows.length} item(s) in the Recycle Bin?`)) return;
-    const ids = rows.map((r) => r.id);
-    const { error } = await supabase.from("content_items").delete().in("id", ids);
-    if (error) return toast.error(error.message);
-    toast.success("Recycle Bin emptied");
-    load();
-  }
-
-  function title(r: Row): string {
-    const t = r.data?.title ?? r.data?.name;
-    if (!t) return r.slug ?? "(untitled)";
-    if (typeof t === "string") return t;
-    return t.en ?? t.dr ?? t.ps ?? t.ar ?? t.fr ?? r.slug ?? "(untitled)";
-  }
+  const handleConfirmPurge = async () => {
+    if (!itemToPurge) return;
+    setPurging(true);
+    try {
+      const ok = await hardDeleteContentItem(itemToPurge.id);
+      if (ok) {
+        toast.success("Item permanently erased from Firestore database");
+        setItemToPurge(null);
+        await loadData();
+      } else {
+        toast.error("Failed to permanently delete item");
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Error purging item");
+    } finally {
+      setPurging(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-wrap justify-between gap-3 items-end">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
         <div>
-          <h1 className="text-2xl font-bold">Recycle Bin</h1>
-          <p className="text-sm opacity-70">Deleted content stays here until you restore or permanently delete it.</p>
+          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+            <Trash2 className="w-6 h-6 text-rose-400" />
+            Recycle Bin & Content Recovery
+          </h1>
+          <p className="text-xs text-slate-400 mt-1">
+            Safely restore accidentally removed programs, projects, articles, or vacancies, or permanently purge them from Firestore.
+          </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={load}><RefreshCw className="w-4 h-4 mr-1" /> Refresh</Button>
-          {rows.length > 0 && (
-            <Button variant="outline" size="sm" className="text-red-600 border-red-300 hover:bg-red-50 dark:border-red-900/50 dark:hover:bg-red-900/20" onClick={emptyBin}>
-              <Trash2 className="w-4 h-4 mr-1" /> Empty Bin
-            </Button>
-          )}
-        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={loadData}
+          disabled={loading}
+          className="border-slate-700 bg-slate-800 text-slate-200 text-xs"
+        >
+          <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
+          Refresh
+        </Button>
       </div>
 
-      <div className="rounded-xl border border-slate-200 dark:border-white/10 bg-white dark:bg-navy-900 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead className="bg-slate-50 dark:bg-white/5 text-xs uppercase tracking-wide">
-              <tr>
-                <th className="text-left p-3">Title</th>
-                <th className="text-left p-3">Type</th>
-                <th className="text-left p-3">Deleted</th>
-                <th className="p-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r) => (
-                <tr key={r.id} className="border-t border-slate-100 dark:border-white/5">
-                  <td className="p-3">
-                    <div className="font-medium">{title(r)}</div>
-                    <div className="text-xs opacity-60">{r.slug}</div>
-                  </td>
-                  <td className="p-3"><span className="text-xs px-2 py-0.5 rounded bg-slate-100 dark:bg-white/10">{r.type}</span></td>
-                  <td className="p-3 text-xs opacity-70">{new Date(r.deleted_at).toLocaleString()}</td>
-                  <td className="p-3 text-right">
-                    <div className="inline-flex gap-1">
-                      <button onClick={() => restore(r.id)} className="p-1.5 rounded hover:bg-slate-100 dark:hover:bg-white/5 text-brand-blue" title="Restore">
-                        <Undo2 className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => purge(r.id)} className="p-1.5 rounded hover:bg-red-50 text-red-600 dark:hover:bg-red-900/20" title="Delete permanently">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {!loading && rows.length === 0 && (
-                <tr><td colSpan={4} className="p-10 text-center opacity-60">Recycle Bin is empty.</td></tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <Card className="bg-slate-950 border-slate-800 text-white overflow-hidden">
+        <CardHeader>
+          <CardTitle className="text-base text-white">Soft-Deleted Items ({deletedItems.length})</CardTitle>
+          <CardDescription className="text-xs text-slate-400">
+            Items in the recycle bin are hidden from the public website but can be restored with a single click.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-0">
+          {deletedItems.length === 0 ? (
+            <div className="py-12 text-center text-slate-500 text-xs">
+              Recycle bin is clean. No deleted items found.
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs text-left">
+                <thead className="bg-slate-900/80 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                  <tr>
+                    <th className="px-4 py-3">Item Title / ID</th>
+                    <th className="px-4 py-3">Type</th>
+                    <th className="px-4 py-3">Slug</th>
+                    <th className="px-4 py-3">Deleted Date</th>
+                    <th className="px-4 py-3 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60">
+                  {deletedItems.map((item) => (
+                    <tr key={item.id} className="hover:bg-slate-900/40 transition-colors">
+                      <td className="px-4 py-3 font-semibold text-white">
+                        {item.data?.title?.en || item.data?.name?.en || item.id}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[10px] uppercase">
+                          {item.type}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3 font-mono text-slate-400">
+                        /{item.slug}
+                      </td>
+                      <td className="px-4 py-3 text-slate-500 text-[11px]">
+                        {new Date(item.deletedAt || item.updatedAt).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleRestore(item)}
+                            disabled={restoringId === item.id}
+                            className="h-7 text-xs border-emerald-500/40 text-emerald-300 bg-emerald-950/20 hover:bg-emerald-900/40"
+                          >
+                            <RotateCcw className={`w-3.5 h-3.5 mr-1 ${restoringId === item.id ? "animate-spin" : ""}`} />
+                            {restoringId === item.id ? "Restoring..." : "Restore"}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => setItemToPurge(item)}
+                            className="h-7 text-xs border-rose-500/40 text-rose-300 bg-rose-950/20 hover:bg-rose-900/40"
+                          >
+                            <AlertOctagon className="w-3.5 h-3.5 mr-1" />
+                            Purge Permanently
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Permanent Deletion Dialog */}
+      <DeleteConfirmDialog
+        open={!!itemToPurge}
+        onOpenChange={(open) => {
+          if (!open) setItemToPurge(null);
+        }}
+        title={`Permanently Purge "${itemToPurge?.data?.title?.en || itemToPurge?.data?.name?.en || itemToPurge?.slug || 'Item'}"?`}
+        description="WARNING: This action is permanent and cannot be undone. This document will be completely deleted from the Firestore database."
+        confirmLabel="Purge Permanently"
+        onConfirm={handleConfirmPurge}
+        loading={purging}
+      />
     </div>
   );
 }

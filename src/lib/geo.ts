@@ -4,29 +4,21 @@
 const CACHE_KEY = "pyecso.geo";
 const USER_LANG_KEY = "pyecso.lang.user"; // set to "1" when user picks a language
 
-// Country → preferred language among the five we support (en, fa, ps, ar, fr).
-// Afghanistan is intentionally excluded — the site keeps the visitor's
-// existing choice (defaults to English/Dari via the browser detector).
-const COUNTRY_LANG: Record<string, "en" | "fa" | "ps" | "ar" | "fr"> = {
-  // Persian / Dari speaking
+// Country → preferred language among the three we support (en, fa, ps).
+// Afghanistan keeps the visitor's existing choice (defaults to English/Dari via the detector).
+const COUNTRY_LANG: Record<string, "en" | "fa" | "ps"> = {
+  // Dari / Persian speaking
   IR: "fa",
   TJ: "fa",
+  AF: "fa",
   // Pashto speaking (large diaspora)
   PK: "ps",
-  // Arabic speaking
-  SA: "ar", AE: "ar", EG: "ar", IQ: "ar", JO: "ar", LB: "ar", SY: "ar",
-  YE: "ar", OM: "ar", QA: "ar", KW: "ar", BH: "ar", LY: "ar", DZ: "ar",
-  TN: "ar", MA: "ar", SD: "ar", MR: "ar", SO: "ar", PS: "ar",
-  // French speaking
-  FR: "fr", BE: "fr", CH: "fr", LU: "fr", MC: "fr", CA: "fr", SN: "fr",
-  CI: "fr", ML: "fr", BF: "fr", NE: "fr", TG: "fr", BJ: "fr", GA: "fr",
-  CD: "fr", CG: "fr", CM: "fr", MG: "fr", HT: "fr", DJ: "fr", KM: "fr",
 };
 
 export interface Geo {
   country: string;
   currency: string;
-  language: "en" | "fa" | "ps" | "ar" | "fr";
+  language: "en" | "fa" | "ps";
 }
 
 const DEFAULT_GEO: Geo = { country: "", currency: "USD", language: "en" };

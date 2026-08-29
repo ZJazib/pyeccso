@@ -6,11 +6,9 @@ type TranslateInput = {
   kind?: "text" | "textarea" | "richtext";
 };
 
-const TARGETS: { code: "dr" | "ps" | "ar" | "fr"; label: string }[] = [
+const TARGETS: { code: "dr" | "ps"; label: string }[] = [
   { code: "dr", label: "Dari (Farsi, as spoken in Afghanistan)" },
   { code: "ps", label: "Pashto" },
-  { code: "ar", label: "Arabic (Modern Standard)" },
-  { code: "fr", label: "French" },
 ];
 
 export const translateFromEnglish = createServerFn({ method: "POST" })
@@ -46,7 +44,7 @@ export const translateFromEnglish = createServerFn({ method: "POST" })
       (data.kind === "richtext"
         ? `Preserve any HTML tags and markdown formatting exactly. `
         : `Return plain text only, no quotes, no extra commentary. `) +
-      `Return ONLY a compact JSON object with keys "dr","ps","ar","fr" — no prose, no code fences.`;
+      `Return ONLY a compact JSON object with keys "dr","ps" — no prose, no code fences.`;
 
     const user =
       `Translate to:\n` +

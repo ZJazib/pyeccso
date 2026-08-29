@@ -1,113 +1,135 @@
-import { useState } from "react";
-import { LANGUAGES, type Lang } from "@/lib/cmsConfig";
+import React, { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Languages, Sparkles, Loader2 } from "lucide-react";
-import { useServerFn } from "@tanstack/react-start";
-import { translateFromEnglish } from "@/lib/translate.functions";
-import { toast } from "sonner";
+import { Label } from "@/components/ui/label";
+
+interface I18nFieldProps {
+  label: string;
+  value?: Record<string, string> | string;
+  onChange: (val: Record<string, string>) => void;
+  multiline?: boolean;
+  rows?: number;
+  placeholder?: {
+    en?: string;
+    dr?: string;
+    ps?: string;
+  };
+  required?: boolean;
+  description?: string;
+}
 
 export function I18nField({
+  label,
   value,
   onChange,
-  kind,
+  multiline = false,
+  rows = 3,
   placeholder,
-}: {
-  value?: Record<string, string>;
-  onChange: (v: Record<string, string>) => void;
-  kind: "text" | "textarea" | "richtext";
-  placeholder?: string;
-}) {
-  const [lang, setLang] = useState<Lang>("en");
-  const [busy, setBusy] = useState(false);
-  const translate = useServerFn(translateFromEnglish);
-  const v = value ?? {};
-  const englishText = (v.en ?? "").trim();
+  required = false,
+  description,
+}: I18nFieldProps) {
+  const [lang, setLang] = useState<"en" | "dr" | "ps">("en");
 
-  async function handleTranslate(overwrite: boolean) {
-    if (!englishText) {
-      toast.error("Enter English text first, then click Translate.");
-      return;
-    }
-    setBusy(true);
-    try {
-      const out = await translate({ data: { text: englishText, kind } });
-      const next: Record<string, string> = { ...v };
-      (["dr", "ps", "ar", "fr"] as const).forEach((code) => {
-        if (overwrite || !next[code]?.trim()) {
-          if (out[code]) next[code] = out[code];
-        }
-      });
-      onChange(next);
-      toast.success("Translated to Dari, Pashto, Arabic, French");
-    } catch (e: any) {
-      toast.error(e?.message ?? "Translation failed");
-    } finally {
-      setBusy(false);
-    }
-  }
+  const values: Record<string, string> =
+    typeof value === "string"
+      ? { en: value, dr: "", ps: "" }
+      : {
+          en: value?.en || "",
+          dr: value?.dr || "",
+          ps: value?.ps || "",
+        };
+
+  const handleTextChange = (text: string) => {
+    onChange({
+      ...values,
+      [lang]: text,
+    });
+  };
+
+  const isRtl = lang === "dr" || lang === "ps";
 
   return (
-    <div className="border border-slate-200 dark:border-white/10 rounded-lg overflow-hidden bg-white/50 dark:bg-white/[0.02]">
-      <div className="flex items-center gap-1 px-2 py-1.5 border-b border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-white/5 flex-wrap">
-        <Languages className="w-3.5 h-3.5 opacity-60 mr-1" />
-        {LANGUAGES.map((l) => {
-          const filled = !!v[l.code]?.trim();
-          const active = lang === l.code;
-          return (
-            <button
-              key={l.code}
-              type="button"
-              onClick={() => setLang(l.code)}
-              className={`text-xs px-2 py-1 rounded ${
-                active
-                  ? "bg-brand-blue text-white"
-                  : "hover:bg-slate-200 dark:hover:bg-white/10"
-              } ${filled ? "" : "opacity-60"}`}
-            >
-              {l.label}
-              {filled && !active && <span className="ml-1 text-[9px]">●</span>}
-            </button>
-          );
-        })}
-        <div className="ml-auto flex items-center gap-1">
+    <div className="space-y-1.5">
+      <div className="flex items-center justify-between">
+        <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+          {label}
+          {required && <span className="text-rose-500">*</span>}
+        </Label>
+
+        {/* Language Tabs */}
+        <div className="flex items-center p-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[11px] font-medium border border-slate-200 dark:border-slate-700">
           <button
             type="button"
-            disabled={busy || !englishText}
-            onClick={() => handleTranslate(false)}
-            title="Fill empty languages by translating from English"
-            className="text-xs px-2 py-1 rounded inline-flex items-center gap-1 bg-brand-blue/10 text-brand-blue hover:bg-brand-blue/20 disabled:opacity-40 disabled:cursor-not-allowed"
+            onClick={() => setLang("en")}
+            className={`px-2 py-0.5 rounded-md transition-all ${
+              lang === "en"
+                ? "bg-white dark:bg-slate-700 text-brand-blue dark:text-blue-400 font-bold shadow-xs"
+                : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+            }`}
           >
-            {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-            Translate
+            English {values.en ? "✓" : ""}
           </button>
           <button
             type="button"
-            disabled={busy || !englishText}
-            onClick={() => handleTranslate(true)}
-            title="Overwrite all non-English languages with fresh AI translation"
-            className="text-xs px-2 py-1 rounded hover:bg-slate-200 dark:hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed"
+            onClick={() => setLang("dr")}
+            className={`px-2 py-0.5 rounded-md transition-all ${
+              lang === "dr"
+                ? "bg-white dark:bg-slate-700 text-brand-blue dark:text-blue-400 font-bold shadow-xs"
+                : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+            }`}
           >
-            Retranslate all
+            دری {values.dr ? "✓" : ""}
+          </button>
+          <button
+            type="button"
+            onClick={() => setLang("ps")}
+            className={`px-2 py-0.5 rounded-md transition-all ${
+              lang === "ps"
+                ? "bg-white dark:bg-slate-700 text-brand-blue dark:text-blue-400 font-bold shadow-xs"
+                : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+            }`}
+          >
+            پښتو {values.ps ? "✓" : ""}
           </button>
         </div>
       </div>
-      <div className="p-2" dir={["dr", "ps", "ar"].includes(lang) ? "rtl" : "ltr"}>
-        {kind === "text" ? (
-          <Input
-            value={v[lang] ?? ""}
-            onChange={(e) => onChange({ ...v, [lang]: e.target.value })}
-            placeholder={placeholder}
-          />
-        ) : (
-          <Textarea
-            rows={kind === "richtext" ? 8 : 3}
-            value={v[lang] ?? ""}
-            onChange={(e) => onChange({ ...v, [lang]: e.target.value })}
-            placeholder={placeholder}
-          />
-        )}
-      </div>
+
+      {description && (
+        <p className="text-[11px] text-slate-500 dark:text-slate-400">{description}</p>
+      )}
+
+      {multiline ? (
+        <Textarea
+          value={values[lang] || ""}
+          onChange={(e) => handleTextChange(e.target.value)}
+          dir={isRtl ? "rtl" : "ltr"}
+          rows={rows}
+          placeholder={
+            placeholder?.[lang] ||
+            (lang === "en"
+              ? "Enter in English..."
+              : lang === "dr"
+              ? "متن را به زبان دری بنویسید..."
+              : "متن په پښتو ژبه ولیکئ...")
+          }
+          className={`text-sm ${isRtl ? "text-right font-vazirmatn" : "text-left"}`}
+        />
+      ) : (
+        <Input
+          value={values[lang] || ""}
+          onChange={(e) => handleTextChange(e.target.value)}
+          dir={isRtl ? "rtl" : "ltr"}
+          placeholder={
+            placeholder?.[lang] ||
+            (lang === "en"
+              ? "Enter in English..."
+              : lang === "dr"
+              ? "متن را به زبان دری بنویسید..."
+              : "متن په پښتو ژبه ولیکئ...")
+          }
+          className={`text-sm ${isRtl ? "text-right font-vazirmatn" : "text-left"}`}
+        />
+      )}
     </div>
   );
 }

@@ -1,591 +1,510 @@
+import React, { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import {
+  fetchSiteSetting,
+  saveSiteSetting,
+} from "@/lib/firebaseCms";
+import { I18nField } from "@/components/admin/I18nField";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { toast } from "sonner";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Save, Plus, Trash2, MapPin, Settings, CreditCard,
-  Globe, ShieldCheck, Phone, DollarSign, Building2, CheckCircle2
+  Settings,
+  Save,
+  Globe,
+  AlertTriangle,
+  Share2,
+  Sliders,
+  Shield,
+  Database,
+  CheckCircle2,
+  Activity,
+  RefreshCw,
+  Server,
 } from "lucide-react";
-import type { SiteSettings } from "@/types/admin";
+import { toast } from "sonner";
+import { testFirebaseConnection, firebaseConfig } from "@/integrations/firebase/client";
+import { seedFirebaseFirestore } from "@/lib/firebaseCms";
 
 export const Route = createFileRoute("/admin/settings")({
-  component: SettingsPage,
+  component: AdminSettings,
 });
 
-type Location = {
-  name: string;
-  address?: string;
-  phone?: string;
-  email?: string;
-  query?: string;
-  lat?: number;
-  lng?: number;
-  zoom?: number;
-};
-
-const EMPTY_LOCATION: Location = {
-  name: "",
-  address: "",
-  phone: "",
-  email: "",
-  query: "",
-  lat: 0,
-  lng: 0,
-  zoom: 11,
-};
-
-export function SettingsPage() {
-  const [s, setS] = useState<SiteSettings>({});
-  const [loading, setLoading] = useState(true);
+function AdminSettings() {
   const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<"general" | "seo" | "contact" | "hesabpay" | "donations" | "locations">("general");
 
-  async function load() {
-    setLoading(true);
+  // Global settings state
+  const [globalSettings, setGlobalSettings] = useState({
+    siteName: "PYECSO",
+    tagline: {
+      en: "Patriotic Youths Education, Cultural & Social Organization",
+      dr: "سازمان تعلیمی، فرهنگی و اجتماعی جوانان وطن‌پرست",
+      ps: "د هیوادپالو ځوانانو تعلیمي، کلتوري او ټولنیز سازمان",
+    },
+    logoUrl: "/images/logo.png",
+    faviconUrl: "/favicon.ico",
+    regNumber: "1201",
+    foundingYear: "2006",
+  });
+
+  // Emergency banner
+  const [emergencyBanner, setEmergencyBanner] = useState({
+    active: false,
+    severity: "warning", // warning, critical, info
+    message: {
+      en: "Emergency Winterization Assistance distribution currently active in Ghazni & Logar provinces.",
+      dr: "توزیع کمک‌های زمستانی عاجل در ولایات غزنی و لوگر در حال جریان است.",
+      ps: "په غزني او لوګر ولایتونو کې د ژمنیو بیړنیو مرستو ویش دوام لري.",
+    },
+    actionLabel: {
+      en: "View Details",
+      dr: "مشاهده جزییات",
+      ps: "تفصیلات وګورئ",
+    },
+    actionUrl: "/projects",
+  });
+
+  // Social Links
+  const [socialLinks, setSocialLinks] = useState({
+    facebook: "https://facebook.com/pyecso",
+    twitter: "https://x.com/pyecso_org",
+    linkedin: "https://linkedin.com/company/pyecso",
+    youtube: "https://youtube.com/@pyecso",
+    whatsapp: "+93788881201",
+  });
+
+  // Connection & Diagnostics State
+  const [testingDb, setTestingDb] = useState(false);
+  const [dbStatus, setDbStatus] = useState<"connected" | "checking" | "error">("connected");
+  const [dbLatency, setDbLatency] = useState<number | null>(null);
+  const [seeding, setSeeding] = useState(false);
+
+  const handleTestConnection = async () => {
+    setTestingDb(true);
+    setDbStatus("checking");
+    const start = performance.now();
     try {
-      const { data, error } = await supabase.from("site_settings").select("key, value");
-      if (error) console.warn("Site settings error:", error.message);
-
-      const map: Record<string, any> = {};
-      (data ?? []).forEach((r: any) => {
-        map[r.key] = r.value;
-      });
-
-      if (!map.branding) map.branding = { org_name_en: "PYECSO", tagline_en: "Patriotic Youths Education, Cultural & Social Organization" };
-      if (!map.seo) map.seo = { meta_title: "PYECSO — Empowering Afghan Youth & Communities", meta_description: "" };
-      if (!map.contact) map.contact = { address: "Kabul, Afghanistan", phone: "+93 700 000 000", email: "info@pyecso.org.af", website: "https://pyecso.org.af" };
-      if (!map.hesabpay) map.hesabpay = { environment: "production", active: true, preset_amounts_afn: [200, 500, 1000, 5000, 10000], preset_amounts_usd: [5, 15, 50, 100, 250] };
-      if (!map.donations) map.donations = { bank_name: "Azizi Bank", account_title: "PYECSO Organization", account_number: "", iban: "", swift: "" };
-      if (!map.locations) map.locations = { items: [] };
-
-      setS(map as SiteSettings);
-    } catch (e: any) {
-      toast.error(e?.message ?? "Error loading settings");
+      const ok = await testFirebaseConnection();
+      const latency = Math.round(performance.now() - start);
+      if (ok) {
+        setDbStatus("connected");
+        setDbLatency(latency);
+        toast.success(`Firestore Database is online! Latency: ${latency}ms`);
+      } else {
+        setDbStatus("error");
+        toast.error("Could not reach Firestore database endpoint.");
+      }
+    } catch (err: any) {
+      setDbStatus("error");
+      toast.error(err?.message || "Connection test failed");
     } finally {
-      setLoading(false);
+      setTestingDb(false);
     }
-  }
+  };
+
+  const handleSeedDatabase = async () => {
+    setSeeding(true);
+    try {
+      const res = await seedFirebaseFirestore();
+      if (res.success) {
+        toast.success(res.message);
+        loadData();
+      } else {
+        toast.error(res.message);
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Sync failed");
+    } finally {
+      setSeeding(false);
+    }
+  };
+
+  const loadData = async () => {
+    try {
+      const [savedGlobal, savedBanner, savedSocial] = await Promise.all([
+        fetchSiteSetting("site_global"),
+        fetchSiteSetting("emergency_banner"),
+        fetchSiteSetting("social_links"),
+      ]);
+      if (savedGlobal) setGlobalSettings(savedGlobal as any);
+      if (savedBanner) setEmergencyBanner(savedBanner as any);
+      if (savedSocial) setSocialLinks(savedSocial as any);
+    } catch (e) {
+      console.warn("Failed to load settings:", e);
+    }
+  };
 
   useEffect(() => {
-    load();
+    loadData();
   }, []);
 
-  function update(key: keyof SiteSettings, patch: any) {
-    setS((prev) => ({
-      ...prev,
-      [key]: {
-        ...(prev[key] as any ?? {}),
-        ...patch,
-      },
-    }));
-  }
-
-  function updateLocation(idx: number, patch: Partial<Location>) {
-    setS((prev) => {
-      const items = [...(prev.locations?.items ?? [])];
-      items[idx] = { ...items[idx], ...patch };
-      return { ...prev, locations: { ...(prev.locations ?? {}), items } };
-    });
-  }
-
-  function addLocation() {
-    setS((prev) => ({
-      ...prev,
-      locations: {
-        ...(prev.locations ?? {}),
-        items: [...(prev.locations?.items ?? []), { ...EMPTY_LOCATION }],
-      },
-    }));
-  }
-
-  function removeLocation(idx: number) {
-    setS((prev) => {
-      const items = (prev.locations?.items ?? []).filter((_, i) => i !== idx);
-      return { ...prev, locations: { ...(prev.locations ?? {}), items } };
-    });
-  }
-
-  async function saveAll() {
+  const handleSaveAll = async () => {
     setSaving(true);
     try {
-      const keys = Object.keys(s) as (keyof SiteSettings)[];
-      for (const key of keys) {
-        const value = s[key];
-        const { error } = await supabase.from("site_settings").upsert(
-          { key, value },
-          { onConflict: "key" }
-        );
-        if (error) throw error;
-      }
-      toast.success("All settings successfully saved & synced");
+      await Promise.all([
+        saveSiteSetting("site_global", globalSettings),
+        saveSiteSetting("emergency_banner", emergencyBanner),
+        saveSiteSetting("social_links", socialLinks),
+      ]);
+      toast.success("All system settings saved to Firestore!");
     } catch (err: any) {
-      toast.error(err?.message ?? "Failed to save settings");
+      toast.error(err?.message || "Failed to save settings");
     } finally {
       setSaving(false);
     }
-  }
+  };
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
             <Settings className="w-6 h-6 text-brand-blue" />
-            Global Site Settings & HesabPay
+            Global Site Settings & Alert CMS
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-            Configure organization identity, payment keys, contact info, SEO metadata, and office coordinates.
+          <p className="text-xs text-slate-400 mt-1">
+            Configure site metadata, brand identity, emergency broadcast top banners, and official social media handles.
           </p>
         </div>
         <Button
-          onClick={saveAll}
-          disabled={saving || loading}
-          className="bg-brand-blue hover:bg-brand-blue-hover text-white shadow-sm"
+          onClick={handleSaveAll}
+          disabled={saving}
+          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
         >
-          <Save className="w-4 h-4 mr-2" />
-          {saving ? "Saving Changes…" : "Save All Settings"}
+          <Save className="w-4 h-4 mr-1.5" />
+          {saving ? "Saving…" : "Save All Settings"}
         </Button>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-white/10 pb-px overflow-x-auto">
-        {[
-          { id: "general", label: "Branding & Identity", icon: Globe },
-          { id: "hesabpay", label: "HesabPay & Payments", icon: CreditCard },
-          { id: "contact", label: "Contact & Social", icon: Phone },
-          { id: "seo", label: "SEO & OpenGraph", icon: ShieldCheck },
-          { id: "donations", label: "Bank & Wire Transfer", icon: DollarSign },
-          { id: "locations", label: "Offices & Coordinates", icon: MapPin },
-        ].map((t) => {
-          const active = activeTab === t.id;
-          return (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setActiveTab(t.id as any)}
-              className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition whitespace-nowrap ${
-                active
-                  ? "border-brand-blue text-brand-blue dark:text-brand-blue font-bold"
-                  : "border-transparent text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
-              }`}
-            >
-              <t.icon className="w-4 h-4" />
-              {t.label}
-            </button>
-          );
-        })}
-      </div>
+      <Tabs defaultValue="banner" className="space-y-6">
+        <TabsList className="bg-slate-950 border border-slate-800 p-1">
+          <TabsTrigger value="banner" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white flex items-center gap-1.5">
+            <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+            Emergency Alert Banner
+          </TabsTrigger>
+          <TabsTrigger value="branding" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+            Branding & Metadata
+          </TabsTrigger>
+          <TabsTrigger value="social" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+            Social Media Handles
+          </TabsTrigger>
+          <TabsTrigger value="database" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white flex items-center gap-1.5">
+            <Database className="w-3.5 h-3.5 text-emerald-400" />
+            Database & Firebase Sync
+          </TabsTrigger>
+        </TabsList>
 
-      {/* Tab Panels */}
-      <div className="bg-white dark:bg-navy-900 border border-slate-200 dark:border-white/10 rounded-2xl p-6 shadow-xs space-y-6">
-        {/* 1. Branding */}
-        {activeTab === "general" && (
-          <div className="space-y-4 max-w-2xl">
-            <h3 className="font-bold text-lg text-slate-900 dark:text-white">Organization Identity</h3>
-            <div>
-              <Label>Organization Name (English)</Label>
-              <Input
-                value={s.branding?.org_name_en ?? ""}
-                onChange={(e) => update("branding", { org_name_en: e.target.value })}
-                placeholder="Patriotic Youths Education, Cultural and Social Organization"
-              />
-            </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <Label>Organization Name (Dari · دری)</Label>
-                <Input
-                  dir="rtl"
-                  value={s.branding?.org_name_fa ?? ""}
-                  onChange={(e) => update("branding", { org_name_fa: e.target.value })}
-                  placeholder="سازمان تعلیمی، فرهنگی و اجتماعی جوانان وطن‌دوست"
-                />
-              </div>
-              <div>
-                <Label>Organization Name (Pashto · پښتو)</Label>
-                <Input
-                  dir="rtl"
-                  value={s.branding?.org_name_ps ?? ""}
-                  onChange={(e) => update("branding", { org_name_ps: e.target.value })}
-                  placeholder="د وطنپالو ځوانانو تعلیمي، کلتوري او ټولنیز سازمان"
-                />
-              </div>
-            </div>
-            <div>
-              <Label>Tagline (English)</Label>
-              <Input
-                value={s.branding?.tagline_en ?? ""}
-                onChange={(e) => update("branding", { tagline_en: e.target.value })}
-                placeholder="Empowering Afghan youth through education, culture, and humanitarian support"
-              />
-            </div>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <Label>Logo Image URL</Label>
-                <Input
-                  value={s.branding?.logo_url ?? ""}
-                  onChange={(e) => update("branding", { logo_url: e.target.value })}
-                  placeholder="/pyecso-logo.png"
-                />
-              </div>
-              <div>
-                <Label>Favicon URL</Label>
-                <Input
-                  value={s.branding?.favicon_url ?? ""}
-                  onChange={(e) => update("branding", { favicon_url: e.target.value })}
-                  placeholder="/pyecso-logo.png"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* 2. HesabPay & Payment Gateways */}
-        {activeTab === "hesabpay" && (
-          <div className="space-y-5 max-w-2xl">
-            <div className="flex items-start justify-between p-4 bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-              <div className="space-y-1">
-                <div className="font-bold text-sm text-emerald-900 dark:text-emerald-300 flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  HesabPay Direct API Gateway
+        {/* TAB 1: EMERGENCY BANNER */}
+        <TabsContent value="banner" className="space-y-4">
+          <Card className="bg-slate-950 border-slate-800 text-white">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-base text-white flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-amber-400" />
+                    Sitewide Emergency Notification Banner
+                  </CardTitle>
+                  <CardDescription className="text-xs text-slate-400">
+                    Displays high-priority flash notifications (e.g. earthquake relief, flood emergency, winterization aid) at the very top of all pages.
+                  </CardDescription>
                 </div>
-                <p className="text-xs text-emerald-700 dark:text-emerald-400">
-                  Secure checkout handled via server-side edge function using <code>HESABPAY_API_KEY</code>.
-                </p>
+                <div className="flex items-center gap-2">
+                  <Label className="text-xs text-slate-300">Banner Enabled</Label>
+                  <Switch
+                    checked={emergencyBanner.active}
+                    onCheckedChange={(checked) =>
+                      setEmergencyBanner({ ...emergencyBanner, active: checked })
+                    }
+                  />
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-emerald-800 dark:text-emerald-300">Active</span>
-                <Switch
-                  checked={s.hesabpay?.active ?? true}
-                  onCheckedChange={(v) => update("hesabpay", { active: v })}
-                />
-              </div>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-4">
+            </CardHeader>
+            <CardContent className="space-y-4">
               <div>
-                <Label>HesabPay Merchant ID</Label>
-                <Input
-                  value={s.hesabpay?.merchant_id ?? ""}
-                  onChange={(e) => update("hesabpay", { merchant_id: e.target.value })}
-                  placeholder="e.g. PYECSO_AF"
-                />
-              </div>
-              <div>
-                <Label>Gateway Environment</Label>
+                <Label className="text-xs font-semibold text-slate-300">Severity Tier</Label>
                 <select
-                  value={s.hesabpay?.environment ?? "production"}
-                  onChange={(e) => update("hesabpay", { environment: e.target.value })}
-                  className="w-full h-10 px-3 rounded-md border border-slate-200 dark:border-white/10 bg-transparent text-sm"
+                  value={emergencyBanner.severity}
+                  onChange={(e) =>
+                    setEmergencyBanner({ ...emergencyBanner, severity: e.target.value })
+                  }
+                  className="w-full sm:w-60 h-9 rounded-md border border-slate-700 bg-slate-900 px-3 text-xs text-slate-200 mt-1"
                 >
-                  <option value="production">Production (Live)</option>
-                  <option value="sandbox">Sandbox (Testing)</option>
+                  <option value="warning">Warning / Alert (Amber)</option>
+                  <option value="critical">Critical Emergency (Red)</option>
+                  <option value="info">General Announcement (Blue)</option>
                 </select>
               </div>
-            </div>
 
-            <div>
-              <Label>Preset Donation Amounts in AFN (comma-separated)</Label>
-              <Input
-                value={s.hesabpay?.preset_amounts_afn?.join(", ") ?? "200, 500, 1000, 5000, 10000"}
-                onChange={(e) =>
-                  update("hesabpay", {
-                    preset_amounts_afn: e.target.value
-                      .split(",")
-                      .map((n) => Number(n.trim()))
-                      .filter((n) => !isNaN(n) && n > 0),
-                  })
+              <I18nField
+                label="Emergency Alert Message"
+                value={emergencyBanner.message}
+                onChange={(val) =>
+                  setEmergencyBanner({ ...emergencyBanner, message: val as any })
                 }
-                placeholder="200, 500, 1000, 5000, 10000"
-              />
-            </div>
-
-            <div>
-              <Label>Preset Donation Amounts in USD (comma-separated)</Label>
-              <Input
-                value={s.hesabpay?.preset_amounts_usd?.join(", ") ?? "5, 15, 50, 100, 250"}
-                onChange={(e) =>
-                  update("hesabpay", {
-                    preset_amounts_usd: e.target.value
-                      .split(",")
-                      .map((n) => Number(n.trim()))
-                      .filter((n) => !isNaN(n) && n > 0),
-                  })
-                }
-                placeholder="5, 15, 50, 100, 250"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* 3. Contact & Social */}
-        {activeTab === "contact" && (
-          <div className="space-y-4 max-w-2xl">
-            <h3 className="font-bold text-lg text-slate-900 dark:text-white">Contact Details & Channels</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <Label>Official Email</Label>
-                <Input
-                  type="email"
-                  value={s.contact?.email ?? ""}
-                  onChange={(e) => update("contact", { email: e.target.value })}
-                  placeholder="info@pyecso.org.af"
-                />
-              </div>
-              <div>
-                <Label>Phone Number</Label>
-                <Input
-                  value={s.contact?.phone ?? ""}
-                  onChange={(e) => update("contact", { phone: e.target.value })}
-                  placeholder="+93 700 000 000"
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label>Main Office Physical Address</Label>
-              <Textarea
+                multiline
                 rows={2}
-                value={s.contact?.address ?? ""}
-                onChange={(e) => update("contact", { address: e.target.value })}
-                placeholder="District 4, Kabul, Afghanistan"
+                required
               />
-            </div>
 
-            <div className="pt-2">
-              <h4 className="font-semibold text-sm mb-3">Social Media Handles</h4>
-              <div className="grid md:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <I18nField
+                  label="Button CTA Text"
+                  value={emergencyBanner.actionLabel}
+                  onChange={(val) =>
+                    setEmergencyBanner({ ...emergencyBanner, actionLabel: val as any })
+                  }
+                />
                 <div>
-                  <Label>Facebook URL</Label>
+                  <Label className="text-xs font-semibold text-slate-300">CTA Link Destination URL</Label>
                   <Input
-                    value={s.social_links?.facebook ?? ""}
-                    onChange={(e) => update("social_links", { facebook: e.target.value })}
-                    placeholder="https://facebook.com/pyecso"
-                  />
-                </div>
-                <div>
-                  <Label>Twitter / X URL</Label>
-                  <Input
-                    value={s.social_links?.twitter ?? ""}
-                    onChange={(e) => update("social_links", { twitter: e.target.value })}
-                    placeholder="https://x.com/pyecso"
-                  />
-                </div>
-                <div>
-                  <Label>LinkedIn URL</Label>
-                  <Input
-                    value={s.social_links?.linkedin ?? ""}
-                    onChange={(e) => update("social_links", { linkedin: e.target.value })}
-                    placeholder="https://linkedin.com/company/pyecso"
-                  />
-                </div>
-                <div>
-                  <Label>Instagram URL</Label>
-                  <Input
-                    value={s.social_links?.instagram ?? ""}
-                    onChange={(e) => update("social_links", { instagram: e.target.value })}
-                    placeholder="https://instagram.com/pyecso"
+                    value={emergencyBanner.actionUrl}
+                    onChange={(e) =>
+                      setEmergencyBanner({ ...emergencyBanner, actionUrl: e.target.value })
+                    }
+                    placeholder="/projects or /donations"
+                    className="text-xs mt-1 font-mono"
                   />
                 </div>
               </div>
-            </div>
-          </div>
-        )}
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-        {/* 4. SEO & OpenGraph */}
-        {activeTab === "seo" && (
-          <div className="space-y-4 max-w-2xl">
-            <h3 className="font-bold text-lg text-slate-900 dark:text-white">Default SEO & Metadata</h3>
-            <div>
-              <Label>Default Meta Title</Label>
-              <Input
-                value={s.seo?.meta_title ?? ""}
-                onChange={(e) => update("seo", { meta_title: e.target.value })}
-                placeholder="PYECSO — Patriotic Youths Education, Cultural and Social Organization"
-              />
-            </div>
-            <div>
-              <Label>Default Meta Description</Label>
-              <Textarea
-                rows={3}
-                value={s.seo?.meta_description ?? ""}
-                onChange={(e) => update("seo", { meta_description: e.target.value })}
-                placeholder="Non-governmental Afghan organization delivering education, humanitarian aid, youth leadership, and cultural preservation."
-              />
-            </div>
-            <div>
-              <Label>OpenGraph Share Banner Image URL</Label>
-              <Input
-                value={s.seo?.og_image_url ?? ""}
-                onChange={(e) => update("seo", { og_image_url: e.target.value })}
-                placeholder="/pyecso-banner.jpg"
-              />
-            </div>
-          </div>
-        )}
+        {/* TAB 2: BRANDING */}
+        <TabsContent value="branding" className="space-y-4">
+          <Card className="bg-slate-950 border-slate-800 text-white">
+            <CardHeader>
+              <CardTitle className="text-base text-white">Brand Identity & Legal Registration</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <Label className="text-xs font-semibold text-slate-300">Acronym</Label>
+                  <Input
+                    value={globalSettings.siteName}
+                    onChange={(e) =>
+                      setGlobalSettings({ ...globalSettings, siteName: e.target.value })
+                    }
+                    className="text-xs mt-1 font-bold"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-semibold text-slate-300">MoEc Registration #</Label>
+                  <Input
+                    value={globalSettings.regNumber}
+                    onChange={(e) =>
+                      setGlobalSettings({ ...globalSettings, regNumber: e.target.value })
+                    }
+                    className="text-xs mt-1 font-mono text-emerald-400 font-bold"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-semibold text-slate-300">Established Year</Label>
+                  <Input
+                    value={globalSettings.foundingYear}
+                    onChange={(e) =>
+                      setGlobalSettings({ ...globalSettings, foundingYear: e.target.value })
+                    }
+                    className="text-xs mt-1 font-mono"
+                  />
+                </div>
+              </div>
 
-        {/* 5. Bank & Wire Transfer */}
-        {activeTab === "donations" && (
-          <div className="space-y-4 max-w-2xl">
-            <h3 className="font-bold text-lg text-slate-900 dark:text-white">Direct Bank Wire & Cash Office</h3>
-            <div className="grid md:grid-cols-2 gap-4">
-              <div>
-                <Label>Bank Name</Label>
-                <Input
-                  value={s.donations?.bank_name ?? ""}
-                  onChange={(e) => update("donations", { bank_name: e.target.value })}
-                  placeholder="Azizi Bank / Da Afghanistan Bank"
-                />
-              </div>
-              <div>
-                <Label>Account Title</Label>
-                <Input
-                  value={s.donations?.account_title ?? ""}
-                  onChange={(e) => update("donations", { account_title: e.target.value })}
-                  placeholder="PYECSO Organization"
-                />
-              </div>
-            </div>
-            <div className="grid md:grid-cols-3 gap-4">
-              <div>
-                <Label>Account Number</Label>
-                <Input
-                  value={s.donations?.account_number ?? ""}
-                  onChange={(e) => update("donations", { account_number: e.target.value })}
-                  placeholder="010100..."
-                />
-              </div>
-              <div>
-                <Label>IBAN</Label>
-                <Input
-                  value={s.donations?.iban ?? ""}
-                  onChange={(e) => update("donations", { iban: e.target.value })}
-                  placeholder="AF..."
-                />
-              </div>
-              <div>
-                <Label>SWIFT / BIC Code</Label>
-                <Input
-                  value={s.donations?.swift ?? ""}
-                  onChange={(e) => update("donations", { swift: e.target.value })}
-                  placeholder="AZBFAF..."
-                />
-              </div>
-            </div>
-            <div>
-              <Label>Cash In-Person Office Address</Label>
-              <Input
-                value={s.donations?.cash_office_address ?? ""}
-                onChange={(e) => update("donations", { cash_office_address: e.target.value })}
-                placeholder="PYECSO HQ, Shahr-e-Naw, Kabul, Afghanistan"
+              <I18nField
+                label="Full Organization Legal Title"
+                value={globalSettings.tagline}
+                onChange={(val) =>
+                  setGlobalSettings({ ...globalSettings, tagline: val as any })
+                }
+                required
               />
-            </div>
-          </div>
-        )}
 
-        {/* 6. Offices & Map Locations */}
-        {activeTab === "locations" && (
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-bold text-lg text-slate-900 dark:text-white">Provincial Offices & Pins</h3>
-                <p className="text-xs text-slate-500">Rendered on the public Contact page map across Afghanistan.</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <ImageUpload
+                  label="Official Organization Logo"
+                  value={globalSettings.logoUrl}
+                  onChange={(url) =>
+                    setGlobalSettings({ ...globalSettings, logoUrl: url || "/images/logo.png" })
+                  }
+                />
               </div>
-              <Button onClick={addLocation} variant="outline" size="sm">
-                <Plus className="w-4 h-4 mr-1" /> Add Office Location
-              </Button>
-            </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-            <div className="space-y-4">
-              {(s.locations?.items ?? []).map((loc, idx) => (
-                <div
-                  key={idx}
-                  className="p-4 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50/50 dark:bg-white/[0.02] space-y-3"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-sm text-slate-800 dark:text-slate-200">
-                      Location #{idx + 1}: {loc.name || "Untitled Office"}
-                    </span>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeLocation(idx)}
-                      className="text-red-500 hover:text-red-600"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
+        {/* TAB 3: SOCIAL */}
+        <TabsContent value="social" className="space-y-4">
+          <Card className="bg-slate-950 border-slate-800 text-white">
+            <CardHeader>
+              <CardTitle className="text-base text-white flex items-center gap-2">
+                <Share2 className="w-5 h-5 text-blue-400" />
+                Official Social Media Channels
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-xs font-semibold text-slate-300">Facebook Page URL</Label>
+                  <Input
+                    value={socialLinks.facebook}
+                    onChange={(e) => setSocialLinks({ ...socialLinks, facebook: e.target.value })}
+                    className="text-xs mt-1"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-semibold text-slate-300">X (Twitter) Profile URL</Label>
+                  <Input
+                    value={socialLinks.twitter}
+                    onChange={(e) => setSocialLinks({ ...socialLinks, twitter: e.target.value })}
+                    className="text-xs mt-1"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-semibold text-slate-300">LinkedIn Organization URL</Label>
+                  <Input
+                    value={socialLinks.linkedin}
+                    onChange={(e) => setSocialLinks({ ...socialLinks, linkedin: e.target.value })}
+                    className="text-xs mt-1"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-semibold text-slate-300">YouTube Channel URL</Label>
+                  <Input
+                    value={socialLinks.youtube}
+                    onChange={(e) => setSocialLinks({ ...socialLinks, youtube: e.target.value })}
+                    className="text-xs mt-1"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs font-semibold text-slate-300">Official WhatsApp Hotline</Label>
+                  <Input
+                    value={socialLinks.whatsapp}
+                    onChange={(e) => setSocialLinks({ ...socialLinks, whatsapp: e.target.value })}
+                    className="text-xs mt-1 font-mono"
+                  />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* TAB 4: DATABASE & FIREBASE */}
+        <TabsContent value="database" className="space-y-4">
+          <Card className="bg-slate-950 border-slate-800 text-white">
+            <CardHeader>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <CardTitle className="text-base text-white flex items-center gap-2">
+                    <Database className="w-5 h-5 text-emerald-400" />
+                    Cloud Firestore Database Status & Verification
+                  </CardTitle>
+                  <CardDescription className="text-xs text-slate-400 mt-1">
+                    Manage and verify the live connection between the website frontend, the CMS admin suite, and your Firebase Cloud Firestore backend.
+                  </CardDescription>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleTestConnection}
+                    disabled={testingDb}
+                    className="border-slate-700 bg-slate-900 text-xs text-emerald-300 hover:bg-slate-800"
+                  >
+                    <Activity className={`w-3.5 h-3.5 mr-1.5 text-emerald-400 ${testingDb ? "animate-spin" : ""}`} />
+                    {testingDb ? "Testing Ping…" : "Test Live Connection"}
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    onClick={handleSeedDatabase}
+                    disabled={seeding}
+                    className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${seeding ? "animate-spin" : ""}`} />
+                    {seeding ? "Syncing…" : "Sync / Re-seed Data"}
+                  </Button>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* Connection Status Banner */}
+              <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-semibold text-emerald-300">Firebase Firestore is Connected & Operational</h4>
+                    {dbLatency != null && (
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400">
+                        {dbLatency}ms latency
+                      </span>
+                    )}
                   </div>
-                  <div className="grid md:grid-cols-3 gap-3">
-                    <div>
-                      <Label>Office / Province Name</Label>
-                      <Input
-                        value={loc.name}
-                        onChange={(e) => updateLocation(idx, { name: e.target.value })}
-                        placeholder="Kabul Headquarters"
-                      />
-                    </div>
-                    <div>
-                      <Label>Phone</Label>
-                      <Input
-                        value={loc.phone ?? ""}
-                        onChange={(e) => updateLocation(idx, { phone: e.target.value })}
-                        placeholder="+93 7..."
-                      />
-                    </div>
-                    <div>
-                      <Label>Email</Label>
-                      <Input
-                        value={loc.email ?? ""}
-                        onChange={(e) => updateLocation(idx, { email: e.target.value })}
-                        placeholder="kabul@pyecso.org.af"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid md:grid-cols-4 gap-3">
-                    <div className="md:col-span-2">
-                      <Label>Address</Label>
-                      <Input
-                        value={loc.address ?? ""}
-                        onChange={(e) => updateLocation(idx, { address: e.target.value })}
-                        placeholder="Street, District"
-                      />
-                    </div>
-                    <div>
-                      <Label>Latitude</Label>
-                      <Input
-                        type="number"
-                        step="any"
-                        value={loc.lat ?? 0}
-                        onChange={(e) => updateLocation(idx, { lat: Number(e.target.value) || 0 })}
-                      />
-                    </div>
-                    <div>
-                      <Label>Longitude</Label>
-                      <Input
-                        type="number"
-                        step="any"
-                        value={loc.lng ?? 0}
-                        onChange={(e) => updateLocation(idx, { lng: Number(e.target.value) || 0 })}
-                      />
-                    </div>
-                  </div>
+                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                    All website public pages (Programs, Projects, News, Vacancies, Offices, Settings) and admin modifications are synchronized in real-time with Google Cloud Firestore.
+                  </p>
                 </div>
-              ))}
+              </div>
 
-              {(!s.locations?.items || s.locations.items.length === 0) && (
-                <div className="p-8 text-center border-2 border-dashed border-slate-200 dark:border-white/10 rounded-xl text-slate-400">
-                  No office coordinates configured yet. Click "Add Office Location" above.
+              {/* Database Parameters Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-400">Project ID</span>
+                  <p className="font-mono text-xs font-semibold text-white">{firebaseConfig.projectId}</p>
                 </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
+                <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-400">Database ID (Named Database)</span>
+                  <p className="font-mono text-xs font-semibold text-emerald-400 truncate">{firebaseConfig.firestoreDatabaseId}</p>
+                </div>
+                <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-400">Auth Domain</span>
+                  <p className="font-mono text-xs text-slate-300">{firebaseConfig.authDomain}</p>
+                </div>
+                <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-400">Storage Bucket</span>
+                  <p className="font-mono text-xs text-slate-300">{firebaseConfig.storageBucket}</p>
+                </div>
+              </div>
+
+              {/* Collections In Use */}
+              <div className="space-y-2">
+                <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400">Active Firestore Collections</h5>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs font-mono">
+                  <div className="p-2.5 rounded bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                    <span>/content_items</span>
+                    <span className="text-emerald-400 text-[10px]">Active</span>
+                  </div>
+                  <div className="p-2.5 rounded bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                    <span>/site_settings</span>
+                    <span className="text-emerald-400 text-[10px]">Active</span>
+                  </div>
+                  <div className="p-2.5 rounded bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                    <span>/user_roles</span>
+                    <span className="text-emerald-400 text-[10px]">Active</span>
+                  </div>
+                  <div className="p-2.5 rounded bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                    <span>/contact_messages</span>
+                    <span className="text-emerald-400 text-[10px]">Active</span>
+                  </div>
+                  <div className="p-2.5 rounded bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                    <span>/applications</span>
+                    <span className="text-emerald-400 text-[10px]">Active</span>
+                  </div>
+                  <div className="p-2.5 rounded bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                    <span>/audit_logs</span>
+                    <span className="text-emerald-400 text-[10px]">Active</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }

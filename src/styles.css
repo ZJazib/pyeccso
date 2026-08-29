@@ -234,7 +234,7 @@
 }
 
 /* ============================================================
-   RTL + script-specific typography (Dari, Pashto, Arabic)
+   RTL + script-specific typography (Dari, Pashto)
    ============================================================ */
 
 html[dir="rtl"] body {
@@ -242,8 +242,7 @@ html[dir="rtl"] body {
   letter-spacing: 0;
 }
 
-/* Arabic-script languages (Arabic, Dari, Pashto): use Vazirmatn */
-html[lang="ar"] body,
+/* Afghan script languages (Dari, Pashto): use Vazirmatn */
 html[lang="fa"] body,
 html[lang="ps"] body { font-family: "Vazirmatn Variable", "Vazirmatn", "Noto Naskh Arabic", system-ui, sans-serif; }
 

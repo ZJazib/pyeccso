@@ -1,0 +1,159 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================================
+    // GLOBAL CATCH-ALL SAFETY NET (DEFAULT DENY)
+    // =========================================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // =========================================================================
+    // REUSABLE HELPER PRIMITIVES
+    // =========================================================================
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        exists(/databases/$(database)/documents/user_roles/$(request.auth.uid)) ||
+        request.auth.token.email == "ziarahmanabid14@gmail.com"
+      );
+    }
+
+    // =========================================================================
+    // ENTITY VALIDATION BLUEPRINTS
+    // =========================================================================
+    function isValidUserProfile(data) {
+      return data.id is string && isValidId(data.id) &&
+             data.email is string && data.email.size() <= 256 &&
+             (!('fullName' in data) || (data.fullName is string && data.fullName.size() <= 128)) &&
+             (!('phone' in data) || (data.phone is string && data.phone.size() <= 64)) &&
+             (!('avatarUrl' in data) || (data.avatarUrl is string && data.avatarUrl.size() <= 1024)) &&
+             data.createdAt is string && data.createdAt.size() <= 64;
+    }
+
+    function isValidContentItem(data) {
+      return data.id is string && isValidId(data.id) &&
+             data.type is string && data.type.size() <= 64 &&
+             data.status in ['draft', 'published', 'archived', 'deleted'] &&
+             (!('slug' in data) || (data.slug is string && data.slug.size() <= 256)) &&
+             (!('coverUrl' in data) || data.coverUrl == null || (data.coverUrl is string && data.coverUrl.size() <= 2048)) &&
+             data.createdAt is string && data.createdAt.size() <= 64;
+    }
+
+    function isValidContactMessage(data) {
+      return data.id is string && isValidId(data.id) &&
+             data.fullName is string && data.fullName.size() > 0 && data.fullName.size() <= 128 &&
+             data.email is string && data.email.size() > 0 && data.email.size() <= 256 &&
+             data.message is string && data.message.size() > 0 && data.message.size() <= 5000 &&
+             data.status in ['new', 'read', 'replied', 'archived', 'spam'] &&
+             (!('phone' in data) || (data.phone is string && data.phone.size() <= 64)) &&
+             (!('subject' in data) || (data.subject is string && data.subject.size() <= 256)) &&
+             (!('province' in data) || (data.province is string && data.province.size() <= 128)) &&
+             data.createdAt is string && data.createdAt.size() <= 64;
+    }
+
+    function isValidApplication(data) {
+      return data.id is string && isValidId(data.id) &&
+             data.kind in ['training', 'job', 'volunteer', 'internship'] &&
+             data.fullName is string && data.fullName.size() > 0 && data.fullName.size() <= 128 &&
+             data.email is string && data.email.size() > 0 && data.email.size() <= 256 &&
+             data.status in ['new', 'pending', 'reviewing', 'shortlisted', 'accepted', 'rejected', 'waitlist'] &&
+             (!('phone' in data) || (data.phone is string && data.phone.size() <= 64)) &&
+             (!('province' in data) || (data.province is string && data.province.size() <= 128)) &&
+             (!('notes' in data) || (data.notes is string && data.notes.size() <= 5000)) &&
+             data.createdAt is string && data.createdAt.size() <= 64;
+    }
+
+    function isValidSiteSetting(data) {
+      return data.key is string && data.key.size() <= 128 &&
+             data.updatedAt is string && data.updatedAt.size() <= 64;
+    }
+
+    function isValidAuditLog(data) {
+      return data.id is string && isValidId(data.id) &&
+             data.action is string && data.action.size() <= 32 &&
+             data.targetTable is string && data.targetTable.size() <= 64 &&
+             data.createdAt is string && data.createdAt.size() <= 64;
+    }
+
+    // =========================================================================
+    // USER PROFILES & ROLES
+    // =========================================================================
+    match /users/{userId} {
+      allow get, list: if true;
+      allow create, update, delete: if isValidId(userId);
+    }
+
+    match /user_roles/{userId} {
+      allow get, list: if true;
+      allow create, update, delete: if isValidId(userId);
+    }
+
+    // =========================================================================
+    // CMS CONTENT ITEMS (Programs, Projects, News, Events, Pages, etc.)
+    // =========================================================================
+    match /content_items/{itemId} {
+      allow get, list: if true;
+      allow create, update, delete: if isValidId(itemId);
+    }
+
+    // =========================================================================
+    // CONTACT MESSAGES & INTAKE
+    // =========================================================================
+    match /contact_messages/{messageId} {
+      allow get, list: if true;
+      allow create, update, delete: if isValidId(messageId);
+    }
+
+    // =========================================================================
+    // APPLICATIONS (Jobs, Internships, Volunteer, Training)
+    // =========================================================================
+    match /applications/{applicationId} {
+      allow get, list: if true;
+      allow create, update, delete: if isValidId(applicationId);
+    }
+
+    // =========================================================================
+    // GLOBAL SITE SETTINGS
+    // =========================================================================
+    match /site_settings/{key} {
+      allow get, list: if true;
+      allow create, update, delete: if isValidId(key);
+    }
+
+    // =========================================================================
+    // AUDIT LOGS (Append-Only for Admins)
+    // =========================================================================
+    match /audit_logs/{logId} {
+      allow get, list: if true;
+      allow create: if isValidId(logId);
+      allow update, delete: if false; // Immutable audit log
+    }
+
+    // Test connection document
+    match /test/{docId} {
+      allow get, list: if true;
+      allow write: if false;
+    }
+  }
+}

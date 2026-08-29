@@ -41,14 +41,12 @@ export type CmsConfig = {
   fields: Field[];
 };
 
-const LANGS = ["en", "dr", "ps", "ar", "fr"] as const;
+const LANGS = ["en", "dr", "ps"] as const;
 export type Lang = typeof LANGS[number];
 export const LANGUAGES: { code: Lang; label: string }[] = [
   { code: "en", label: "English" },
   { code: "dr", label: "Dari" },
   { code: "ps", label: "Pashto" },
-  { code: "ar", label: "Arabic" },
-  { code: "fr", label: "French" },
 ];
 
 const COMMON_LIST: CmsConfig["listColumns"] = [

@@ -141,7 +141,9 @@ export function Footer() {
           <div className="flex items-center gap-6">
             <Link to="/donate" search={{ status: undefined }} className="hover:text-white">{t("nav.donate")}</Link>
             <Link to="/contact" className="hover:text-white">{t("nav.contact")}</Link>
-            <Link to="/admin" className="hover:text-white">Admin Portal</Link>
+            <Link to="/admin" className="text-slate-400 hover:text-white flex items-center gap-1 opacity-80 hover:opacity-100 transition-opacity">
+              <span>Admin Portal</span>
+            </Link>
           </div>
         </div>
       </div>

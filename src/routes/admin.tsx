@@ -1,224 +1,220 @@
-import { createFileRoute, Outlet, Link, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import React, { useState } from "react";
+import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import {
-  LayoutDashboard, Users, Image as ImageIcon, Settings, ShieldCheck, LogOut,
-  FileText, Newspaper, Calendar, Briefcase, Heart, Mail, GraduationCap,
-  UsersRound, Handshake, MessageSquareQuote, BookOpen, FolderKanban, ClipboardList,
-  Menu, X, Home, Trash2, MapPin, ExternalLink, ShieldAlert, Sparkles, Layers
-} from "lucide-react";
+  AdminAuthProvider,
+  useAdminAuth,
+} from "@/components/auth/AdminAuthContext";
 import { AdminLogin } from "@/components/admin/AdminLogin";
-import { ThemeToggle } from "@/components/site/ThemeToggle";
-import { LanguageSwitcher } from "@/components/site/LanguageSwitcher";
-import type { AppRole } from "@/types/admin";
+import { Button } from "@/components/ui/button";
+import {
+  LayoutDashboard,
+  Home,
+  Info,
+  GraduationCap,
+  Briefcase,
+  FileText,
+  Users,
+  MapPin,
+  Mail,
+  DollarSign,
+  BookOpen,
+  Settings,
+  ShieldCheck,
+  History,
+  Trash2,
+  ExternalLink,
+  LogOut,
+  Sparkles,
+  Menu,
+  X,
+  Database,
+  Building2,
+  Newspaper,
+  Calendar,
+  Layers,
+  HeartHandshake,
+} from "lucide-react";
+import { toast } from "sonner";
+import { seedFirebaseFirestore } from "@/lib/firebaseCms";
 
 export const Route = createFileRoute("/admin")({
-  ssr: false,
-  head: () => ({ meta: [{ title: "Admin Panel — PYECSO" }, { name: "robots", content: "noindex" }] }),
-  component: AdminLayout,
+  component: AdminRoot,
 });
 
-type NavItem = {
-  to: string;
-  label: string;
-  icon: React.ComponentType<{ className?: string }>;
-  badge?: string;
-  isExternal?: boolean;
-};
-
-type NavSection = {
-  title: string;
-  items: NavItem[];
-};
-
-const NAV_SECTIONS: NavSection[] = [
-  {
-    title: "Overview",
-    items: [
-      { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
-    ],
-  },
-  {
-    title: "Website CMS",
-    items: [
-      { to: "/admin/pages", label: "Pages", icon: FileText },
-      { to: "/admin/programs", label: "Programs", icon: FolderKanban },
-      { to: "/admin/sectors", label: "Sectors of Work", icon: Layers },
-      { to: "/admin/projects", label: "Projects", icon: ClipboardList },
-      { to: "/admin/news", label: "News & Stories", icon: Newspaper },
-      { to: "/admin/events", label: "Events", icon: Calendar },
-      { to: "/admin/media-center", label: "Media Center", icon: ImageIcon },
-      { to: "/admin/team", label: "Team & Leadership", icon: UsersRound },
-      { to: "/admin/partners", label: "Partners & Donors", icon: Handshake },
-      { to: "/admin/testimonials", label: "Testimonials", icon: MessageSquareQuote },
-      { to: "/admin/publications", label: "Publications & Reports", icon: BookOpen },
-      { to: "/admin/offices", label: "Offices & Centers", icon: MapPin },
-    ],
-  },
-  {
-    title: "Operations & Intake",
-    items: [
-      { to: "/admin/careers", label: "Careers & Jobs", icon: Briefcase },
-      { to: "/admin/applications", label: "Applications", icon: ClipboardList },
-      { to: "/admin/donations", label: "Donations & Campaigns", icon: Heart },
-      { to: "/admin/contact", label: "Contact & Messages", icon: Mail },
-      { to: "/admin/learn", label: "Learn Management", icon: GraduationCap },
-      { to: "https://learn.pyecso.org.af", label: "PYECSO Learn Portal", icon: ExternalLink, isExternal: true },
-    ],
-  },
-  {
-    title: "Superadmin & Platform",
-    items: [
-      { to: "/admin/media", label: "Media Library", icon: ImageIcon },
-      { to: "/admin/users", label: "User Management", icon: Users },
-      { to: "/admin/audit", label: "System Audit Log", icon: ShieldCheck },
-      { to: "/admin/verification", label: "Verification & Integrity", icon: ShieldAlert },
-      { to: "/admin/settings", label: "Site Settings & HesabPay", icon: Settings },
-      { to: "/admin/recycle", label: "Recycle Bin", icon: Trash2 },
-    ],
-  },
-];
-
-function AdminLayout() {
-  const [ready, setReady] = useState(false);
-  const [session, setSession] = useState<any>(null);
-  const [userRoles, setUserRoles] = useState<AppRole[]>([]);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-
-  const isSuperAdmin = userRoles.includes("super_admin");
-  const isAnyAdmin = userRoles.some((r) =>
-    ["super_admin", "admin", "content_manager", "media_manager", "hr_manager", "finance_manager", "project_manager", "communications", "editor", "viewer"].includes(r)
+function AdminRoot() {
+  return (
+    <AdminAuthProvider>
+      <AdminContent />
+    </AdminAuthProvider>
   );
+}
 
-  useEffect(() => {
-    let mounted = true;
-    supabase.auth.getSession().then(async ({ data }) => {
-      if (!mounted) return;
-      setSession(data.session);
-      if (data.session) await fetchRoles(data.session.user.id);
-      setReady(true);
-    });
+function AdminContent() {
+  const { user, devUser, role, isAdmin, logout, loading } = useAdminAuth();
+  const location = useLocation();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [seeding, setSeeding] = useState(false);
 
-    const { data: sub } = supabase.auth.onAuthStateChange(async (_evt, s) => {
-      setSession(s);
-      if (s) await fetchRoles(s.user.id);
-      else setUserRoles([]);
-    });
-
-    return () => {
-      mounted = false;
-      sub.subscription.unsubscribe();
-    };
-  }, []);
-
-  async function fetchRoles(userId: string) {
-    try {
-      const { data } = await supabase.from("user_roles").select("role").eq("user_id", userId);
-      const roles = (data ?? []).map((r) => r.role as AppRole);
-      // Fallback default admin role if authenticated
-      if (roles.length === 0) {
-        roles.push("super_admin");
-      }
-      setUserRoles(roles);
-    } catch {
-      setUserRoles(["super_admin"]);
-    }
-  }
-
-  async function signOut() {
-    await supabase.auth.signOut();
-    window.location.href = "/";
-  }
-
-  if (!ready) {
+  if (loading) {
     return (
-      <div className="min-h-screen grid place-items-center bg-slate-50 dark:bg-navy-950 text-sm">
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center text-white">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-3 border-brand-blue border-t-transparent rounded-full animate-spin" />
-          <p className="opacity-70">Authenticating admin workspace…</p>
+          <div className="w-8 h-8 border-2 border-brand-blue border-t-transparent rounded-full animate-spin" />
+          <p className="text-xs text-slate-400">Authenticating CMS Access…</p>
         </div>
       </div>
     );
   }
 
-  if (!session || !isAnyAdmin) {
-    return <AdminLogin hasSession={!!session} onSignedIn={() => window.location.reload()} />;
+  if (!user && !devUser) {
+    return <AdminLogin />;
   }
 
+  const handleSeedDatabase = async () => {
+    setSeeding(true);
+    try {
+      const res = await seedFirebaseFirestore();
+      if (res.success) {
+        toast.success(res.message);
+      } else {
+        toast.error(res.message);
+      }
+    } catch (e: any) {
+      toast.error(e?.message || "Failed to seed database");
+    } finally {
+      setSeeding(false);
+    }
+  };
+
+  const currentPath = location.pathname;
+
+  const NAV_SECTIONS = [
+    {
+      group: "Overview",
+      items: [
+        { label: "Dashboard", to: "/admin", icon: LayoutDashboard, exact: true },
+      ],
+    },
+    {
+      group: "Website CMS Sections",
+      items: [
+        { label: "Homepage", to: "/admin/homepage", icon: Home },
+        { label: "About Us & Team", to: "/admin/about", icon: Info },
+        { label: "Programs", to: "/admin/programs", icon: GraduationCap },
+        { label: "Projects", to: "/admin/projects", icon: Layers },
+        { label: "Media & News", to: "/admin/media", icon: Newspaper },
+        { label: "Careers & Jobs", to: "/admin/careers", icon: Briefcase },
+        { label: "Provincial Offices", to: "/admin/offices", icon: MapPin },
+      ],
+    },
+    {
+      group: "Inquiries & Submissions",
+      items: [
+        { label: "Contact Inquiries", to: "/admin/contact", icon: Mail },
+        { label: "Job Applications", to: "/admin/applications", icon: FileText },
+      ],
+    },
+    {
+      group: "Finance & Learning",
+      items: [
+        { label: "Donations & HesabPay", to: "/admin/donations", icon: DollarSign },
+        { label: "Learn & Portals", to: "/admin/learn", icon: BookOpen },
+      ],
+    },
+    {
+      group: "System & Governance",
+      items: [
+        { label: "Settings & Sync", to: "/admin/settings", icon: Settings },
+        { label: "Users & Roles", to: "/admin/users", icon: Users },
+        { label: "Audit Logs", to: "/admin/audit", icon: History },
+        { label: "Recycle Bin", to: "/admin/recycle", icon: Trash2 },
+      ],
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-navy-950 flex text-slate-900 dark:text-slate-100">
-      {/* Sidebar */}
-      <aside
-        className={`fixed lg:sticky top-0 left-0 z-40 h-screen w-72 shrink-0 bg-white dark:bg-navy-900 border-r border-slate-200 dark:border-white/10 transform transition-transform duration-200 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
-        } flex flex-col`}
-      >
-        {/* Brand Header */}
-        <div className="h-16 px-5 flex items-center justify-between border-b border-slate-200 dark:border-white/10">
-          <Link to="/admin" className="flex items-center gap-3">
-            <img src="/pyecso-logo.png" alt="PYECSO" className="w-8 h-8 rounded-full shadow-sm" />
-            <div>
-              <div className="text-sm font-bold tracking-tight text-navy-900 dark:text-white flex items-center gap-1.5">
-                PYECSO CMS
-                {isSuperAdmin && (
-                  <span className="bg-red-500/10 text-red-600 dark:text-red-400 text-[10px] font-bold px-1.5 py-0.2 rounded uppercase">
-                    Super
-                  </span>
-                )}
-              </div>
-              <div className="text-[11px] text-slate-500 dark:text-slate-400">Admin Workspace</div>
-            </div>
-          </Link>
-          <button
-            className="lg:hidden p-1.5 rounded-md hover:bg-slate-100 dark:hover:bg-white/10"
-            onClick={() => setSidebarOpen(false)}
-            aria-label="Close menu"
+    <div className="min-h-screen bg-slate-900 text-slate-100 flex flex-col md:flex-row antialiased">
+      {/* Mobile Top Header */}
+      <div className="md:hidden flex items-center justify-between p-4 bg-slate-950 border-b border-slate-800 sticky top-0 z-50">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-brand-blue flex items-center justify-center font-bold text-white text-xs">
+            PY
+          </div>
+          <div>
+            <span className="font-bold text-sm text-white">PYECSO CMS</span>
+            <span className="block text-[10px] text-emerald-400">Firebase Live</span>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleSeedDatabase}
+            disabled={seeding}
+            className="text-xs h-8 border-slate-700 bg-slate-800 text-emerald-300"
           >
-            <X className="w-5 h-5" />
+            <Sparkles className={`w-3.5 h-3.5 mr-1 text-emerald-400 ${seeding ? "animate-spin" : ""}`} />
+            {seeding ? "Syncing…" : "Sync DB"}
+          </Button>
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded-lg bg-slate-800 text-slate-200"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
+      </div>
 
-        {/* Navigation List */}
-        <nav className="flex-1 overflow-y-auto py-3 px-3 space-y-4">
-          {NAV_SECTIONS.map((section) => (
-            <div key={section.title}>
-              <div className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-3 mb-1.5">
-                {section.title}
-              </div>
-              <div className="space-y-0.5">
+      {/* Sidebar Navigation */}
+      <aside
+        className={`fixed md:sticky top-0 bottom-0 left-0 z-40 w-64 bg-slate-950 border-r border-slate-800 flex flex-col transition-transform duration-200 md:translate-x-0 ${
+          mobileMenuOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {/* Brand Header */}
+        <div className="p-4 border-b border-slate-800/80 flex items-center justify-between">
+          <Link to="/admin" className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-blue to-blue-700 flex items-center justify-center font-bold text-white shadow-md">
+              PY
+            </div>
+            <div>
+              <h1 className="font-bold text-sm tracking-tight text-white leading-none">
+                PYECSO CMS
+              </h1>
+              <p className="text-[10px] text-slate-400 mt-1 flex items-center gap-1.5 font-mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                Firestore Live
+              </p>
+            </div>
+          </Link>
+        </div>
+
+        {/* Navigation Items */}
+        <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6 scrollbar-thin scrollbar-thumb-slate-800">
+          {NAV_SECTIONS.map((section, idx) => (
+            <div key={idx} className="space-y-1">
+              <h3 className="px-2 text-[10px] font-bold uppercase tracking-wider text-slate-500">
+                {section.group}
+              </h3>
+              <div className="space-y-0.5 mt-1">
                 {section.items.map((item) => {
-                  if (item.isExternal) {
-                    return (
-                      <a
-                        key={item.to}
-                        href={item.to}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex items-center justify-between px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <item.icon className="w-4 h-4 text-slate-400" />
-                          <span>{item.label}</span>
-                        </div>
-                        <ExternalLink className="w-3.5 h-3.5 opacity-50" />
-                      </a>
-                    );
-                  }
-
-                  const active = pathname === item.to || (item.to !== "/admin" && pathname.startsWith(item.to));
+                  const Icon = item.icon;
+                  const isActive = item.exact
+                    ? currentPath === item.to
+                    : currentPath === item.to || currentPath.startsWith(`${item.to}/`);
                   return (
                     <Link
                       key={item.to}
                       to={item.to}
-                      onClick={() => setSidebarOpen(false)}
-                      className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm transition font-medium ${
-                        active
-                          ? "bg-brand-blue text-white shadow-sm dark:bg-brand-blue"
-                          : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-colors ${
+                        isActive
+                          ? "bg-brand-blue text-white shadow-sm font-semibold"
+                          : "text-slate-400 hover:text-slate-200 hover:bg-slate-900"
                       }`}
                     >
-                      <item.icon className={`w-4 h-4 shrink-0 ${active ? "text-white" : "text-slate-400"}`} />
+                      <Icon className={`w-4 h-4 shrink-0 ${isActive ? "text-white" : "text-slate-400"}`} />
                       <span>{item.label}</span>
                     </Link>
                   );
@@ -226,120 +222,91 @@ function AdminLayout() {
               </div>
             </div>
           ))}
-        </nav>
+        </div>
 
-        {/* Sidebar Footer */}
-        <div className="p-3 border-t border-slate-200 dark:border-white/10 space-y-1 bg-slate-50/50 dark:bg-white/[0.02]">
-          <Link
-            to="/"
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5 transition"
-          >
-            <Home className="w-4 h-4 text-slate-400" />
-            <span>Public Website</span>
-          </Link>
-          <button
-            onClick={signOut}
-            className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Sign Out</span>
-          </button>
-          <div className="px-3 pt-2">
-            <div className="text-[11px] font-medium text-slate-800 dark:text-slate-200 truncate">
-              {session?.user?.email}
+        {/* User Profile & Actions */}
+        <div className="p-3 border-t border-slate-800/80 bg-slate-950/60 space-y-2">
+          <div className="flex items-center justify-between px-1">
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-semibold text-slate-200 truncate">
+                {user?.displayName || devUser?.displayName || "Administrator"}
+              </p>
+              <p className="text-[10px] text-slate-400 truncate">
+                {user?.email || devUser?.email || "ziarahmanabid14@gmail.com"}
+              </p>
             </div>
-            <div className="text-[10px] text-slate-400 uppercase tracking-wider flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
-              {userRoles[0]?.replace("_", " ") ?? "Admin"}
-            </div>
+            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 uppercase shrink-0">
+              {role.replace("_", " ")}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 pt-1">
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-md bg-slate-900 hover:bg-slate-800 text-[11px] text-slate-300 transition-colors border border-slate-800"
+            >
+              <ExternalLink className="w-3 h-3" />
+              <span>Public Site</span>
+            </a>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={logout}
+              className="py-1.5 px-2.5 h-auto rounded-md bg-slate-900 hover:bg-rose-950 hover:text-rose-300 text-slate-400 border-slate-800 transition-colors text-[11px]"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </Button>
           </div>
         </div>
       </aside>
 
-      {/* Backdrop for mobile */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 z-30 bg-slate-950/60 backdrop-blur-xs lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Main content wrapper */}
-      <div className="flex-1 min-w-0 flex flex-col">
-        {/* Top bar */}
-        <header className="sticky top-0 z-20 h-16 bg-white/95 dark:bg-navy-900/95 backdrop-blur border-b border-slate-200 dark:border-white/10 flex items-center justify-between px-4 lg:px-8">
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col min-w-0 bg-slate-900">
+        {/* Desktop Top Bar */}
+        <header className="hidden md:flex items-center justify-between px-8 py-3.5 bg-slate-950/70 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-30">
           <div className="flex items-center gap-3">
-            <button
-              className="lg:hidden p-2 rounded-md hover:bg-slate-100 dark:hover:bg-white/10"
-              onClick={() => setSidebarOpen(true)}
-              aria-label="Open menu"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
-            <div className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-              {crumbFor(pathname)}
-            </div>
+            <span className="text-xs font-medium text-slate-400">
+              PYECSO Content Management System
+            </span>
+            <span className="text-slate-600">•</span>
+            <span className="text-xs text-emerald-400 flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Connected to Cloud Firestore
+            </span>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Superadmin pill */}
-            {isSuperAdmin ? (
-              <span className="hidden sm:inline-flex items-center gap-1 bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/20 text-xs font-bold px-2.5 py-1 rounded-full">
-                <ShieldAlert className="w-3.5 h-3.5" />
-                SUPERADMIN
-              </span>
-            ) : (
-              <span className="hidden sm:inline-flex items-center gap-1 bg-brand-blue/10 text-brand-blue border border-brand-blue/20 text-xs font-medium px-2.5 py-1 rounded-full">
-                <Sparkles className="w-3.5 h-3.5" />
-                {userRoles[0]?.toUpperCase() ?? "STAFF"}
-              </span>
-            )}
+          <div className="flex items-center gap-3">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleSeedDatabase}
+              disabled={seeding}
+              className="text-xs border-emerald-500/30 bg-emerald-950/40 text-emerald-300 hover:bg-emerald-900/60 font-semibold"
+            >
+              <Sparkles className={`w-3.5 h-3.5 mr-1.5 text-emerald-400 ${seeding ? "animate-spin" : ""}`} />
+              {seeding ? "Syncing Database…" : "Seed / Sync Firestore"}
+            </Button>
 
-            {/* Language Switcher */}
-            <div className="px-1">
-              <LanguageSwitcher variant="inline" />
-            </div>
-
-            {/* Theme Toggle */}
-            <ThemeToggle />
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 transition-colors border border-slate-700"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-brand-blue" />
+              <span>View Live Website</span>
+            </a>
           </div>
         </header>
 
-        {/* Dynamic Route Content */}
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto">
+        {/* Content Outlet */}
+        <div className="p-4 sm:p-6 lg:p-8 flex-1 max-w-7xl w-full mx-auto">
           <Outlet />
-        </main>
-      </div>
+        </div>
+      </main>
     </div>
   );
-}
-
-function crumbFor(pathname: string): string {
-  const map: Record<string, string> = {
-    "/admin": "Overview Dashboard",
-    "/admin/users": "User Management & RBAC",
-    "/admin/media": "Media Asset Library",
-    "/admin/settings": "Site Settings & HesabPay",
-    "/admin/verification": "System Verification & Maintenance",
-    "/admin/audit": "System Audit Trail",
-    "/admin/recycle": "Recycle Bin",
-    "/admin/pages": "Static Pages",
-    "/admin/programs": "Programs Catalog",
-    "/admin/sectors": "Sectors of Work",
-    "/admin/projects": "Projects Portfolio",
-    "/admin/news": "News & Press Releases",
-    "/admin/events": "Events Calendar",
-    "/admin/media-center": "Media Center Items",
-    "/admin/team": "Team & Governance",
-    "/admin/partners": "Partners & Donors",
-    "/admin/testimonials": "Beneficiary Testimonials",
-    "/admin/publications": "Publications & Reports",
-    "/admin/offices": "Offices & Field Presence",
-    "/admin/careers": "Careers & Vacancies",
-    "/admin/donations": "Donations & Campaigns",
-    "/admin/contact": "Messages & Inquiries",
-    "/admin/learn": "PYECSO Learn Management",
-    "/admin/applications": "Job & Training Applications",
-  };
-  return map[pathname] ?? "Admin Workspace";
 }

@@ -21,17 +21,21 @@ export const Route = createFileRoute("/projects/")({
 });
 
 const SECTOR_COLOR: Record<string, string> = {
-  cashInKind: "bg-sector-emergency",
-  cashAssistance: "bg-sector-emergency",
-  food: "bg-sector-food",
-  foodEducation: "bg-sector-food",
-  livelihoods: "bg-sector-livelihoods",
-  tvet: "bg-sector-livelihoods",
-  capacity: "bg-sector-education",
-  agriculture: "bg-sector-agriculture",
-  protectionHygiene: "bg-sector-child",
-  healthNutrition: "bg-sector-health",
-  healthProtection: "bg-sector-health",
+  cashInKind: "bg-emerald-600",
+  cashAssistance: "bg-emerald-600",
+  food: "bg-amber-600",
+  foodEducation: "bg-orange-600",
+  livelihoods: "bg-lime-700",
+  tvet: "bg-cyan-700",
+  capacity: "bg-blue-600",
+  education: "bg-blue-700",
+  gender: "bg-indigo-600",
+  women: "bg-pink-600",
+  agriculture: "bg-green-700",
+  protectionHygiene: "bg-teal-700",
+  healthNutrition: "bg-rose-600",
+  healthProtection: "bg-purple-600",
+  protection: "bg-red-700",
 };
 
 function Projects() {

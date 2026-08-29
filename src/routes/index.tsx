@@ -7,9 +7,7 @@ import {
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { useTranslation } from "react-i18next";
 import { useCmsListTranslated } from "@/lib/useCmsContent";
-import cardEducation from "@/assets/card-education.jpg";
-import cardLivelihoods from "@/assets/card-livelihoods.jpg";
-import cardEmergency from "@/assets/card-emergency.jpg";
+import { resolveProjectCover } from "@/lib/projectCover";
 import heroImage from "@/assets/hero-schoolgirl.jpg";
 
 
@@ -37,24 +35,30 @@ const SECTOR_COLORS = [
   "bg-sector-livelihoods",
 ];
 
+const SECTOR_COLOR: Record<string, string> = {
+  cashInKind: "bg-sector-emergency",
+  cashAssistance: "bg-sector-emergency",
+  food: "bg-sector-food",
+  foodEducation: "bg-sector-food",
+  livelihoods: "bg-sector-livelihoods",
+  tvet: "bg-sector-livelihoods",
+  capacity: "bg-sector-education",
+  agriculture: "bg-sector-agriculture",
+  protectionHygiene: "bg-sector-child",
+  healthNutrition: "bg-sector-health",
+  healthProtection: "bg-sector-health",
+};
+
 function Home() {
   const { t } = useTranslation();
   const { items: sectorsOfWork } = useCmsListTranslated("sector");
+  const { items: projects, loading: loadingProjects } = useCmsListTranslated("project");
 
   const heroStats = [
     { icon: Calendar, value: "2006", label: t("home.stats.founded") },
     { icon: Building2, value: "MoEc No. 1201", label: t("home.stats.registered") },
     { icon: MapPin, value: "24+", label: t("home.stats.provinces") },
     { icon: Users2, value: t("home.stats.womenLed"), label: t("home.stats.orgType") },
-  ];
-
-
-
-
-  const highlights = [
-    { img: cardEmergency, tag: t("home.highlights.cash.tag"), title: t("home.highlights.cash.title"), body: t("home.highlights.cash.body") },
-    { img: cardLivelihoods, tag: t("home.highlights.livelihoods.tag"), title: t("home.highlights.livelihoods.title"), body: t("home.highlights.livelihoods.body") },
-    { img: cardEducation, tag: t("home.highlights.capacity.tag"), title: t("home.highlights.capacity.title"), body: t("home.highlights.capacity.body") },
   ];
 
   const clusterKeys = ["education", "gender", "food", "protection"] as const;
@@ -195,16 +199,65 @@ function Home() {
             </Link>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {highlights.map((s) => (
-              <article key={s.title} className="bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
-                <img src={s.img} alt="" className="w-full aspect-[4/3] object-cover" loading="lazy" />
-                <div className="p-6">
-                  <span className="text-[10px] font-bold tracking-wider text-brand-blue uppercase">{s.tag}</span>
-                  <h3 className="text-navy-900 font-semibold leading-snug mt-2 mb-3">{s.title}</h3>
-                  <p className="text-navy-900/70 text-sm">{s.body}</p>
-                </div>
-              </article>
-            ))}
+            {loadingProjects && projects.length === 0 && (
+              <div className="col-span-full py-10 text-center text-sm text-navy-900/60">
+                Loading projects…
+              </div>
+            )}
+            {projects.slice(0, 3).map((p) => {
+              const tag = (p.data?.category as string) || (p.data?.sector_tag as string);
+              const sectorColor = (tag && SECTOR_COLOR[tag]) || "bg-brand-blue";
+              const cover = resolveProjectCover(p as any);
+              const location = (p.data?.location as string) ?? "";
+              const partner = (p.data?.partner as string) ?? "";
+
+              return (
+                <Link
+                  key={p.id}
+                  to="/projects/$slug"
+                  params={{ slug: p.slug ?? "" }}
+                  className="group block h-full"
+                >
+                  <article className="h-full bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md group-hover:-translate-y-0.5 transition-all flex flex-col">
+                    <div className="relative aspect-[4/3] overflow-hidden bg-navy-900/5">
+                      <img
+                        src={cover}
+                        alt={p.t.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        loading="lazy"
+                      />
+                      {tag && (
+                        <span className={`absolute top-3 left-3 inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase shadow-xs`}>
+                          {tag}
+                        </span>
+                      )}
+                    </div>
+                    <div className="p-6 flex flex-col flex-1">
+                      <h3 className="text-navy-900 font-semibold leading-snug mb-2 group-hover:text-brand-blue transition-colors line-clamp-2">
+                        {p.t.title}
+                      </h3>
+                      <p className="text-navy-900/70 text-sm line-clamp-3 leading-relaxed mb-4 flex-1">
+                        {p.t.summary}
+                      </p>
+                      {(location || partner) && (
+                        <div className="pt-3 border-t border-border flex items-center justify-between text-xs text-navy-900/60">
+                          {location && (
+                            <span className="flex items-center gap-1 font-medium text-navy-900/80 truncate">
+                              <MapPin className="size-3 text-brand-blue shrink-0" /> {location}
+                            </span>
+                          )}
+                          {partner && (
+                            <span className="truncate text-right ml-auto text-[11px] text-navy-900/70">
+                              {partner}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
