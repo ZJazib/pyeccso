@@ -163,20 +163,22 @@ function ProjectDetail() {
 
   return (
     <SiteLayout>
-      {/* Hero banner with featured image */}
+      {/* Hero banner */}
       <section className="relative bg-navy-900 text-white overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src={cover}
-            alt={title}
-            className="w-full h-full object-cover opacity-40"
-            width={1920}
-            height={900}
-            loading="eager"
-            fetchPriority="high"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-900/85 to-navy-900/40" />
-        </div>
+        {cover && (
+          <div className="absolute inset-0">
+            <img
+              src={cover}
+              alt={title}
+              className="w-full h-full object-cover opacity-35"
+              width={1920}
+              height={900}
+              loading="eager"
+              fetchPriority="high"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-900/85 to-navy-900/40" />
+          </div>
+        )}
         <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
           <nav className="flex items-center gap-2 text-sm text-white/70 mb-5">
             <Link to="/" className="hover:text-white">{t("nav.home")}</Link>
@@ -516,14 +518,16 @@ function ProjectDetail() {
                     params={{ slug: p.slug ?? "" }}
                     className="group block bg-surface dark:bg-navy-950 ring-1 ring-border dark:ring-white/10 rounded-xl overflow-hidden hover:shadow-md transition"
                   >
-                    <div className="aspect-[16/10] overflow-hidden">
-                      <img
-                        src={rc}
-                        alt={p.t.title}
-                        loading="lazy"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                      />
-                    </div>
+                    {rc ? (
+                      <div className="aspect-[16/10] overflow-hidden">
+                        <img
+                          src={rc}
+                          alt={p.t.title}
+                          loading="lazy"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                      </div>
+                    ) : null}
                     <div className="p-4">
                       {(p.data?.category as string) && (
                         <span className="inline-block text-[10px] font-bold tracking-wider text-brand-blue uppercase mb-2">

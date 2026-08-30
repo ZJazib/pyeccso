@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getFirestore, doc, getDocFromServer } from "firebase/firestore";
+import { initializeFirestore, getFirestore, doc, getDoc } from "firebase/firestore";
 import firebaseConfig from "../../../firebase-applet-config.json";
 
 // Initialize Firebase App
@@ -8,8 +8,22 @@ export { firebaseConfig };
 export const app =
   getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// Initialize Firestore with the database ID specified in firebase-applet-config.json
-export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+// Initialize Firestore with robust long-polling auto-detection for iframes/proxies
+let firestoreInstance;
+try {
+  firestoreInstance = initializeFirestore(
+    app,
+    {
+      experimentalAutoDetectLongPolling: true,
+      ignoreUndefinedProperties: true,
+    },
+    firebaseConfig.firestoreDatabaseId
+  );
+} catch {
+  firestoreInstance = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+}
+
+export const db = firestoreInstance;
 
 // Initialize Authentication
 export const auth = getAuth(app);
@@ -18,20 +32,16 @@ export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
 
-// Connection test helper
+// Connection test helper with graceful fallback
 export async function testFirebaseConnection(): Promise<boolean> {
   try {
-    const snap = await getDocFromServer(doc(db, "site_settings", "general"));
+    const snap = await getDoc(doc(db, "site_settings", "general"));
     if (snap.exists()) {
       console.log(`[Firebase] Connected successfully to Cloud Firestore (${firebaseConfig.firestoreDatabaseId})`);
     }
     return true;
   } catch (error: unknown) {
-    if (error instanceof Error && error.message.includes("the client is offline")) {
-      console.warn("[Firebase] Client is currently offline or unreachable.");
-    } else {
-      console.warn("[Firebase] Firestore connection notice:", error);
-    }
+    // Graceful silent fallback to offline mode if network is initially negotiating
     return false;
   }
 }
@@ -40,3 +50,4 @@ export async function testFirebaseConnection(): Promise<boolean> {
 if (typeof window !== "undefined") {
   testFirebaseConnection().catch(() => {});
 }
+

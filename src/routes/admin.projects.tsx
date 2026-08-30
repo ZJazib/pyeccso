@@ -62,14 +62,12 @@ function AdminProjects() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const data = await fetchContentItemsByType("project", true);
-      if (data.length === 0) {
-        // If Firestore has not been seeded with projects yet, automatically sync the 30 implemented projects
+      let data = await fetchContentItemsByType("project", true);
+      if (data.length < 30) {
+        // If Firestore has not been seeded with all 30 PDF projects yet, automatically sync them
         const syncRes = await syncImplementedProjectsToFirestore();
         if (syncRes.success) {
-          const reloaded = await fetchContentItemsByType("project", true);
-          setItems(reloaded);
-          return;
+          data = await fetchContentItemsByType("project", true);
         }
       }
       setItems(data);

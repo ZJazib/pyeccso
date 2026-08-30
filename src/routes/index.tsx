@@ -219,20 +219,29 @@ function Home() {
                   className="group block h-full"
                 >
                   <article className="h-full bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md group-hover:-translate-y-0.5 transition-all flex flex-col">
-                    <div className="relative aspect-[4/3] overflow-hidden bg-navy-900/5">
-                      <img
-                        src={cover}
-                        alt={p.t.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                        loading="lazy"
-                      />
-                      {tag && (
-                        <span className={`absolute top-3 left-3 inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase shadow-xs`}>
-                          {tag}
-                        </span>
-                      )}
-                    </div>
+                    {cover ? (
+                      <div className="relative aspect-[4/3] overflow-hidden bg-navy-900/5">
+                        <img
+                          src={cover}
+                          alt={p.t.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          loading="lazy"
+                        />
+                        {tag && (
+                          <span className={`absolute top-3 left-3 inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase shadow-xs`}>
+                            {tag}
+                          </span>
+                        )}
+                      </div>
+                    ) : null}
                     <div className="p-6 flex flex-col flex-1">
+                      {!cover && tag && (
+                        <div className="mb-3">
+                          <span className={`inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2.5 py-1 rounded uppercase`}>
+                            {tag}
+                          </span>
+                        </div>
+                      )}
                       <h3 className="text-navy-900 font-semibold leading-snug mb-2 group-hover:text-brand-blue transition-colors line-clamp-2">
                         {p.t.title}
                       </h3>

@@ -99,6 +99,10 @@ export function useCmsList(type: string) {
       (docs) => {
         if (!alive) return;
         if (docs.length > 0) {
+          if (type === "project" && docs.length < 30) {
+            // Database is currently auto-syncing all 30 PDF projects; do not overwrite with partial legacy items
+            return;
+          }
           const mapped: CmsItem[] = docs.map((d) => ({
             ...d,
             cover_url: d.coverUrl || d.data?.cover_url || null,

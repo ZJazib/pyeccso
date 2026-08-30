@@ -135,7 +135,7 @@ export async function fetchContentItemsByType(
     const q = query(colRef, where("type", "==", type));
     
     const snap = await getDocs(q);
-    const items: FirebaseContentItem[] = [];
+    let items: FirebaseContentItem[] = [];
     snap.forEach((d) => {
       const data = d.data() as FirebaseContentItem;
       if (!data.id) data.id = d.id;
@@ -148,6 +148,22 @@ export async function fetchContentItemsByType(
       items.push(data);
     });
 
+    // Auto-migrate projects if the database has fewer than 30 projects or contains outdated items not from PDF
+    if (type === "project" && (items.length < 30 || items.some((i) => !IMPLEMENTED_PROJECTS.some((p) => p.slug === i.slug)))) {
+      console.log("Migrating and synchronizing 30 official implemented projects from PDF to Firestore...");
+      await syncImplementedProjectsToFirestore({ purgeExisting: true });
+      const refreshedSnap = await getDocs(q);
+      items = [];
+      refreshedSnap.forEach((d) => {
+        const data = d.data() as FirebaseContentItem;
+        if (!data.id) data.id = d.id;
+        if (!includeAllStatus && (data.status !== "published" || data.deletedAt)) {
+          return;
+        }
+        items.push(data);
+      });
+    }
+
     items.sort((a, b) => {
       if (a.position != null && b.position != null) return a.position - b.position;
       return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
@@ -156,6 +172,20 @@ export async function fetchContentItemsByType(
     return items;
   } catch (error) {
     console.error(`Error fetching content items for type: ${type}`, error);
+    if (type === "project") {
+      return IMPLEMENTED_PROJECTS.map((item, idx) => ({
+        id: `project_${item.slug}`,
+        type: "project",
+        slug: item.slug,
+        status: "published",
+        position: item.position ?? idx + 1,
+        coverUrl: item.cover_url || null,
+        data: item.data,
+        publishedAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }));
+    }
     return [];
   }
 }

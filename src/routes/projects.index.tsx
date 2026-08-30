@@ -52,20 +52,39 @@ function Projects() {
     Array.from(new Set(arr.map((v) => (v ?? "").trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b));
 
   const sectors = useMemo(() => uniq(projects.map((p) => (p.data?.category as string) || (p.data?.sector_tag as string))), [projects]);
-  const provinces = useMemo(() => uniq(projects.map((p) => p.data?.location as string)), [projects]);
-  const donors = useMemo(() => uniq(projects.map((p) => p.data?.partner as string)), [projects]);
+  const provinces = useMemo(() => {
+    const rawList = projects.map((p) => (p.data?.province as string) || (p.data?.location as string) || "");
+    const extracted: string[] = [];
+    rawList.forEach((raw) => {
+      if (!raw) return;
+      // Extract province names if comma separated or province suffix
+      const cleaned = raw.replace(/,?\s*Afghanistan/i, "").trim();
+      if (cleaned.includes(",")) {
+        cleaned.split(",").forEach((sub) => {
+          const s = sub.trim().replace(/\s+Province/i, "");
+          if (s) extracted.push(s);
+        });
+      } else {
+        const s = cleaned.replace(/\s+Province/i, "").trim();
+        if (s) extracted.push(s);
+      }
+    });
+    return uniq(extracted);
+  }, [projects]);
+  const donors = useMemo(() => uniq(projects.map((p) => (p.data?.partner as string) || (p.data?.donor as string))), [projects]);
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
     const list = projects.filter((p) => {
       const cat = ((p.data?.category as string) || (p.data?.sector_tag as string) || "").trim();
       const loc = ((p.data?.location as string) ?? "").trim();
-      const par = ((p.data?.partner as string) ?? "").trim();
-      if (sector && cat !== sector) return false;
-      if (province && loc !== province) return false;
-      if (donor && par !== donor) return false;
+      const prov = ((p.data?.province as string) ?? "").trim();
+      const par = (((p.data?.partner as string) || (p.data?.donor as string)) ?? "").trim();
+      if (sector && cat !== sector && (p.data?.sector_tag !== sector)) return false;
+      if (province && !loc.toLowerCase().includes(province.toLowerCase()) && !prov.toLowerCase().includes(province.toLowerCase())) return false;
+      if (donor && par !== donor && !(p.data?.donor === donor)) return false;
       if (needle) {
-        const hay = `${p.t.title ?? ""} ${p.t.summary ?? ""} ${cat} ${loc} ${par}`.toLowerCase();
+        const hay = `${p.t.title ?? ""} ${p.t.summary ?? ""} ${p.t.description ?? ""} ${cat} ${loc} ${prov} ${par}`.toLowerCase();
         if (!hay.includes(needle)) return false;
       }
       return true;
@@ -253,11 +272,11 @@ function Projects() {
                 </div>
               )}
               {filtered.map((p) => {
-                const tag = p.data?.sector_tag as string | undefined;
-                const sectorColor = (tag && SECTOR_COLOR[tag]) || "bg-brand-blue";
+                const tag = (p.data?.category as string) || (p.data?.sector_tag as string) || "";
+                const sectorColor = (SECTOR_COLOR[tag] || SECTOR_COLOR[p.data?.sector_tag as string]) || "bg-brand-blue";
                 const location = (p.data?.location as string) ?? "";
-                const donor = (p.data?.partner as string) ?? "";
-                const category = (p.data?.category as string) ?? "";
+                const donor = ((p.data?.partner as string) || (p.data?.donor as string)) ?? "";
+                const category = (p.data?.category as string) || tag;
                 const cover = resolveProjectCover(p as any);
                 return (
                   <Link
@@ -267,22 +286,31 @@ function Projects() {
                     className="block group"
                   >
                     <article className="h-full bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md group-hover:-translate-y-0.5 transition-all flex flex-col">
-                      <div className="aspect-[16/9] overflow-hidden bg-navy-900/5 relative">
-                        <img
-                          src={cover}
-                          alt={p.t.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                        />
-                        {category && (
-                          <span className={`absolute top-3 left-3 inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase`}>
-                            {category}
-                          </span>
-                        )}
-                      </div>
+                      {cover ? (
+                        <div className="aspect-[16/9] overflow-hidden bg-navy-900/5 relative">
+                          <img
+                            src={cover}
+                            alt={p.t.title}
+                            loading="lazy"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                          {category && (
+                            <span className={`absolute top-3 left-3 inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase`}>
+                              {category}
+                            </span>
+                          )}
+                        </div>
+                      ) : null}
                       <div className="p-5 flex flex-col flex-1">
+                        {!cover && category && (
+                          <div className="mb-3">
+                            <span className={`inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2.5 py-1 rounded uppercase`}>
+                              {category}
+                            </span>
+                          </div>
+                        )}
                         <h4 className="text-navy-900 font-bold text-sm mb-2 leading-snug group-hover:text-brand-blue transition-colors">{p.t.title}</h4>
-                        <p className="text-navy-900/70 text-sm leading-relaxed mb-4 line-clamp-3">{p.t.summary}</p>
+                        <p className="text-navy-900/70 text-sm leading-relaxed mb-4 line-clamp-3">{p.t.summary || p.t.description}</p>
                         <div className="mt-auto pt-3 border-t border-border grid grid-cols-2 gap-3 text-xs">
                           <div>
                             <div className="text-navy-900/50">{t("common.location")}</div>
@@ -292,7 +320,7 @@ function Projects() {
                           </div>
                           <div>
                             <div className="text-navy-900/50">{t("common.donorPartner")}</div>
-                            <div className="font-semibold text-navy-900">{donor}</div>
+                            <div className="font-semibold text-navy-900 truncate">{donor}</div>
                           </div>
                         </div>
                       </div>
