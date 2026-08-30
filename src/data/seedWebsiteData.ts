@@ -372,6 +372,110 @@ export const SEED_CONTENT_ITEMS = [
       location: "Jalalabad, Nangarhar",
     },
   },
+
+  // ==========================================
+  // 6. SECTORS OF WORK (Four Core Pillars)
+  // ==========================================
+  {
+    type: "sector",
+    slug: "sector-education",
+    status: "published",
+    position: 1,
+    cover_url: null,
+    data: {
+      title: {
+        en: "Education",
+        dr: "تعلیم و تربیه",
+        ps: "ښوونه او روزنه",
+      },
+      icon: "GraduationCap",
+      summary: {
+        en: "Primary and secondary education, accelerated learning, literacy programs, vocational skills, teacher training, and essential school supplies.",
+        dr: "آموزش و پرورش، برنامه‌های سوادآموزی، مهارت‌های مسلکی، ارتقای ظرفیت معلمان و توزیع لوازم درسی برای کودکان و جوانان.",
+        ps: "لومړنۍ او منځنۍ زده کړې، د چټکو زده کړو ټولګي، د سواد زده کړه، مسلکي مهارتونه، د ښوونکو روزنه او د ښوونځیو توکي.",
+      },
+      description: {
+        en: "Primary and secondary education, accelerated learning, literacy programs, vocational skills, teacher training, and essential school supplies.",
+        dr: "آموزش و پرورش، برنامه‌های سوادآموزی، مهارت‌های مسلکی، ارتقای ظرفیت معلمان و توزیع لوازم درسی برای کودکان و جوانان.",
+        ps: "لومړنۍ او منځنۍ زده کړې، د چټکو زده کړو ټولګي، د سواد زده کړه، مسلکي مهارتونه، د ښوونکو روزنه او د ښوونځیو توکي.",
+      },
+    },
+  },
+  {
+    type: "sector",
+    slug: "sector-health",
+    status: "published",
+    position: 2,
+    cover_url: null,
+    data: {
+      title: {
+        en: "Health",
+        dr: "صحت عامه و تغذیه",
+        ps: "روغتیا او تغذیه",
+      },
+      icon: "HeartPulse",
+      summary: {
+        en: "Community health, maternal & child care, nutrition, mental health, and awareness campaigns.",
+        dr: "صحت عامه و جامعه، مراقبت‌های صحی مادر و کودک، تغذیه، صحت روان و کمپاین‌های آگاهی‌دهی.",
+        ps: "ټولنیزه روغتیا، د مور او ماشوم پالنه، تغذیه، رواني روغتیا او عامه پوهاوي کمپاینونه.",
+      },
+      description: {
+        en: "Community health, maternal & child care, nutrition, mental health, and awareness campaigns.",
+        dr: "صحت عامه و جامعه، مراقبت‌های صحی مادر و کودک، تغذیه، صحت روان و کمپاین‌های آگاهی‌دهی.",
+        ps: "ټولنیزه روغتیا، د مور او ماشوم پالنه، تغذیه، رواني روغتیا او عامه پوهاوي کمپاینونه.",
+      },
+    },
+  },
+  {
+    type: "sector",
+    slug: "sector-agriculture",
+    status: "published",
+    position: 3,
+    cover_url: null,
+    data: {
+      title: {
+        en: "Agriculture",
+        dr: "زراعت و مالداری",
+        ps: "کرنه او مالداري",
+      },
+      icon: "Leaf",
+      summary: {
+        en: "Sustainable farming, livelihoods, food security, and training for rural farmers and youth.",
+        dr: "زراعت پایدار، معیشت، مصونیت غذایی و آموزش‌های مسلکی برای دهقانان و جوانان روستایی.",
+        ps: "دوامداره کرنه، معیشت، خوراکي خوندیتوب او د کلیوالي کروندګرو او ځوانانو لپاره مسلکي روزنه.",
+      },
+      description: {
+        en: "Sustainable farming, livelihoods, food security, and training for rural farmers and youth.",
+        dr: "زراعت پایدار، معیشت، مصونیت غذایی و آموزش‌های مسلکی برای دهقانان و جوانان روستایی.",
+        ps: "دوامداره کرنه، معیشت، خوراکي خوندیتوب او د کلیوالي کروندګرو او ځوانانو لپاره مسلکي روزنه.",
+      },
+    },
+  },
+  {
+    type: "sector",
+    slug: "sector-social-development",
+    status: "published",
+    position: 4,
+    cover_url: null,
+    data: {
+      title: {
+        en: "Social Development",
+        dr: "انکشاف اجتماعی",
+        ps: "ټولنیزه پراختیا",
+      },
+      icon: "Users",
+      summary: {
+        en: "Protection, gender equality, civic engagement, and community empowerment programs.",
+        dr: "حفاظت، برابری جنسیتی، مشارکت مدنی و برنامه‌های توانمندسازی جوامع محلی.",
+        ps: "خوندیتوب، جنډري برابري، مدني ونډه او د سیمه ییزو ټولنو د پیاوړتیا پروګرامونه.",
+      },
+      description: {
+        en: "Protection, gender equality, civic engagement, and community empowerment programs.",
+        dr: "حفاظت، برابری جنسیتی، مشارکت مدنی و برنامه‌های توانمندسازی جوامع محلی.",
+        ps: "خوندیتوب، جنډري برابري، مدني ونډه او د سیمه ییزو ټولنو د پیاوړتیا پروګرامونه.",
+      },
+    },
+  },
 ];
 
 export const SEED_SITE_SETTINGS = [

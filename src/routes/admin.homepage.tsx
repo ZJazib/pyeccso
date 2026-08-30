@@ -102,13 +102,18 @@ function AdminHomepage() {
     e.preventDefault();
     if (!editingSector) return;
     try {
+      const desc = editingSector.data?.description || editingSector.data?.summary || {};
       const res = await saveContentItem({
         id: editingSector.id,
         type: "sector",
         slug: editingSector.slug || `sector-${Date.now()}`,
         status: editingSector.status || "published",
         position: editingSector.position ?? sectors.length + 1,
-        data: editingSector.data || {},
+        data: {
+          ...editingSector.data,
+          description: desc,
+          summary: desc,
+        },
       });
       if (res.success) {
         toast.success("Sector saved successfully!");
@@ -290,7 +295,7 @@ function AdminHomepage() {
         <TabsContent value="sectors" className="space-y-4">
           <div className="flex items-center justify-between">
             <p className="text-xs text-slate-400">
-              The 6 core pillar sectors PYECSO operates in.
+              The 4 core pillar sectors driving impact across Afghanistan.
             </p>
             <Button
               size="sm"
@@ -301,6 +306,7 @@ function AdminHomepage() {
                   data: {
                     title: { en: "", dr: "", ps: "" },
                     description: { en: "", dr: "", ps: "" },
+                    summary: { en: "", dr: "", ps: "" },
                     icon: "GraduationCap",
                   },
                 })

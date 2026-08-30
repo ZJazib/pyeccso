@@ -807,17 +807,35 @@ export async function seedFirebaseFirestore(): Promise<{
 }
 
 /**
- * Synchronize all 30 official implemented projects to Firebase Firestore database
+ * Remove existing projects from Firestore and write all 30 official implemented projects from PDF
  */
-export async function syncImplementedProjectsToFirestore(): Promise<{
+export async function syncImplementedProjectsToFirestore(options: { purgeExisting?: boolean } = { purgeExisting: true }): Promise<{
   success: boolean;
   insertedCount: number;
+  deletedCount: number;
   message: string;
 }> {
   try {
+    let deletedCount = 0;
     let count = 0;
     const now = new Date().toISOString();
 
+    // 1. Purge existing projects if requested (default: true)
+    if (options.purgeExisting) {
+      try {
+        const q = query(collection(db, "content_items"), where("type", "==", "project"));
+        const snapshot = await getDocs(q);
+        const deletePromises = snapshot.docs.map((d) => {
+          deletedCount++;
+          return deleteDoc(d.ref);
+        });
+        await Promise.all(deletePromises);
+      } catch (err) {
+        console.warn("Notice: Could not query existing projects to purge:", err);
+      }
+    }
+
+    // 2. Insert all 30 official implemented projects from PDF
     for (const item of IMPLEMENTED_PROJECTS) {
       const slug = item.slug;
       const id = `project_${slug.replace(/[^a-zA-Z0-9_-]/g, "_")}`;
@@ -838,23 +856,30 @@ export async function syncImplementedProjectsToFirestore(): Promise<{
         createdBy: "seeder@pyecso.org.af",
       };
 
-      await setDoc(docRef, payload, { merge: true });
+      await setDoc(docRef, payload);
       count++;
     }
 
-    await logAuditEvent("PROJECTS_SYNCED", "system", "projects", { count });
+    await logAuditEvent("PROJECTS_SYNCED", "system", "projects", {
+      count,
+      deletedCount,
+    });
 
     return {
       success: true,
       insertedCount: count,
-      message: `Successfully saved and synced all ${count} official implemented projects to Firebase Firestore!`,
+      deletedCount,
+      message: `Successfully removed previous projects (${deletedCount}) and added all ${count} official projects from PDF to Firebase Firestore!`,
     };
   } catch (error: any) {
     console.error("Error syncing implemented projects to Firebase Firestore:", error);
     return {
       success: false,
       insertedCount: 0,
+      deletedCount: 0,
       message: error?.message || "Failed to sync implemented projects to Firestore.",
     };
   }
 }
+
+export const resetAndReplaceProjectsInFirestore = syncImplementedProjectsToFirestore;

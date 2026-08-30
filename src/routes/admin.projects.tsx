@@ -209,9 +209,10 @@ function AdminProjects() {
             disabled={syncing}
             variant="outline"
             className="border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-semibold"
+            title="Purge existing project database records and re-seed all 30 official projects from PDF"
           >
             <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${syncing ? "animate-spin text-sky-400" : "text-sky-400"}`} />
-            {syncing ? "Syncing Projects..." : "Sync All 30 Projects to DB"}
+            {syncing ? "Resetting & Syncing DB..." : "Replace & Sync All 30 Projects to DB"}
           </Button>
 
           <Button

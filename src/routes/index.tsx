@@ -177,7 +177,7 @@ function Home() {
                       <Icon className="size-6" />
                     </div>
                     <h3 className="text-navy-900 font-bold text-lg mb-2 leading-snug">{s.t.title}</h3>
-                    <p className="text-navy-900/70 text-sm leading-relaxed">{s.t.summary}</p>
+                    <p className="text-navy-900/70 text-sm leading-relaxed">{s.t.summary || s.t.description}</p>
                   </article>
                 );
               })}
