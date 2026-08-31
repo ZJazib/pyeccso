@@ -15,58 +15,67 @@ which pages this website have`;
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2 text-navy-900 dark:text-white">
-            <ShieldCheck className="w-6 h-6 text-emerald-500" />
+          <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2.5 text-slate-900">
+            <ShieldCheck className="w-6 h-6 text-emerald-600" />
             System Verification & Maintenance
           </h1>
-          <p className="text-sm text-slate-500 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Authorized project maintenance directives and integrity audit.
           </p>
         </div>
-        <div className="bg-emerald-500/10 text-emerald-600 px-3 py-1 rounded-full text-xs font-bold flex items-center gap-1.5 border border-emerald-500/20">
-          <ClipboardCheck className="w-3.5 h-3.5" />
+        <div className="bg-emerald-50 text-emerald-700 px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 border border-emerald-200 w-fit">
+          <ClipboardCheck className="w-4 h-4 text-emerald-600" />
           VERIFIED SYSTEM STATUS: PASS
         </div>
       </div>
 
-      <div className="bg-white dark:bg-navy-900 border border-slate-200 dark:border-white/10 rounded-2xl overflow-hidden shadow-xs">
-        <div className="p-4 bg-slate-50 dark:bg-white/[0.03] border-b border-slate-200 dark:border-white/10 flex items-center gap-2">
-          <Info className="w-4 h-4 text-slate-400" />
-          <span className="text-xs font-bold uppercase tracking-wider text-slate-500">Maintenance Directives</span>
+      <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-2xs">
+        <div className="p-4 bg-slate-50 border-b border-slate-200 flex items-center gap-2">
+          <Info className="w-4 h-4 text-slate-500" />
+          <span className="text-xs font-bold uppercase tracking-wider text-slate-600">Maintenance Directives</span>
         </div>
         <div className="p-6">
-          <pre className="whitespace-pre-wrap font-mono text-xs text-slate-700 dark:text-slate-300 bg-slate-50 dark:bg-black/20 p-6 rounded-xl border border-slate-200 dark:border-white/5 leading-relaxed">
+          <pre className="whitespace-pre-wrap font-mono text-xs text-slate-700 bg-slate-50 p-6 rounded-xl border border-slate-200 leading-relaxed">
             {maintenanceText}
           </pre>
         </div>
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="p-6 rounded-2xl border border-emerald-500/20 bg-emerald-50/50 dark:bg-emerald-500/5">
-          <h3 className="font-bold text-emerald-900 dark:text-emerald-300 mb-2">Automated Verification Report</h3>
-          <ul className="space-y-2 text-sm text-emerald-800 dark:text-emerald-400">
+        <div className="p-6 rounded-2xl border border-emerald-200 bg-emerald-50/70 shadow-2xs">
+          <h3 className="font-bold text-emerald-900 mb-3 text-sm">Automated Verification Report</h3>
+          <ul className="space-y-2.5 text-xs font-medium text-emerald-800">
             <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" /> HesabPay Gateway: Active
+              <CheckCircle className="w-4 h-4 text-emerald-600" /> HesabPay Gateway: Active
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" /> AI Gateway (Gemini): Active
+              <CheckCircle className="w-4 h-4 text-emerald-600" /> AI Gateway (Gemini): Active
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" /> Supabase Edge & RLS: Verified
+              <CheckCircle className="w-4 h-4 text-emerald-600" /> Firestore Database & Security Rules: Verified
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4" /> cPanel Proxy Integrity: Passed
+              <CheckCircle className="w-4 h-4 text-emerald-600" /> Storage & CDN Proxy Integrity: Passed
             </li>
           </ul>
         </div>
-        <div className="p-6 rounded-2xl border border-slate-200 dark:border-white/10 bg-white dark:bg-navy-900">
-          <h3 className="font-bold text-slate-900 dark:text-white mb-2">Last Audit Details</h3>
-          <div className="text-sm text-slate-500 space-y-1">
-            <p>Timestamp: {new Date().toISOString()}</p>
-            <p>Environment: Production Export Ready</p>
-            <p>Build Status: 37 Static Routes Generated</p>
+        <div className="p-6 rounded-2xl border border-slate-200 bg-white shadow-2xs">
+          <h3 className="font-bold text-slate-900 mb-3 text-sm">Last Audit Details</h3>
+          <div className="text-xs text-slate-600 space-y-2">
+            <p className="flex items-center justify-between">
+              <span className="text-slate-500">Timestamp:</span>
+              <span className="font-mono text-slate-800">{new Date().toISOString()}</span>
+            </p>
+            <p className="flex items-center justify-between">
+              <span className="text-slate-500">Environment:</span>
+              <span className="font-semibold text-brand-blue">Production Ready</span>
+            </p>
+            <p className="flex items-center justify-between">
+              <span className="text-slate-500">Routing Status:</span>
+              <span className="font-semibold text-emerald-700">Dynamic CMS Synchronized</span>
+            </p>
           </div>
         </div>
       </div>

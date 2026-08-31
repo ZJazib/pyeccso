@@ -51,20 +51,20 @@ export function I18nField({
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between">
-        <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1">
+        <Label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
           {label}
           {required && <span className="text-rose-500">*</span>}
         </Label>
 
         {/* Language Tabs */}
-        <div className="flex items-center p-0.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-[11px] font-medium border border-slate-200 dark:border-slate-700">
+        <div className="flex items-center p-0.5 rounded-lg bg-slate-100 text-[11px] font-medium border border-slate-200">
           <button
             type="button"
             onClick={() => setLang("en")}
-            className={`px-2 py-0.5 rounded-md transition-all ${
+            className={`px-2.5 py-0.5 rounded-md transition-all ${
               lang === "en"
-                ? "bg-white dark:bg-slate-700 text-brand-blue dark:text-blue-400 font-bold shadow-xs"
-                : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                ? "bg-white text-brand-blue font-bold shadow-xs"
+                : "text-slate-600 hover:text-slate-900"
             }`}
           >
             English {values.en ? "✓" : ""}
@@ -72,10 +72,10 @@ export function I18nField({
           <button
             type="button"
             onClick={() => setLang("dr")}
-            className={`px-2 py-0.5 rounded-md transition-all ${
+            className={`px-2.5 py-0.5 rounded-md transition-all ${
               lang === "dr"
-                ? "bg-white dark:bg-slate-700 text-brand-blue dark:text-blue-400 font-bold shadow-xs"
-                : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                ? "bg-white text-brand-blue font-bold shadow-xs"
+                : "text-slate-600 hover:text-slate-900"
             }`}
           >
             دری {values.dr ? "✓" : ""}
@@ -83,10 +83,10 @@ export function I18nField({
           <button
             type="button"
             onClick={() => setLang("ps")}
-            className={`px-2 py-0.5 rounded-md transition-all ${
+            className={`px-2.5 py-0.5 rounded-md transition-all ${
               lang === "ps"
-                ? "bg-white dark:bg-slate-700 text-brand-blue dark:text-blue-400 font-bold shadow-xs"
-                : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                ? "bg-white text-brand-blue font-bold shadow-xs"
+                : "text-slate-600 hover:text-slate-900"
             }`}
           >
             پښتو {values.ps ? "✓" : ""}
@@ -95,7 +95,7 @@ export function I18nField({
       </div>
 
       {description && (
-        <p className="text-[11px] text-slate-500 dark:text-slate-400">{description}</p>
+        <p className="text-[11px] text-slate-500">{description}</p>
       )}
 
       {multiline ? (
@@ -112,7 +112,9 @@ export function I18nField({
               ? "متن را به زبان دری بنویسید..."
               : "متن په پښتو ژبه ولیکئ...")
           }
-          className={`text-sm ${isRtl ? "text-right font-vazirmatn" : "text-left"}`}
+          className={`text-sm bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-brand-blue focus:ring-1 focus:ring-brand-blue rounded-xl ${
+            isRtl ? "text-right font-vazirmatn" : "text-left"
+          }`}
         />
       ) : (
         <Input
@@ -127,7 +129,9 @@ export function I18nField({
               ? "متن را به زبان دری بنویسید..."
               : "متن په پښتو ژبه ولیکئ...")
           }
-          className={`text-sm ${isRtl ? "text-right font-vazirmatn" : "text-left"}`}
+          className={`text-sm bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 focus:border-brand-blue focus:ring-1 focus:ring-brand-blue rounded-xl ${
+            isRtl ? "text-right font-vazirmatn" : "text-left"
+          }`}
         />
       )}
     </div>

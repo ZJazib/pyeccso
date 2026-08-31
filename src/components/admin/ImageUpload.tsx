@@ -122,25 +122,25 @@ export function ImageUpload({
     <div className="space-y-2.5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <Label className="text-xs font-semibold text-slate-700">
             {label}
           </Label>
           {aspectRatioLabel && (
-            <span className="text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 px-1.5 py-0.5 rounded font-mono">
+            <span className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-mono border border-slate-200">
               {aspectRatioLabel}
             </span>
           )}
         </div>
 
         {/* Tab switchers */}
-        <div className="flex items-center gap-1.5 text-xs">
+        <div className="flex items-center gap-1 p-0.5 bg-slate-100 rounded-lg border border-slate-200 text-xs">
           <button
             type="button"
             onClick={() => setActiveTab("upload")}
-            className={`px-2 py-0.5 rounded font-medium transition ${
+            className={`px-2.5 py-0.5 rounded-md font-medium transition ${
               activeTab === "upload"
-                ? "bg-brand-blue text-white shadow-xs"
-                : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                ? "bg-white text-brand-blue shadow-xs font-semibold"
+                : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Upload Device
@@ -148,10 +148,10 @@ export function ImageUpload({
           <button
             type="button"
             onClick={() => setActiveTab("url")}
-            className={`px-2 py-0.5 rounded font-medium transition ${
+            className={`px-2.5 py-0.5 rounded-md font-medium transition ${
               activeTab === "url"
-                ? "bg-brand-blue text-white shadow-xs"
-                : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
+                ? "bg-white text-brand-blue shadow-xs font-semibold"
+                : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Web URL / Stock
@@ -160,7 +160,7 @@ export function ImageUpload({
       </div>
 
       {description && (
-        <p className="text-[11px] text-slate-500 dark:text-slate-400">{description}</p>
+        <p className="text-[11px] text-slate-500">{description}</p>
       )}
 
       {/* Hidden file input */}
@@ -183,27 +183,27 @@ export function ImageUpload({
               onClick={() => fileInputRef.current?.click()}
               className={`border-2 border-dashed rounded-xl p-5 text-center cursor-pointer transition-all ${
                 isDragging
-                  ? "border-brand-blue bg-blue-50/50 dark:bg-blue-950/30 scale-[0.99]"
-                  : "border-slate-300 dark:border-slate-700 hover:border-brand-blue dark:hover:border-blue-400 bg-slate-50/70 dark:bg-slate-900/50"
+                  ? "border-brand-blue bg-blue-50/70 scale-[0.99]"
+                  : "border-slate-300 hover:border-brand-blue bg-slate-50/80 hover:bg-blue-50/30"
               }`}
             >
               {isCompressing ? (
                 <div className="flex flex-col items-center justify-center py-3">
                   <RefreshCw className="w-6 h-6 text-brand-blue animate-spin mb-2" />
-                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                  <p className="text-xs font-semibold text-slate-700">
                     Optimizing & Compressing Image...
                   </p>
-                  <p className="text-[11px] text-slate-400">Converting to ultra-fast WebP</p>
+                  <p className="text-[11px] text-slate-500">Converting to ultra-fast WebP</p>
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center py-2">
-                  <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/40 text-brand-blue dark:text-blue-400 flex items-center justify-center mb-2">
+                  <div className="w-10 h-10 rounded-full bg-blue-50 text-brand-blue border border-blue-100 flex items-center justify-center mb-2 shadow-2xs">
                     <UploadCloud className="w-5 h-5" />
                   </div>
-                  <p className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                  <p className="text-xs font-semibold text-slate-800">
                     Click to browse or drag & drop image
                   </p>
-                  <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  <p className="text-[11px] text-slate-500 mt-0.5">
                     JPG, PNG, WebP, SVG, GIF (Auto-compressed to high-speed WebP)
                   </p>
                 </div>
@@ -222,7 +222,7 @@ export function ImageUpload({
                 placeholder="https://images.unsplash.com/... or image link"
                 value={inputUrl}
                 onChange={(e) => setInputUrl(e.target.value)}
-                className="pl-9 text-xs"
+                className="pl-9 text-xs bg-white border-slate-300"
               />
             </div>
             <Button
@@ -230,7 +230,7 @@ export function ImageUpload({
               size="sm"
               variant="outline"
               onClick={handleApplyUrl}
-              className="text-xs shrink-0"
+              className="text-xs shrink-0 bg-white border-slate-300 text-slate-700 hover:bg-slate-50"
             >
               <Check className="w-3.5 h-3.5 mr-1" />
               Apply
@@ -241,7 +241,7 @@ export function ImageUpload({
             <button
               type="button"
               onClick={() => setShowPresets(!showPresets)}
-              className="text-xs text-brand-blue dark:text-blue-400 hover:underline flex items-center gap-1 font-medium"
+              className="text-xs text-brand-blue hover:underline flex items-center gap-1 font-medium"
             >
               <Sparkles className="w-3.5 h-3.5" />
               {showPresets ? "Hide Presets" : "Stock Photo Library"}
@@ -250,7 +250,7 @@ export function ImageUpload({
 
           {/* Preset Image Picker */}
           {showPresets && (
-            <div className="p-2.5 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-200 dark:border-slate-700 grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <div className="p-2.5 bg-slate-50 rounded-xl border border-slate-200 grid grid-cols-2 sm:grid-cols-3 gap-2">
               {PRESET_IMAGES.map((preset, idx) => (
                 <button
                   key={idx}
@@ -260,7 +260,7 @@ export function ImageUpload({
                     onChange(preset.url);
                     setShowPresets(false);
                   }}
-                  className="group relative rounded-lg overflow-hidden border border-slate-200 dark:border-slate-700 hover:border-brand-blue aspect-video text-left"
+                  className="group relative rounded-lg overflow-hidden border border-slate-200 hover:border-brand-blue aspect-video text-left shadow-2xs"
                 >
                   <img
                     src={preset.url}
@@ -281,16 +281,16 @@ export function ImageUpload({
 
       {/* Error Notice */}
       {uploadError && (
-        <div className="flex items-center gap-2 p-2 rounded-lg bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-800 text-rose-700 dark:text-rose-300 text-xs">
-          <AlertCircle className="w-4 h-4 shrink-0" />
+        <div className="flex items-center gap-2 p-2.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs">
+          <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
           <span>{uploadError}</span>
         </div>
       )}
 
       {/* Live Preview Box with optimization details & action toolbar */}
       {value && (
-        <div className="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-slate-50 dark:bg-slate-900/60 p-3 space-y-2.5">
-          <div className="relative rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 aspect-video max-h-48 bg-slate-950/10 flex items-center justify-center group">
+        <div className="border border-slate-200 rounded-xl overflow-hidden bg-slate-50/70 p-3 space-y-2.5 shadow-2xs">
+          <div className="relative rounded-lg overflow-hidden border border-slate-200 aspect-video max-h-48 bg-slate-100 flex items-center justify-center group">
             <img
               src={value}
               alt="Uploaded Preview"
@@ -301,13 +301,13 @@ export function ImageUpload({
             />
             
             {/* Overlay Toolbar */}
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+            <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
               <Button
                 type="button"
                 size="sm"
                 variant="secondary"
                 onClick={() => fileInputRef.current?.click()}
-                className="h-8 text-xs font-semibold bg-white/90 hover:bg-white text-slate-800"
+                className="h-8 text-xs font-semibold bg-white/95 hover:bg-white text-slate-800 shadow-md"
               >
                 <RefreshCw className="w-3.5 h-3.5 mr-1" />
                 Replace
@@ -317,7 +317,7 @@ export function ImageUpload({
                 size="sm"
                 variant="destructive"
                 onClick={handleClear}
-                className="h-8 text-xs font-semibold"
+                className="h-8 text-xs font-semibold shadow-md"
               >
                 <Trash2 className="w-3.5 h-3.5 mr-1" />
                 Remove
@@ -328,14 +328,14 @@ export function ImageUpload({
           {/* Info Footer & Optimization Stats */}
           <div className="flex items-center justify-between text-xs pt-1">
             {optimizationStats ? (
-              <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-medium">
-                <FileCheck className="w-4 h-4 shrink-0" />
+              <div className="flex items-center gap-1.5 text-emerald-700 font-medium">
+                <FileCheck className="w-4 h-4 shrink-0 text-emerald-600" />
                 <span>
                   Optimized: {formatBytes(optimizationStats.optimizedSize)} (saved {optimizationStats.compressionRatio}%)
                 </span>
               </div>
             ) : (
-              <span className="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[200px]">
+              <span className="text-[11px] text-slate-500 truncate max-w-[200px]">
                 {value.startsWith("data:") ? "Local optimized image stored" : "Online image linked"}
               </span>
             )}
@@ -346,7 +346,7 @@ export function ImageUpload({
                 size="sm"
                 variant="outline"
                 onClick={() => fileInputRef.current?.click()}
-                className="h-7 text-xs px-2.5 text-slate-700 dark:text-slate-200"
+                className="h-7 text-xs px-2.5 text-slate-700 bg-white border-slate-200 hover:bg-slate-50"
               >
                 <RefreshCw className="w-3 h-3 mr-1" />
                 Replace
@@ -356,7 +356,7 @@ export function ImageUpload({
                 size="sm"
                 variant="ghost"
                 onClick={handleClear}
-                className="h-7 text-xs px-2 text-rose-600 hover:text-rose-700 hover:bg-rose-50 dark:hover:bg-rose-950/30"
+                className="h-7 text-xs px-2 text-rose-600 hover:text-rose-700 hover:bg-rose-50"
               >
                 <Trash2 className="w-3 h-3 mr-1" />
                 Delete

@@ -158,20 +158,20 @@ function AdminAbout() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
             <Info className="w-6 h-6 text-brand-blue" />
             About Us & Governance CMS
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Manage vision, mission, core values, leadership team, board members, and international donor partners.
           </p>
         </div>
         <Button
           onClick={handleSaveAboutInfo}
           disabled={savingOrg}
-          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
         >
           <Save className="w-4 h-4 mr-1.5" />
           {savingOrg ? "Saving…" : "Save to Firestore"}
@@ -179,59 +179,59 @@ function AdminAbout() {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="bg-slate-950 border border-slate-800 p-1">
-          <TabsTrigger value="overview" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+        <TabsList className="bg-slate-100 border border-slate-200 p-1 rounded-xl">
+          <TabsTrigger value="overview" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600">
             Vision, Mission & Registration
           </TabsTrigger>
-          <TabsTrigger value="leadership" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+          <TabsTrigger value="leadership" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600">
             Executive Leadership & Board ({teamMembers.length})
           </TabsTrigger>
-          <TabsTrigger value="partners" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+          <TabsTrigger value="partners" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600">
             Partners & Donors ({partners.length})
           </TabsTrigger>
         </TabsList>
 
         {/* Tab 1: Vision, Mission, Registration */}
         <TabsContent value="overview" className="space-y-6">
-          <Card className="bg-slate-950 border-slate-800 text-white">
+          <Card className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs">
             <CardHeader>
-              <CardTitle className="text-base font-bold text-white flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <CardTitle className="text-base font-bold text-slate-900 flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-600" />
                 Legal Registration & Institutional Identity
               </CardTitle>
-              <CardDescription className="text-xs text-slate-400">
+              <CardDescription className="text-xs text-slate-500">
                 Official registration details under Afghan non-governmental organization laws.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Registration Number</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Registration Number</Label>
                   <Input
                     value={aboutInfo.regNumber}
                     onChange={(e) => setAboutInfo({ ...aboutInfo, regNumber: e.target.value })}
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Founding Year</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Founding Year</Label>
                   <Input
                     value={aboutInfo.foundingYear}
                     onChange={(e) => setAboutInfo({ ...aboutInfo, foundingYear: e.target.value })}
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Supervising Ministry</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Supervising Ministry</Label>
                   <Input
                     value={aboutInfo.ministry}
                     onChange={(e) => setAboutInfo({ ...aboutInfo, ministry: e.target.value })}
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-slate-800/80 space-y-4">
+              <div className="pt-3 border-t border-slate-100 space-y-4">
                 <I18nField
                   label="Organizational Vision"
                   value={aboutInfo.vision}
@@ -278,7 +278,7 @@ function AdminAbout() {
         {/* Tab 2: Leadership & Board */}
         <TabsContent value="leadership" className="space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               Profiles of Board of Directors, Executive Director, and Senior Program Managers.
             </p>
             <Button
@@ -296,7 +296,7 @@ function AdminAbout() {
                   },
                 })
               }
-              className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+              className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
             >
               <Plus className="w-3.5 h-3.5 mr-1" />
               Add Leadership Member
@@ -305,25 +305,25 @@ function AdminAbout() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {teamMembers.map((member) => (
-              <Card key={member.id} className="bg-slate-950 border-slate-800 text-white">
+              <Card key={member.id} className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs hover:shadow-md transition-all">
                 <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-3">
                     {member.coverUrl ? (
                       <img
                         src={member.coverUrl}
                         alt="Avatar"
-                        className="w-10 h-10 rounded-full object-cover border border-slate-700"
+                        className="w-10 h-10 rounded-full object-cover border border-slate-200"
                       />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center font-bold text-brand-blue text-xs">
+                      <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center font-bold text-brand-blue text-xs border border-blue-100">
                         {member.data?.name?.en?.charAt(0) || "U"}
                       </div>
                     )}
                     <div>
-                      <h4 className="text-xs font-bold text-white">
+                      <h4 className="text-xs font-bold text-slate-900">
                         {member.data?.name?.en || "Team Member"}
                       </h4>
-                      <p className="text-[10px] text-slate-400">
+                      <p className="text-[10px] text-slate-500">
                         {member.data?.role?.en || "Executive Role"}
                       </p>
                     </div>
@@ -349,10 +349,10 @@ function AdminAbout() {
                           },
                         })
                       }
-                      className="h-7 w-7 p-0 text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800"
+                      className="h-7 w-7 p-0 text-slate-400 hover:text-brand-blue bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded-lg"
                       title="Edit member"
                     >
-                      <Edit2 className="w-3.5 h-3.5 text-sky-400" />
+                      <Edit2 className="w-3.5 h-3.5 text-brand-blue" />
                     </Button>
                     <Button
                       size="sm"
@@ -364,14 +364,14 @@ function AdminAbout() {
                           type: "member",
                         })
                       }
-                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-400 bg-slate-900/60 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50"
+                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded-lg"
                       title="Delete member"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4 pt-1 text-xs text-slate-400 space-y-1.5">
+                <CardContent className="p-4 pt-1 text-xs text-slate-600 space-y-1.5">
                   <p className="line-clamp-2">{member.data?.bio?.en}</p>
                   {member.data?.email && (
                     <p className="text-[11px] text-slate-500 flex items-center gap-1.5 font-mono">
@@ -388,7 +388,7 @@ function AdminAbout() {
         {/* Tab 3: Partners & Donors */}
         <TabsContent value="partners" className="space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               UN Agencies, international donors, government ministries, and partner NGOs
             </p>
             <Button
@@ -405,7 +405,7 @@ function AdminAbout() {
                   },
                 })
               }
-              className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+              className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
             >
               <Plus className="w-3.5 h-3.5 mr-1" />
               Add Partner
@@ -414,11 +414,11 @@ function AdminAbout() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {partners.map((partner) => (
-              <Card key={partner.id} className="bg-slate-950 border-slate-800 text-white">
+              <Card key={partner.id} className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs hover:shadow-md transition-all">
                 <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Handshake className="w-4 h-4 text-emerald-400" />
-                    <span className="text-xs font-bold text-white">
+                    <Handshake className="w-4 h-4 text-emerald-600" />
+                    <span className="text-xs font-bold text-slate-900">
                       {partner.data?.name?.en || "Partner Name"}
                     </span>
                   </div>
@@ -442,10 +442,10 @@ function AdminAbout() {
                           },
                         })
                       }
-                      className="h-7 w-7 p-0 text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800"
+                      className="h-7 w-7 p-0 text-slate-400 hover:text-brand-blue bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded-lg"
                       title="Edit partner"
                     >
-                      <Edit2 className="w-3.5 h-3.5 text-sky-400" />
+                      <Edit2 className="w-3.5 h-3.5 text-brand-blue" />
                     </Button>
                     <Button
                       size="sm"
@@ -457,15 +457,15 @@ function AdminAbout() {
                           type: "partner",
                         })
                       }
-                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-400 bg-slate-900/60 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50"
+                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded-lg"
                       title="Delete partner"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4 pt-1 text-xs text-slate-400 space-y-1">
-                  <span className="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-emerald-300 font-semibold inline-block">
+                <CardContent className="p-4 pt-1 text-xs text-slate-600 space-y-1">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold inline-block">
                     {partner.data?.category || "Partner"}
                   </span>
                   <p className="line-clamp-2 mt-1">{partner.data?.description?.en}</p>
@@ -484,9 +484,9 @@ function AdminAbout() {
             if (!open) setEditingMember(null);
           }}
         >
-          <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl">
             <DialogHeader>
-              <DialogTitle className="text-base font-bold text-white">
+              <DialogTitle className="text-base font-bold text-slate-900">
                 {editingMember.id ? "Edit Team Member" : "New Team Member"}
               </DialogTitle>
             </DialogHeader>
@@ -527,7 +527,7 @@ function AdminAbout() {
               />
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Email Address</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Email Address</Label>
                   <Input
                     type="email"
                     value={editingMember.data?.email || ""}
@@ -538,11 +538,11 @@ function AdminAbout() {
                       })
                     }
                     placeholder="official@pyecso.org.af"
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Phone / WhatsApp</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Phone / WhatsApp</Label>
                   <Input
                     value={editingMember.data?.phone || ""}
                     onChange={(e) =>
@@ -552,7 +552,7 @@ function AdminAbout() {
                       })
                     }
                     placeholder="+93 78 888 1201"
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
@@ -562,10 +562,10 @@ function AdminAbout() {
                 onChange={(url) => setEditingMember({ ...editingMember, coverUrl: url })}
               />
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setEditingMember(null)} className="text-xs">
+                <Button type="button" variant="outline" onClick={() => setEditingMember(null)} className="text-xs border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl">
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold">
+                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs">
                   Save Member
                 </Button>
               </DialogFooter>
@@ -582,9 +582,9 @@ function AdminAbout() {
             if (!open) setEditingPartner(null);
           }}
         >
-          <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl">
             <DialogHeader>
-              <DialogTitle className="text-base font-bold text-white">
+              <DialogTitle className="text-base font-bold text-slate-900">
                 {editingPartner.id ? "Edit Partner" : "New Partner"}
               </DialogTitle>
             </DialogHeader>
@@ -601,7 +601,7 @@ function AdminAbout() {
                 required
               />
               <div>
-                <Label className="text-xs font-semibold text-slate-300">Partner Category</Label>
+                <Label className="text-xs font-semibold text-slate-700">Partner Category</Label>
                 <Input
                   value={editingPartner.data?.category || "UN Agency"}
                   onChange={(e) =>
@@ -611,7 +611,7 @@ function AdminAbout() {
                     })
                   }
                   placeholder="UN Agency, International NGO, Ministry, Donor"
-                  className="text-xs mt-1"
+                  className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                 />
               </div>
               <I18nField
@@ -632,10 +632,10 @@ function AdminAbout() {
                 onChange={(url) => setEditingPartner({ ...editingPartner, coverUrl: url })}
               />
               <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setEditingPartner(null)} className="text-xs">
+                <Button type="button" variant="outline" onClick={() => setEditingPartner(null)} className="text-xs border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl">
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold">
+                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs">
                   Save Partner
                 </Button>
               </DialogFooter>

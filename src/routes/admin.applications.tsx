@@ -113,13 +113,13 @@ function AdminApplications() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
             <FileText className="w-6 h-6 text-brand-blue" />
             Applicant Dossiers & Submissions
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Review candidate resumes, evaluate cover letters, and track hiring decisions for all open job vacancies.
           </p>
         </div>
@@ -128,7 +128,7 @@ function AdminApplications() {
           size="sm"
           onClick={loadData}
           disabled={loading}
-          className="border-slate-700 bg-slate-800 text-slate-200 text-xs"
+          className="border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs rounded-xl shadow-2xs"
         >
           <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
           Refresh Submissions
@@ -136,14 +136,14 @@ function AdminApplications() {
       </div>
 
       {/* Filter Bar */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200 shadow-2xs">
         <div className="relative w-full sm:w-80">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <Input
             placeholder="Search applicants by name, email, role..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 text-xs bg-slate-900 border-slate-700"
+            className="pl-9 text-xs bg-white border-slate-300 text-slate-900 rounded-xl"
           />
         </div>
 
@@ -152,10 +152,10 @@ function AdminApplications() {
             <button
               key={st}
               onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors whitespace-nowrap ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold capitalize transition-colors whitespace-nowrap ${
                 statusFilter === st
-                  ? "bg-brand-blue text-white"
-                  : "text-slate-400 hover:text-slate-200 bg-slate-900"
+                  ? "bg-brand-blue text-white shadow-xs"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100 bg-slate-50 border border-slate-200"
               }`}
             >
               {st}
@@ -165,7 +165,7 @@ function AdminApplications() {
       </div>
 
       {/* Table of Applications */}
-      <Card className="bg-slate-950 border-slate-800 text-white overflow-hidden">
+      <Card className="bg-white border-slate-200 text-slate-900 overflow-hidden rounded-2xl shadow-2xs">
         <CardContent className="p-0">
           {filteredApps.length === 0 ? (
             <div className="py-12 text-center text-slate-500 text-xs">
@@ -174,7 +174,7 @@ function AdminApplications() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
-                <thead className="bg-slate-900/80 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200 font-bold">
                   <tr>
                     <th className="px-4 py-3">Applicant</th>
                     <th className="px-4 py-3">Position Applied For</th>
@@ -184,17 +184,17 @@ function AdminApplications() {
                     <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-slate-100">
                   {filteredApps.map((app) => (
-                    <tr key={app.id} className="hover:bg-slate-900/40 transition-colors">
+                    <tr key={app.id} className="hover:bg-slate-50 transition-colors">
                       <td className="px-4 py-3">
-                        <div className="font-semibold text-white">{app.fullName}</div>
-                        <div className="text-[10px] text-slate-400">{app.province || "Kabul"}</div>
+                        <div className="font-semibold text-slate-900">{app.fullName}</div>
+                        <div className="text-[10px] text-slate-500">{app.province || "Kabul"}</div>
                       </td>
-                      <td className="px-4 py-3 font-medium text-slate-200">
+                      <td className="px-4 py-3 font-medium text-slate-800">
                         {app.referenceTitle || app.kind}
                       </td>
-                      <td className="px-4 py-3 text-slate-400 font-mono text-[11px]">
+                      <td className="px-4 py-3 text-slate-600 font-mono text-[11px]">
                         <div>{app.email}</div>
                         <div>{app.phone}</div>
                       </td>
@@ -205,14 +205,14 @@ function AdminApplications() {
                         <span
                           className={`text-[10px] px-2 py-0.5 rounded-full font-semibold uppercase ${
                             app.status === "new"
-                              ? "bg-amber-500/20 text-amber-300 border border-amber-500/30"
+                              ? "bg-amber-50 text-amber-700 border border-amber-200"
                               : app.status === "shortlisted"
-                              ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                              ? "bg-blue-50 text-blue-700 border border-blue-200"
                               : app.status === "accepted"
-                              ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                               : app.status === "rejected"
-                              ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
-                              : "bg-slate-800 text-slate-400"
+                              ? "bg-rose-50 text-rose-700 border border-rose-200"
+                              : "bg-slate-100 text-slate-600"
                           }`}
                         >
                           {app.status}
@@ -227,16 +227,16 @@ function AdminApplications() {
                               setSelectedApp(app);
                               setReviewerNotes(app.notes || "");
                             }}
-                            className="h-7 text-xs border-slate-700 bg-slate-900 text-slate-300 hover:text-white"
+                            className="h-7 text-xs border-slate-300 bg-white text-slate-700 hover:bg-slate-50 hover:text-brand-blue rounded-lg"
                           >
-                            <Eye className="w-3.5 h-3.5 mr-1 text-sky-400" />
+                            <Eye className="w-3.5 h-3.5 mr-1 text-brand-blue" />
                             Review CV
                           </Button>
                           <Button
                             size="sm"
                             variant="ghost"
                             onClick={() => setAppToDelete(app)}
-                            className="h-7 w-7 p-0 text-slate-400 hover:text-rose-400 bg-slate-900/60 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50"
+                            className="h-7 w-7 p-0 text-slate-400 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded-lg"
                             title="Delete dossier"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -255,40 +255,40 @@ function AdminApplications() {
       {/* Review Dialog */}
       {selectedApp && (
         <Dialog open={!!selectedApp} onOpenChange={() => setSelectedApp(null)}>
-          <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl">
             <DialogHeader>
-              <DialogTitle className="text-base font-bold text-white flex items-center justify-between">
+              <DialogTitle className="text-base font-bold text-slate-900 flex items-center justify-between">
                 <span>Candidate Dossier: {selectedApp.fullName}</span>
-                <span className="text-xs uppercase font-mono text-emerald-400">
+                <span className="text-xs uppercase font-mono px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
                   {selectedApp.status}
                 </span>
               </DialogTitle>
             </DialogHeader>
 
             <div className="space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-4 p-3 rounded-xl bg-slate-950 border border-slate-800">
+              <div className="grid grid-cols-2 gap-4 p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700">
                 <div>
-                  <span className="text-slate-500 block text-[10px] uppercase">Email</span>
-                  <span className="text-slate-200 font-mono">{selectedApp.email}</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-semibold">Email</span>
+                  <span className="text-slate-900 font-mono">{selectedApp.email}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px] uppercase">Phone</span>
-                  <span className="text-slate-200 font-mono">{selectedApp.phone || "N/A"}</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-semibold">Phone</span>
+                  <span className="text-slate-900 font-mono">{selectedApp.phone || "N/A"}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px] uppercase">Target Position</span>
-                  <span className="text-slate-200 font-semibold">{selectedApp.referenceTitle || selectedApp.kind}</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-semibold">Target Position</span>
+                  <span className="text-slate-900 font-semibold">{selectedApp.referenceTitle || selectedApp.kind}</span>
                 </div>
                 <div>
-                  <span className="text-slate-500 block text-[10px] uppercase">Province / Residence</span>
-                  <span className="text-slate-200">{selectedApp.province || "Kabul"}</span>
+                  <span className="text-slate-500 block text-[10px] uppercase font-semibold">Province / Residence</span>
+                  <span className="text-slate-900">{selectedApp.province || "Kabul"}</span>
                 </div>
               </div>
 
               {selectedApp.data?.coverLetter && (
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Cover Letter / Statement of Purpose</Label>
-                  <div className="p-3 mt-1 rounded-xl bg-slate-950 border border-slate-800 text-slate-300 text-xs leading-relaxed whitespace-pre-wrap">
+                  <Label className="text-xs font-semibold text-slate-700">Cover Letter / Statement of Purpose</Label>
+                  <div className="p-3.5 mt-1 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-xs leading-relaxed whitespace-pre-wrap">
                     {selectedApp.data?.coverLetter}
                   </div>
                 </div>
@@ -312,25 +312,25 @@ function AdminApplications() {
               />
 
               <div>
-                <Label className="text-xs font-semibold text-slate-300">HR Reviewer Notes & Evaluation</Label>
+                <Label className="text-xs font-semibold text-slate-700">HR Reviewer Notes & Evaluation</Label>
                 <Textarea
                   value={reviewerNotes}
                   onChange={(e) => setReviewerNotes(e.target.value)}
                   placeholder="Record interview results, qualification checks, or hiring decision rationale..."
-                  className="text-xs mt-1 bg-slate-950 border-slate-800"
+                  className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   rows={3}
                 />
               </div>
             </div>
 
-            <DialogFooter className="flex items-center justify-between gap-2 border-t border-slate-800 pt-3 flex-wrap">
+            <DialogFooter className="flex items-center justify-between gap-2 border-t border-slate-100 pt-3 flex-wrap">
               <div className="flex items-center gap-1.5 flex-wrap">
                 <Button
                   size="sm"
                   type="button"
                   variant="outline"
                   onClick={() => handleStatusChange(selectedApp.id, "shortlisted", reviewerNotes)}
-                  className="text-xs border-blue-500/40 text-blue-300 bg-blue-950/30"
+                  className="text-xs border-blue-300 text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-xl"
                 >
                   Shortlist
                 </Button>
@@ -339,7 +339,7 @@ function AdminApplications() {
                   type="button"
                   variant="outline"
                   onClick={() => handleStatusChange(selectedApp.id, "accepted", reviewerNotes)}
-                  className="text-xs border-emerald-500/40 text-emerald-300 bg-emerald-950/30"
+                  className="text-xs border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-xl"
                 >
                   Accept
                 </Button>
@@ -348,7 +348,7 @@ function AdminApplications() {
                   type="button"
                   variant="outline"
                   onClick={() => handleStatusChange(selectedApp.id, "rejected", reviewerNotes)}
-                  className="text-xs border-rose-500/40 text-rose-300 bg-rose-950/30"
+                  className="text-xs border-rose-300 text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-xl"
                 >
                   Reject
                 </Button>
@@ -357,7 +357,7 @@ function AdminApplications() {
                   type="button"
                   variant="outline"
                   onClick={() => setAppToDelete(selectedApp)}
-                  className="text-xs border-rose-500/40 text-rose-300 bg-rose-950/30 hover:bg-rose-900/50"
+                  className="text-xs border-rose-200 text-rose-600 bg-rose-50 hover:bg-rose-100 rounded-xl"
                 >
                   <Trash2 className="w-3.5 h-3.5 mr-1" />
                   Delete Dossier
@@ -367,7 +367,7 @@ function AdminApplications() {
               <Button
                 type="button"
                 onClick={() => handleStatusChange(selectedApp.id, selectedApp.status, reviewerNotes)}
-                className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+                className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
               >
                 Save Reviewer Notes
               </Button>

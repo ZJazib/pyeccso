@@ -70,33 +70,33 @@ function AdminLearn() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
             <BookOpen className="w-6 h-6 text-brand-blue" />
             Learn & Portal Ecosystem CMS
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Configure learning platform tracks, external LMS URLs, and role-based student/teacher/manager portal access points.
           </p>
         </div>
         <Button
           onClick={handleSave}
           disabled={saving}
-          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
         >
           <Save className="w-4 h-4 mr-1.5" />
           {saving ? "Saving…" : "Save Portal Settings"}
         </Button>
       </div>
 
-      <Card className="bg-slate-950 border-slate-800 text-white">
+      <Card className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs">
         <CardHeader>
-          <CardTitle className="text-base text-white flex items-center gap-2">
-            <Laptop className="w-5 h-5 text-emerald-400" />
+          <CardTitle className="text-base text-slate-900 font-bold flex items-center gap-2">
+            <Laptop className="w-5 h-5 text-emerald-600" />
             Learning Tracks & LMS Portal Integration
           </CardTitle>
-          <CardDescription className="text-xs text-slate-400">
+          <CardDescription className="text-xs text-slate-500">
             Educational copy and destination portals for Afghan youth
           </CardDescription>
         </CardHeader>
@@ -143,35 +143,35 @@ function AdminLearn() {
             description="Upload accredited TVET syllabus or vocational training prospectus PDF."
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-slate-800">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-slate-100">
             <div>
-              <Label className="text-xs font-semibold text-slate-300">Student Portal Route</Label>
+              <Label className="text-xs font-semibold text-slate-700">Student Portal Route</Label>
               <Input
                 value={learnConfig.studentPortalUrl}
                 onChange={(e) =>
                   setLearnConfig({ ...learnConfig, studentPortalUrl: e.target.value })
                 }
-                className="text-xs mt-1 font-mono"
+                className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
               />
             </div>
             <div>
-              <Label className="text-xs font-semibold text-slate-300">Instructor Portal Route</Label>
+              <Label className="text-xs font-semibold text-slate-700">Instructor Portal Route</Label>
               <Input
                 value={learnConfig.teacherPortalUrl}
                 onChange={(e) =>
                   setLearnConfig({ ...learnConfig, teacherPortalUrl: e.target.value })
                 }
-                className="text-xs mt-1 font-mono"
+                className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
               />
             </div>
             <div>
-              <Label className="text-xs font-semibold text-slate-300">Manager Portal Route</Label>
+              <Label className="text-xs font-semibold text-slate-700">Manager Portal Route</Label>
               <Input
                 value={learnConfig.managerPortalUrl}
                 onChange={(e) =>
                   setLearnConfig({ ...learnConfig, managerPortalUrl: e.target.value })
                 }
-                className="text-xs mt-1 font-mono"
+                className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
               />
             </div>
           </div>

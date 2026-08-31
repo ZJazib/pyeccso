@@ -101,14 +101,14 @@ function AdminOffices() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
             <MapPin className="w-6 h-6 text-brand-blue" />
             Provincial Field Offices CMS
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Manage headquarters and 11 provincial field office locations, managers, contact lines, and coordinates across Afghanistan.
+          <p className="text-xs text-slate-500 mt-1">
+            Manage headquarters and provincial field office locations, managers, contact lines, and coordinates across Afghanistan.
           </p>
         </div>
         <Button
@@ -129,7 +129,7 @@ function AdminOffices() {
               },
             })
           }
-          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
         >
           <Plus className="w-4 h-4 mr-1.5" />
           Add Field Office
@@ -139,52 +139,52 @@ function AdminOffices() {
       {/* Offices Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {offices.length === 0 ? (
-          <div className="col-span-full py-12 text-center text-slate-500 text-xs bg-slate-950 rounded-xl border border-slate-800">
+          <div className="col-span-full py-12 text-center text-slate-500 text-xs bg-white rounded-2xl border border-slate-200 shadow-2xs">
             No offices listed. Click "Add Field Office" to configure locations.
           </div>
         ) : (
           offices.map((off) => (
-            <Card key={off.id} className="bg-slate-950 border-slate-800 text-white flex flex-col justify-between">
+            <Card key={off.id} className="bg-white border-slate-200 text-slate-900 flex flex-col justify-between rounded-2xl shadow-2xs hover:shadow-md transition-all">
               <CardHeader className="p-4 pb-2">
                 <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-brand-blue/10 text-sky-400 border border-brand-blue/20">
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-brand-blue border border-blue-200">
                     {off.data?.province || "Office"}
                   </span>
-                  <span className="text-[10px] font-mono text-slate-500">
+                  <span className="text-[10px] font-mono text-slate-400">
                     {off.data?.lat?.toFixed?.(2) ?? off.data?.lat}, {off.data?.lng?.toFixed?.(2) ?? off.data?.lng}
                   </span>
                 </div>
-                <CardTitle className="text-sm font-bold text-white line-clamp-1">
+                <CardTitle className="text-sm font-bold text-slate-900 line-clamp-1">
                   {off.data?.officeName?.en || off.slug}
                 </CardTitle>
-                <p className="text-xs text-slate-400 line-clamp-2 pt-1">
+                <p className="text-xs text-slate-600 line-clamp-2 pt-1">
                   {off.data?.address?.en || "No address provided"}
                 </p>
               </CardHeader>
-              <CardContent className="p-4 pt-1 text-xs text-slate-400 space-y-2">
-                <div className="space-y-1 pt-2 border-t border-slate-800/80 text-[11px]">
+              <CardContent className="p-4 pt-1 text-xs text-slate-600 space-y-2">
+                <div className="space-y-1.5 pt-2 border-t border-slate-100 text-[11px]">
                   {off.data?.manager && (
-                    <div className="flex items-center gap-2 text-slate-300">
-                      <User className="w-3 h-3 text-slate-500" />
+                    <div className="flex items-center gap-2 text-slate-700">
+                      <User className="w-3 h-3 text-slate-400" />
                       <span>{off.data.manager}</span>
                     </div>
                   )}
                   {off.data?.phone && (
-                    <div className="flex items-center gap-2 text-slate-300">
-                      <Phone className="w-3 h-3 text-slate-500" />
+                    <div className="flex items-center gap-2 text-slate-700">
+                      <Phone className="w-3 h-3 text-slate-400" />
                       <span>{off.data.phone}</span>
                     </div>
                   )}
                   {off.data?.email && (
-                    <div className="flex items-center gap-2 text-slate-300">
-                      <Mail className="w-3 h-3 text-slate-500" />
+                    <div className="flex items-center gap-2 text-slate-700">
+                      <Mail className="w-3 h-3 text-slate-400" />
                       <span>{off.data.email}</span>
                     </div>
                   )}
                 </div>
 
-                <div className="flex items-center justify-between pt-3 border-t border-slate-800/80">
-                  <span className="text-[10px] font-mono text-slate-500">/{off.slug}</span>
+                <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+                  <span className="text-[10px] font-mono text-slate-400">/{off.slug}</span>
                   <div className="flex items-center gap-1">
                     <Button
                       size="sm"
@@ -208,16 +208,16 @@ function AdminOffices() {
                           },
                         })
                       }
-                      className="h-7 text-xs text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800 px-2"
+                      className="h-7 text-xs text-slate-700 hover:text-brand-blue bg-slate-50 hover:bg-blue-50 border border-slate-200 px-2 rounded-lg"
                     >
-                      <Edit2 className="w-3.5 h-3.5 mr-1 text-sky-400" />
+                      <Edit2 className="w-3.5 h-3.5 mr-1 text-brand-blue" />
                       Edit
                     </Button>
                     <Button
                       size="sm"
                       variant="ghost"
                       onClick={() => setItemToDelete(off)}
-                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-400 bg-slate-900/60 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50"
+                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded-lg"
                       title="Delete office"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -238,16 +238,16 @@ function AdminOffices() {
             if (!open) setEditingOffice(null);
           }}
         >
-          <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl">
             <DialogHeader>
-              <DialogTitle className="text-base font-bold text-white">
+              <DialogTitle className="text-base font-bold text-slate-900">
                 {editingOffice.id ? "Edit Provincial Office" : "New Provincial Office"}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSave} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Province</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Province</Label>
                   <Input
                     value={editingOffice.data?.province || ""}
                     onChange={(e) =>
@@ -257,17 +257,17 @@ function AdminOffices() {
                       })
                     }
                     placeholder="e.g. Nangarhar, Ghazni, Kabul"
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                     required
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">URL Slug</Label>
+                  <Label className="text-xs font-semibold text-slate-700">URL Slug</Label>
                   <Input
                     value={editingOffice.slug || ""}
                     onChange={(e) => setEditingOffice({ ...editingOffice, slug: e.target.value })}
                     placeholder="kabul-hq"
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                     required
                   />
                 </div>
@@ -301,7 +301,7 @@ function AdminOffices() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Office Manager / Head</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Office Manager / Head</Label>
                   <Input
                     value={editingOffice.data?.manager || ""}
                     onChange={(e) =>
@@ -310,11 +310,11 @@ function AdminOffices() {
                         data: { ...editingOffice.data, manager: e.target.value },
                       })
                     }
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Phone Number</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Phone Number</Label>
                   <Input
                     value={editingOffice.data?.phone || ""}
                     onChange={(e) =>
@@ -323,11 +323,11 @@ function AdminOffices() {
                         data: { ...editingOffice.data, phone: e.target.value },
                       })
                     }
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Email Address</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Email Address</Label>
                   <Input
                     value={editingOffice.data?.email || ""}
                     onChange={(e) =>
@@ -336,14 +336,14 @@ function AdminOffices() {
                         data: { ...editingOffice.data, email: e.target.value },
                       })
                     }
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Latitude</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Latitude</Label>
                   <Input
                     type="number"
                     step="0.0001"
@@ -354,11 +354,11 @@ function AdminOffices() {
                         data: { ...editingOffice.data, lat: Number(e.target.value) },
                       })
                     }
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Longitude</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Longitude</Label>
                   <Input
                     type="number"
                     step="0.0001"
@@ -369,7 +369,7 @@ function AdminOffices() {
                         data: { ...editingOffice.data, lng: Number(e.target.value) },
                       })
                     }
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
@@ -386,11 +386,11 @@ function AdminOffices() {
                   type="button"
                   variant="outline"
                   onClick={() => setEditingOffice(null)}
-                  className="text-xs"
+                  className="text-xs border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold">
+                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs">
                   Save Office
                 </Button>
               </DialogFooter>

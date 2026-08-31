@@ -100,19 +100,19 @@ function AdminCareers() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
             <Briefcase className="w-6 h-6 text-brand-blue" />
             Careers & Vacancies CMS
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Manage open job positions, terms of reference (ToR), duty stations, deadlines, and candidate applications.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link to="/admin/applications">
-            <Button variant="outline" size="sm" className="border-slate-700 bg-slate-800 text-slate-200 text-xs">
+            <Button variant="outline" size="sm" className="border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs rounded-xl shadow-2xs">
               <Users className="w-4 h-4 mr-1.5 text-brand-blue" />
               View Applications
             </Button>
@@ -137,7 +137,7 @@ function AdminCareers() {
                 },
               })
             }
-            className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+            className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
           >
             <Plus className="w-4 h-4 mr-1.5" />
             Post New Vacancy
@@ -148,44 +148,44 @@ function AdminCareers() {
       {/* Vacancies List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {vacancies.length === 0 ? (
-          <div className="col-span-full py-12 text-center text-slate-500 text-xs bg-slate-950 rounded-xl border border-slate-800">
+          <div className="col-span-full py-12 text-center text-slate-500 text-xs bg-white rounded-2xl border border-slate-200 shadow-2xs">
             No vacancies posted. Click "Post New Vacancy" to add one.
           </div>
         ) : (
           vacancies.map((job) => (
-            <Card key={job.id} className="bg-slate-950 border-slate-800 text-white flex flex-col justify-between">
+            <Card key={job.id} className="bg-white border-slate-200 text-slate-900 flex flex-col justify-between rounded-2xl shadow-2xs hover:shadow-md transition-all">
               <CardHeader className="p-4 pb-2">
                 <div className="flex items-center justify-between gap-2 mb-1.5">
-                  <span className="text-[10px] font-mono text-brand-blue">
+                  <span className="text-[10px] font-mono font-semibold text-brand-blue">
                     {job.data?.jobCode || job.slug}
                   </span>
                   <span
-                    className={`text-[10px] font-medium px-2 py-0.5 rounded ${
+                    className={`text-[10px] font-medium px-2 py-0.5 rounded-full ${
                       job.status === "published"
-                        ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                        : "bg-slate-800 text-slate-400"
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        : "bg-slate-100 text-slate-600 border border-slate-200"
                     }`}
                   >
                     {job.status}
                   </span>
                 </div>
-                <CardTitle className="text-sm font-bold text-white line-clamp-1">
+                <CardTitle className="text-sm font-bold text-slate-900 line-clamp-1">
                   {job.data?.title?.en || "Untitled Vacancy"}
                 </CardTitle>
-                <div className="flex items-center gap-3 text-[11px] text-slate-400 pt-1">
+                <div className="flex items-center gap-3 text-[11px] text-slate-500 pt-1">
                   <span className="flex items-center gap-1">
-                    <MapPin className="w-3 h-3 text-slate-500" />
+                    <MapPin className="w-3 h-3 text-slate-400" />
                     {job.data?.location || "Kabul"}
                   </span>
                   <span className="flex items-center gap-1">
-                    <Calendar className="w-3 h-3 text-slate-500" />
+                    <Calendar className="w-3 h-3 text-slate-400" />
                     {job.data?.deadline ? `Deadline: ${job.data.deadline}` : "Open"}
                   </span>
                 </div>
               </CardHeader>
-              <CardContent className="p-4 pt-1 text-xs text-slate-400">
+              <CardContent className="p-4 pt-1 text-xs text-slate-600">
                 <p className="line-clamp-2 mb-4">{job.data?.summary?.en || "No summary provided."}</p>
-                <div className="flex items-center justify-between pt-3 border-t border-slate-800/80">
+                <div className="flex items-center justify-between pt-3 border-t border-slate-100">
                   <span className="text-[10px] font-medium text-slate-500">
                     {job.data?.contractType || "Full-Time"}
                   </span>
@@ -213,16 +213,16 @@ function AdminCareers() {
                           },
                         })
                       }
-                      className="h-7 text-xs text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800 px-2"
+                      className="h-7 text-xs text-slate-700 hover:text-brand-blue bg-slate-50 hover:bg-blue-50 border border-slate-200 px-2 rounded-lg"
                     >
-                      <Edit2 className="w-3.5 h-3.5 mr-1 text-sky-400" />
+                      <Edit2 className="w-3.5 h-3.5 mr-1 text-brand-blue" />
                       Edit
                     </Button>
                     <Button
                       size="sm"
                       variant="ghost"
                       onClick={() => setItemToDelete(job)}
-                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-400 bg-slate-900/60 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50"
+                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded-lg"
                       title="Delete vacancy"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -243,16 +243,16 @@ function AdminCareers() {
             if (!open) setEditingItem(null);
           }}
         >
-          <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl">
             <DialogHeader>
-              <DialogTitle className="text-base font-bold text-white">
+              <DialogTitle className="text-base font-bold text-slate-900">
                 {editingItem.id ? "Edit Job Vacancy" : "Post New Vacancy"}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSave} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Job Code</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Job Code</Label>
                   <Input
                     value={editingItem.data?.jobCode || ""}
                     onChange={(e) =>
@@ -262,27 +262,27 @@ function AdminCareers() {
                       })
                     }
                     placeholder="PYECSO-HR-2026-01"
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">URL Slug</Label>
+                  <Label className="text-xs font-semibold text-slate-700">URL Slug</Label>
                   <Input
                     value={editingItem.slug || ""}
                     onChange={(e) => setEditingItem({ ...editingItem, slug: e.target.value })}
                     placeholder="senior-project-manager"
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                     required
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Status</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Status</Label>
                   <select
                     value={editingItem.status || "published"}
                     onChange={(e) =>
                       setEditingItem({ ...editingItem, status: e.target.value as ContentStatus })
                     }
-                    className="w-full h-9 rounded-md border border-slate-700 bg-slate-950 px-3 text-xs text-slate-200 mt-1"
+                    className="w-full h-9 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-800 mt-1"
                   >
                     <option value="published">Published</option>
                     <option value="draft">Draft</option>
@@ -305,7 +305,7 @@ function AdminCareers() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Department</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Department</Label>
                   <Input
                     value={editingItem.data?.department || ""}
                     onChange={(e) =>
@@ -315,11 +315,11 @@ function AdminCareers() {
                       })
                     }
                     placeholder="Programs, HR, Finance"
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Duty Station / Location</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Duty Station / Location</Label>
                   <Input
                     value={editingItem.data?.location || ""}
                     onChange={(e) =>
@@ -329,11 +329,11 @@ function AdminCareers() {
                       })
                     }
                     placeholder="Kabul / Nangarhar / Herat"
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Application Deadline</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Application Deadline</Label>
                   <Input
                     type="date"
                     value={editingItem.data?.deadline || ""}
@@ -343,14 +343,14 @@ function AdminCareers() {
                         data: { ...editingItem.data, deadline: e.target.value },
                       })
                     }
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Contract Type</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Contract Type</Label>
                   <Input
                     value={editingItem.data?.contractType || ""}
                     onChange={(e) =>
@@ -360,11 +360,11 @@ function AdminCareers() {
                       })
                     }
                     placeholder="Full-Time (1 Year Renewable)"
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Number of Vacancies</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Number of Vacancies</Label>
                   <Input
                     type="number"
                     min="1"
@@ -375,7 +375,7 @@ function AdminCareers() {
                         data: { ...editingItem.data, positions: Number(e.target.value) },
                       })
                     }
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
@@ -442,11 +442,11 @@ function AdminCareers() {
                   type="button"
                   variant="outline"
                   onClick={() => setEditingItem(null)}
-                  className="text-xs"
+                  className="text-xs border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold">
+                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs">
                   Save Vacancy
                 </Button>
               </DialogFooter>

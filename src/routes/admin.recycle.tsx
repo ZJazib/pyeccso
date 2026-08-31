@@ -78,13 +78,13 @@ function AdminRecycle() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <Trash2 className="w-6 h-6 text-rose-400" />
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
+            <Trash2 className="w-6 h-6 text-rose-600" />
             Recycle Bin & Content Recovery
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Safely restore accidentally removed programs, projects, articles, or vacancies, or permanently purge them from Firestore.
           </p>
         </div>
@@ -93,17 +93,17 @@ function AdminRecycle() {
           size="sm"
           onClick={loadData}
           disabled={loading}
-          className="border-slate-700 bg-slate-800 text-slate-200 text-xs"
+          className="border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs rounded-xl shadow-2xs"
         >
           <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${loading ? "animate-spin" : ""}`} />
           Refresh
         </Button>
       </div>
 
-      <Card className="bg-slate-950 border-slate-800 text-white overflow-hidden">
+      <Card className="bg-white border-slate-200 text-slate-900 overflow-hidden rounded-2xl shadow-2xs">
         <CardHeader>
-          <CardTitle className="text-base text-white">Soft-Deleted Items ({deletedItems.length})</CardTitle>
-          <CardDescription className="text-xs text-slate-400">
+          <CardTitle className="text-base text-slate-900 font-bold">Soft-Deleted Items ({deletedItems.length})</CardTitle>
+          <CardDescription className="text-xs text-slate-500">
             Items in the recycle bin are hidden from the public website but can be restored with a single click.
           </CardDescription>
         </CardHeader>
@@ -115,7 +115,7 @@ function AdminRecycle() {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-left">
-                <thead className="bg-slate-900/80 text-slate-400 uppercase text-[10px] tracking-wider border-b border-slate-800">
+                <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] tracking-wider border-b border-slate-200 font-bold">
                   <tr>
                     <th className="px-4 py-3">Item Title / ID</th>
                     <th className="px-4 py-3">Type</th>
@@ -124,18 +124,18 @@ function AdminRecycle() {
                     <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-800/60">
+                <tbody className="divide-y divide-slate-100">
                   {deletedItems.map((item) => (
-                    <tr key={item.id} className="hover:bg-slate-900/40 transition-colors">
-                      <td className="px-4 py-3 font-semibold text-white">
+                    <tr key={item.id} className="hover:bg-slate-50 transition-colors">
+                      <td className="px-4 py-3 font-semibold text-slate-900">
                         {item.data?.title?.en || item.data?.name?.en || item.id}
                       </td>
                       <td className="px-4 py-3">
-                        <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[10px] uppercase">
+                        <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 font-mono text-[10px] uppercase font-bold">
                           {item.type}
                         </span>
                       </td>
-                      <td className="px-4 py-3 font-mono text-slate-400">
+                      <td className="px-4 py-3 font-mono text-slate-600">
                         /{item.slug}
                       </td>
                       <td className="px-4 py-3 text-slate-500 text-[11px]">
@@ -148,7 +148,7 @@ function AdminRecycle() {
                             variant="outline"
                             onClick={() => handleRestore(item)}
                             disabled={restoringId === item.id}
-                            className="h-7 text-xs border-emerald-500/40 text-emerald-300 bg-emerald-950/20 hover:bg-emerald-900/40"
+                            className="h-7 text-xs border-emerald-300 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-lg"
                           >
                             <RotateCcw className={`w-3.5 h-3.5 mr-1 ${restoringId === item.id ? "animate-spin" : ""}`} />
                             {restoringId === item.id ? "Restoring..." : "Restore"}
@@ -157,7 +157,7 @@ function AdminRecycle() {
                             size="sm"
                             variant="outline"
                             onClick={() => setItemToPurge(item)}
-                            className="h-7 text-xs border-rose-500/40 text-rose-300 bg-rose-950/20 hover:bg-rose-900/40"
+                            className="h-7 text-xs border-rose-300 text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-lg"
                           >
                             <AlertOctagon className="w-3.5 h-3.5 mr-1" />
                             Purge Permanently

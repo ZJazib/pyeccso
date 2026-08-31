@@ -162,20 +162,20 @@ function AdminSettings() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
             <Settings className="w-6 h-6 text-brand-blue" />
             Global Site Settings & Alert CMS
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Configure site metadata, brand identity, emergency broadcast top banners, and official social media handles.
           </p>
         </div>
         <Button
           onClick={handleSaveAll}
           disabled={saving}
-          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
         >
           <Save className="w-4 h-4 mr-1.5" />
           {saving ? "Saving…" : "Save All Settings"}
@@ -183,39 +183,39 @@ function AdminSettings() {
       </div>
 
       <Tabs defaultValue="banner" className="space-y-6">
-        <TabsList className="bg-slate-950 border border-slate-800 p-1">
-          <TabsTrigger value="banner" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white flex items-center gap-1.5">
-            <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+        <TabsList className="bg-slate-100 border border-slate-200 p-1 rounded-xl">
+          <TabsTrigger value="banner" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600 flex items-center gap-1.5">
+            <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
             Emergency Alert Banner
           </TabsTrigger>
-          <TabsTrigger value="branding" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+          <TabsTrigger value="branding" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600">
             Branding & Metadata
           </TabsTrigger>
-          <TabsTrigger value="social" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+          <TabsTrigger value="social" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600">
             Social Media Handles
           </TabsTrigger>
-          <TabsTrigger value="database" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white flex items-center gap-1.5">
-            <Database className="w-3.5 h-3.5 text-emerald-400" />
+          <TabsTrigger value="database" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600 flex items-center gap-1.5">
+            <Database className="w-3.5 h-3.5 text-emerald-600" />
             Database & Firebase Sync
           </TabsTrigger>
         </TabsList>
 
         {/* TAB 1: EMERGENCY BANNER */}
         <TabsContent value="banner" className="space-y-4">
-          <Card className="bg-slate-950 border-slate-800 text-white">
+          <Card className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-base text-white flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5 text-amber-400" />
+                  <CardTitle className="text-base text-slate-900 font-bold flex items-center gap-2">
+                    <AlertTriangle className="w-5 h-5 text-amber-500" />
                     Sitewide Emergency Notification Banner
                   </CardTitle>
-                  <CardDescription className="text-xs text-slate-400">
+                  <CardDescription className="text-xs text-slate-500">
                     Displays high-priority flash notifications (e.g. earthquake relief, flood emergency, winterization aid) at the very top of all pages.
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Label className="text-xs text-slate-300">Banner Enabled</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Banner Enabled</Label>
                   <Switch
                     checked={emergencyBanner.active}
                     onCheckedChange={(checked) =>
@@ -227,13 +227,13 @@ function AdminSettings() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label className="text-xs font-semibold text-slate-300">Severity Tier</Label>
+                <Label className="text-xs font-semibold text-slate-700">Severity Tier</Label>
                 <select
                   value={emergencyBanner.severity}
                   onChange={(e) =>
                     setEmergencyBanner({ ...emergencyBanner, severity: e.target.value })
                   }
-                  className="w-full sm:w-60 h-9 rounded-md border border-slate-700 bg-slate-900 px-3 text-xs text-slate-200 mt-1"
+                  className="w-full sm:w-60 h-9 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-900 mt-1"
                 >
                   <option value="warning">Warning / Alert (Amber)</option>
                   <option value="critical">Critical Emergency (Red)</option>
@@ -261,14 +261,14 @@ function AdminSettings() {
                   }
                 />
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">CTA Link Destination URL</Label>
+                  <Label className="text-xs font-semibold text-slate-700">CTA Link Destination URL</Label>
                   <Input
                     value={emergencyBanner.actionUrl}
                     onChange={(e) =>
                       setEmergencyBanner({ ...emergencyBanner, actionUrl: e.target.value })
                     }
                     placeholder="/projects or /donations"
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
@@ -278,40 +278,40 @@ function AdminSettings() {
 
         {/* TAB 2: BRANDING */}
         <TabsContent value="branding" className="space-y-4">
-          <Card className="bg-slate-950 border-slate-800 text-white">
+          <Card className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs">
             <CardHeader>
-              <CardTitle className="text-base text-white">Brand Identity & Legal Registration</CardTitle>
+              <CardTitle className="text-base text-slate-900 font-bold">Brand Identity & Legal Registration</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Acronym</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Acronym</Label>
                   <Input
                     value={globalSettings.siteName}
                     onChange={(e) =>
                       setGlobalSettings({ ...globalSettings, siteName: e.target.value })
                     }
-                    className="text-xs mt-1 font-bold"
+                    className="text-xs mt-1 font-bold bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">MoEc Registration #</Label>
+                  <Label className="text-xs font-semibold text-slate-700">MoEc Registration #</Label>
                   <Input
                     value={globalSettings.regNumber}
                     onChange={(e) =>
                       setGlobalSettings({ ...globalSettings, regNumber: e.target.value })
                     }
-                    className="text-xs mt-1 font-mono text-emerald-400 font-bold"
+                    className="text-xs mt-1 font-mono text-emerald-700 font-bold bg-white border-slate-300 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Established Year</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Established Year</Label>
                   <Input
                     value={globalSettings.foundingYear}
                     onChange={(e) =>
                       setGlobalSettings({ ...globalSettings, foundingYear: e.target.value })
                     }
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
@@ -371,53 +371,53 @@ function AdminSettings() {
 
         {/* TAB 3: SOCIAL */}
         <TabsContent value="social" className="space-y-4">
-          <Card className="bg-slate-950 border-slate-800 text-white">
+          <Card className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs">
             <CardHeader>
-              <CardTitle className="text-base text-white flex items-center gap-2">
-                <Share2 className="w-5 h-5 text-blue-400" />
+              <CardTitle className="text-base text-slate-900 font-bold flex items-center gap-2">
+                <Share2 className="w-5 h-5 text-brand-blue" />
                 Official Social Media Channels
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Facebook Page URL</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Facebook Page URL</Label>
                   <Input
                     value={socialLinks.facebook}
                     onChange={(e) => setSocialLinks({ ...socialLinks, facebook: e.target.value })}
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">X (Twitter) Profile URL</Label>
+                  <Label className="text-xs font-semibold text-slate-700">X (Twitter) Profile URL</Label>
                   <Input
                     value={socialLinks.twitter}
                     onChange={(e) => setSocialLinks({ ...socialLinks, twitter: e.target.value })}
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">LinkedIn Organization URL</Label>
+                  <Label className="text-xs font-semibold text-slate-700">LinkedIn Organization URL</Label>
                   <Input
                     value={socialLinks.linkedin}
                     onChange={(e) => setSocialLinks({ ...socialLinks, linkedin: e.target.value })}
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">YouTube Channel URL</Label>
+                  <Label className="text-xs font-semibold text-slate-700">YouTube Channel URL</Label>
                   <Input
                     value={socialLinks.youtube}
                     onChange={(e) => setSocialLinks({ ...socialLinks, youtube: e.target.value })}
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Official WhatsApp Hotline</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Official WhatsApp Hotline</Label>
                   <Input
                     value={socialLinks.whatsapp}
                     onChange={(e) => setSocialLinks({ ...socialLinks, whatsapp: e.target.value })}
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
@@ -427,15 +427,15 @@ function AdminSettings() {
 
         {/* TAB 4: DATABASE & FIREBASE */}
         <TabsContent value="database" className="space-y-4">
-          <Card className="bg-slate-950 border-slate-800 text-white">
+          <Card className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs">
             <CardHeader>
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <CardTitle className="text-base text-white flex items-center gap-2">
-                    <Database className="w-5 h-5 text-emerald-400" />
+                  <CardTitle className="text-base text-slate-900 font-bold flex items-center gap-2">
+                    <Database className="w-5 h-5 text-emerald-600" />
                     Cloud Firestore Database Status & Verification
                   </CardTitle>
-                  <CardDescription className="text-xs text-slate-400 mt-1">
+                  <CardDescription className="text-xs text-slate-500 mt-1">
                     Manage and verify the live connection between the website frontend, the CMS admin suite, and your Firebase Cloud Firestore backend.
                   </CardDescription>
                 </div>
@@ -446,9 +446,9 @@ function AdminSettings() {
                     size="sm"
                     onClick={handleTestConnection}
                     disabled={testingDb}
-                    className="border-slate-700 bg-slate-900 text-xs text-emerald-300 hover:bg-slate-800"
+                    className="border-slate-300 bg-white hover:bg-slate-50 text-xs text-emerald-700 rounded-xl shadow-2xs"
                   >
-                    <Activity className={`w-3.5 h-3.5 mr-1.5 text-emerald-400 ${testingDb ? "animate-spin" : ""}`} />
+                    <Activity className={`w-3.5 h-3.5 mr-1.5 text-emerald-600 ${testingDb ? "animate-spin" : ""}`} />
                     {testingDb ? "Testing Ping…" : "Test Live Connection"}
                   </Button>
                   <Button
@@ -456,7 +456,7 @@ function AdminSettings() {
                     size="sm"
                     onClick={handleSeedDatabase}
                     disabled={seeding}
-                    className="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold rounded-xl shadow-xs"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${seeding ? "animate-spin" : ""}`} />
                     {seeding ? "Syncing…" : "Sync / Re-seed Data"}
@@ -466,18 +466,18 @@ function AdminSettings() {
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Connection Status Banner */}
-              <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+              <div className="p-4 rounded-xl border border-emerald-200 bg-emerald-50 flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <h4 className="text-sm font-semibold text-emerald-300">Firebase Firestore is Connected & Operational</h4>
+                    <h4 className="text-sm font-semibold text-emerald-900">Firebase Firestore is Connected & Operational</h4>
                     {dbLatency != null && (
-                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 border border-emerald-800 text-emerald-400">
+                      <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold">
                         {dbLatency}ms latency
                       </span>
                     )}
                   </div>
-                  <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+                  <p className="text-xs text-emerald-800 mt-1 leading-relaxed">
                     All website public pages (Programs, Projects, News, Vacancies, Offices, Settings) and admin modifications are synchronized in real-time with Google Cloud Firestore.
                   </p>
                 </div>
@@ -485,51 +485,51 @@ function AdminSettings() {
 
               {/* Database Parameters Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Project ID</span>
-                  <p className="font-mono text-xs font-semibold text-white">{firebaseConfig.projectId}</p>
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-500">Project ID</span>
+                  <p className="font-mono text-xs font-semibold text-slate-900">{firebaseConfig.projectId}</p>
                 </div>
-                <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Database ID (Named Database)</span>
-                  <p className="font-mono text-xs font-semibold text-emerald-400 truncate">{firebaseConfig.firestoreDatabaseId}</p>
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-500">Database ID (Named Database)</span>
+                  <p className="font-mono text-xs font-semibold text-emerald-700 truncate">{firebaseConfig.firestoreDatabaseId}</p>
                 </div>
-                <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Auth Domain</span>
-                  <p className="font-mono text-xs text-slate-300">{firebaseConfig.authDomain}</p>
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-500">Auth Domain</span>
+                  <p className="font-mono text-xs text-slate-700">{firebaseConfig.authDomain}</p>
                 </div>
-                <div className="p-3.5 rounded-lg bg-slate-900 border border-slate-800 space-y-1">
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Storage Bucket</span>
-                  <p className="font-mono text-xs text-slate-300">{firebaseConfig.storageBucket}</p>
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-500">Storage Bucket</span>
+                  <p className="font-mono text-xs text-slate-700">{firebaseConfig.storageBucket}</p>
                 </div>
               </div>
 
               {/* Collections In Use */}
               <div className="space-y-2">
-                <h5 className="text-xs font-bold uppercase tracking-wider text-slate-400">Active Firestore Collections</h5>
+                <h5 className="text-xs font-bold uppercase tracking-wider text-slate-600">Active Firestore Collections</h5>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs font-mono">
-                  <div className="p-2.5 rounded bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 flex items-center justify-between">
                     <span>/content_items</span>
-                    <span className="text-emerald-400 text-[10px]">Active</span>
+                    <span className="text-emerald-600 font-semibold text-[10px]">Active</span>
                   </div>
-                  <div className="p-2.5 rounded bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 flex items-center justify-between">
                     <span>/site_settings</span>
-                    <span className="text-emerald-400 text-[10px]">Active</span>
+                    <span className="text-emerald-600 font-semibold text-[10px]">Active</span>
                   </div>
-                  <div className="p-2.5 rounded bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 flex items-center justify-between">
                     <span>/user_roles</span>
-                    <span className="text-emerald-400 text-[10px]">Active</span>
+                    <span className="text-emerald-600 font-semibold text-[10px]">Active</span>
                   </div>
-                  <div className="p-2.5 rounded bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 flex items-center justify-between">
                     <span>/contact_messages</span>
-                    <span className="text-emerald-400 text-[10px]">Active</span>
+                    <span className="text-emerald-600 font-semibold text-[10px]">Active</span>
                   </div>
-                  <div className="p-2.5 rounded bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 flex items-center justify-between">
                     <span>/applications</span>
-                    <span className="text-emerald-400 text-[10px]">Active</span>
+                    <span className="text-emerald-600 font-semibold text-[10px]">Active</span>
                   </div>
-                  <div className="p-2.5 rounded bg-slate-900/80 border border-slate-800 text-slate-300 flex items-center justify-between">
+                  <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 flex items-center justify-between">
                     <span>/audit_logs</span>
-                    <span className="text-emerald-400 text-[10px]">Active</span>
+                    <span className="text-emerald-600 font-semibold text-[10px]">Active</span>
                   </div>
                 </div>
               </div>

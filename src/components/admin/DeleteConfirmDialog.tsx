@@ -32,22 +32,22 @@ export function DeleteConfirmDialog({
 }: DeleteConfirmDialogProps) {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="bg-slate-900 border-slate-800 text-white max-w-md">
+      <AlertDialogContent className="bg-white border-slate-200 text-slate-900 max-w-md shadow-2xl rounded-2xl">
         <AlertDialogHeader>
-          <div className="w-10 h-10 rounded-full bg-rose-500/10 border border-rose-500/20 flex items-center justify-center mb-2 text-rose-400">
+          <div className="w-11 h-11 rounded-full bg-rose-50 border border-rose-200 flex items-center justify-center mb-2 text-rose-600 shadow-2xs">
             <Trash2 className="w-5 h-5" />
           </div>
-          <AlertDialogTitle className="text-base font-bold text-white">
+          <AlertDialogTitle className="text-base font-bold text-slate-900">
             {title}
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-xs text-slate-400">
+          <AlertDialogDescription className="text-xs text-slate-500 leading-relaxed">
             {description}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="mt-4 gap-2">
           <AlertDialogCancel
             disabled={loading}
-            className="border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white text-xs h-8"
+            className="border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900 text-xs h-9 rounded-xl shadow-2xs"
           >
             Cancel
           </AlertDialogCancel>
@@ -57,7 +57,7 @@ export function DeleteConfirmDialog({
               e.preventDefault();
               onConfirm();
             }}
-            className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold h-8"
+            className="bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold h-9 rounded-xl shadow-xs"
           >
             {loading ? "Processing..." : confirmLabel}
           </AlertDialogAction>

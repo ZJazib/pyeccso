@@ -172,20 +172,20 @@ function AdminHomepage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
             <Home className="w-6 h-6 text-brand-blue" />
             Homepage CMS
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Manage the hero banner, impact counters, core pillars, and community testimonials.
           </p>
         </div>
         <Button
           onClick={handleSaveHero}
           disabled={savingHero}
-          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
         >
           <Save className="w-4 h-4 mr-1.5" />
           {savingHero ? "Saving…" : "Save Changes to Firestore"}
@@ -193,27 +193,27 @@ function AdminHomepage() {
       </div>
 
       <Tabs defaultValue="hero" className="space-y-6">
-        <TabsList className="bg-slate-950 border border-slate-800 p-1">
-          <TabsTrigger value="hero" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+        <TabsList className="bg-slate-100 border border-slate-200 p-1 rounded-xl">
+          <TabsTrigger value="hero" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600">
             Hero Banner & Headline
           </TabsTrigger>
-          <TabsTrigger value="stats" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+          <TabsTrigger value="stats" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600">
             Impact Statistics
           </TabsTrigger>
-          <TabsTrigger value="sectors" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+          <TabsTrigger value="sectors" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600">
             Core Sectors / Pillars ({sectors.length})
           </TabsTrigger>
-          <TabsTrigger value="testimonials" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+          <TabsTrigger value="testimonials" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600">
             Community Testimonials ({testimonials.length})
           </TabsTrigger>
         </TabsList>
 
         {/* Tab 1: Hero Banner */}
         <TabsContent value="hero" className="space-y-6">
-          <Card className="bg-slate-950 border-slate-800 text-white">
+          <Card className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs">
             <CardHeader>
-              <CardTitle className="text-base text-white">Hero Banner Content</CardTitle>
-              <CardDescription className="text-xs text-slate-400">
+              <CardTitle className="text-base text-slate-900 font-bold">Hero Banner Content</CardTitle>
+              <CardDescription className="text-xs text-slate-500">
                 Supports full trilingual translations in English, Dari, and Pashto
               </CardDescription>
             </CardHeader>
@@ -254,17 +254,17 @@ function AdminHomepage() {
 
         {/* Tab 2: Impact Statistics */}
         <TabsContent value="stats" className="space-y-4">
-          <Card className="bg-slate-950 border-slate-800 text-white">
+          <Card className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs">
             <CardHeader>
-              <CardTitle className="text-base text-white">Key Organizational Statistics</CardTitle>
-              <CardDescription className="text-xs text-slate-400">
+              <CardTitle className="text-base text-slate-900 font-bold">Key Organizational Statistics</CardTitle>
+              <CardDescription className="text-xs text-slate-500">
                 Displayed in the main impact banner on the homepage.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {statsData.map((st, idx) => (
-                  <div key={idx} className="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-2">
+                  <div key={idx} className="p-3.5 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                     <Label className="text-xs font-semibold text-brand-blue">Counter Value #{idx + 1}</Label>
                     <Input
                       value={st.value}
@@ -273,7 +273,7 @@ function AdminHomepage() {
                         copy[idx].value = e.target.value;
                         setStatsData(copy);
                       }}
-                      className="text-xs font-bold"
+                      className="text-xs font-bold bg-white border-slate-300 text-slate-900 rounded-xl"
                     />
                     <I18nField
                       label="Counter Label"
@@ -294,7 +294,7 @@ function AdminHomepage() {
         {/* Tab 3: Sectors */}
         <TabsContent value="sectors" className="space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               The 4 core pillar sectors driving impact across Afghanistan.
             </p>
             <Button
@@ -311,7 +311,7 @@ function AdminHomepage() {
                   },
                 })
               }
-              className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+              className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
             >
               <Plus className="w-3.5 h-3.5 mr-1" />
               Add Sector Pillar
@@ -320,9 +320,9 @@ function AdminHomepage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {sectors.map((sec) => (
-              <Card key={sec.id} className="bg-slate-950 border-slate-800 text-white">
+              <Card key={sec.id} className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs">
                 <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
-                  <span className="text-xs font-bold text-white">
+                  <span className="text-xs font-bold text-slate-900">
                     {sec.data?.title?.en || "Sector"}
                   </span>
                   <div className="flex items-center gap-1">
@@ -343,9 +343,9 @@ function AdminHomepage() {
                           },
                         })
                       }
-                      className="h-7 w-7 p-0 text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800"
+                      className="h-7 w-7 p-0 text-slate-400 hover:text-brand-blue bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg"
                     >
-                      <Edit2 className="w-3.5 h-3.5 text-sky-400" />
+                      <Edit2 className="w-3.5 h-3.5 text-brand-blue" />
                     </Button>
                     <Button
                       size="sm"
@@ -357,13 +357,13 @@ function AdminHomepage() {
                           type: "sector",
                         })
                       }
-                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-400 bg-slate-900/60 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50"
+                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded-lg"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4 pt-1 text-xs text-slate-400">
+                <CardContent className="p-4 pt-1 text-xs text-slate-600">
                   <p className="line-clamp-2">{sec.data?.description?.en}</p>
                 </CardContent>
               </Card>
@@ -374,7 +374,7 @@ function AdminHomepage() {
         {/* Tab 4: Testimonials */}
         <TabsContent value="testimonials" className="space-y-4">
           <div className="flex items-center justify-between">
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-slate-500">
               Quotes from community beneficiaries and program graduates across Afghan provinces.
             </p>
             <Button
@@ -391,7 +391,7 @@ function AdminHomepage() {
                   },
                 })
               }
-              className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+              className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
             >
               <Plus className="w-3.5 h-3.5 mr-1" />
               Add Testimonial
@@ -400,11 +400,11 @@ function AdminHomepage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {testimonials.map((test) => (
-              <Card key={test.id} className="bg-slate-950 border-slate-800 text-white">
+              <Card key={test.id} className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs">
                 <CardHeader className="p-4 pb-2 flex flex-row items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Quote className="w-4 h-4 text-brand-blue" />
-                    <span className="text-xs font-bold text-white">
+                    <span className="text-xs font-bold text-slate-900">
                       {test.data?.name?.en || "Community Member"}
                     </span>
                   </div>
@@ -427,9 +427,9 @@ function AdminHomepage() {
                           },
                         })
                       }
-                      className="h-7 w-7 p-0 text-slate-400 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800"
+                      className="h-7 w-7 p-0 text-slate-400 hover:text-brand-blue bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg"
                     >
-                      <Edit2 className="w-3.5 h-3.5 text-sky-400" />
+                      <Edit2 className="w-3.5 h-3.5 text-brand-blue" />
                     </Button>
                     <Button
                       size="sm"
@@ -441,17 +441,17 @@ function AdminHomepage() {
                           type: "testimonial",
                         })
                       }
-                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-400 bg-slate-900/60 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50"
+                      className="h-7 w-7 p-0 text-slate-400 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded-lg"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4 pt-1 text-xs text-slate-300">
-                  <p className="italic text-slate-300 line-clamp-3">
+                <CardContent className="p-4 pt-1 text-xs text-slate-600">
+                  <p className="italic text-slate-700 line-clamp-3">
                     "{test.data?.quote?.en || test.data?.quote?.dr}"
                   </p>
-                  <p className="text-[11px] text-slate-500 mt-2">
+                  <p className="text-[11px] text-slate-500 mt-2 font-medium">
                     {test.data?.role?.en} • {test.data?.location?.en}
                   </p>
                 </CardContent>
@@ -469,9 +469,9 @@ function AdminHomepage() {
             if (!open) setEditingSector(null);
           }}
         >
-          <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl">
             <DialogHeader>
-              <DialogTitle className="text-base font-bold text-white">
+              <DialogTitle className="text-base font-bold text-slate-900">
                 {editingSector.id ? "Edit Sector" : "New Sector"}
               </DialogTitle>
             </DialogHeader>
@@ -500,7 +500,7 @@ function AdminHomepage() {
                 rows={3}
               />
               <div>
-                <Label className="text-xs font-semibold text-slate-300">Lucide Icon Name</Label>
+                <Label className="text-xs font-semibold text-slate-700">Lucide Icon Name</Label>
                 <Input
                   value={editingSector.data?.icon || "GraduationCap"}
                   onChange={(e) =>
@@ -510,14 +510,14 @@ function AdminHomepage() {
                     })
                   }
                   placeholder="GraduationCap, Banknote, Wheat, Sprout, Shield, HeartPulse"
-                  className="text-xs mt-1"
+                  className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                 />
               </div>
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setEditingSector(null)} className="text-xs">
+              <DialogFooter className="gap-2 pt-2 border-t border-slate-100">
+                <Button type="button" variant="outline" onClick={() => setEditingSector(null)} className="text-xs border-slate-300 rounded-xl">
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold">
+                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs">
                   Save Sector
                 </Button>
               </DialogFooter>
@@ -534,9 +534,9 @@ function AdminHomepage() {
             if (!open) setEditingTestimonial(null);
           }}
         >
-          <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl">
             <DialogHeader>
-              <DialogTitle className="text-base font-bold text-white">
+              <DialogTitle className="text-base font-bold text-slate-900">
                 {editingTestimonial.id ? "Edit Testimonial" : "New Testimonial"}
               </DialogTitle>
             </DialogHeader>
@@ -590,11 +590,11 @@ function AdminHomepage() {
                 value={editingTestimonial.coverUrl}
                 onChange={(url) => setEditingTestimonial({ ...editingTestimonial, coverUrl: url })}
               />
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setEditingTestimonial(null)} className="text-xs">
+              <DialogFooter className="gap-2 pt-2 border-t border-slate-100">
+                <Button type="button" variant="outline" onClick={() => setEditingTestimonial(null)} className="text-xs border-slate-300 rounded-xl">
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold">
+                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs">
                   Save Testimonial
                 </Button>
               </DialogFooter>

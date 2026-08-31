@@ -88,20 +88,20 @@ function AdminDonations() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
             <DollarSign className="w-6 h-6 text-brand-blue" />
             Donations & Banking Channels CMS
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Configure HesabPay mobile integration parameters, preset donation tiers, and official Azizi Bank wire transfer credentials.
           </p>
         </div>
         <Button
           onClick={handleSaveAll}
           disabled={saving}
-          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+          className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
         >
           <Save className="w-4 h-4 mr-1.5" />
           {saving ? "Saving…" : "Save Donation Settings"}
@@ -109,31 +109,31 @@ function AdminDonations() {
       </div>
 
       <Tabs defaultValue="hesabpay" className="space-y-6">
-        <TabsList className="bg-slate-950 border border-slate-800 p-1">
-          <TabsTrigger value="hesabpay" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+        <TabsList className="bg-slate-100 border border-slate-200 p-1 rounded-xl">
+          <TabsTrigger value="hesabpay" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600">
             HesabPay Mobile Payments
           </TabsTrigger>
-          <TabsTrigger value="bank" className="text-xs data-[state=active]:bg-brand-blue data-[state=active]:text-white">
+          <TabsTrigger value="bank" className="text-xs rounded-lg font-semibold data-[state=active]:bg-white data-[state=active]:text-brand-blue data-[state=active]:shadow-xs text-slate-600">
             Azizi Bank International Wire Transfer
           </TabsTrigger>
         </TabsList>
 
         {/* TAB 1: HESABPAY */}
         <TabsContent value="hesabpay" className="space-y-4">
-          <Card className="bg-slate-950 border-slate-800 text-white">
+          <Card className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-base text-white flex items-center gap-2">
-                    <QrCode className="w-5 h-5 text-emerald-400" />
+                  <CardTitle className="text-base text-slate-900 font-bold flex items-center gap-2">
+                    <QrCode className="w-5 h-5 text-emerald-600" />
                     HesabPay Payment Gateway Integration
                   </CardTitle>
-                  <CardDescription className="text-xs text-slate-400">
+                  <CardDescription className="text-xs text-slate-500">
                     Seamless digital mobile donations in AFN and USD
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Label className="text-xs text-slate-300">Gateway Active</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Gateway Active</Label>
                   <Switch
                     checked={hesabPayConfig.enabled}
                     onCheckedChange={(checked) =>
@@ -146,30 +146,30 @@ function AdminDonations() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Merchant Account Name</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Merchant Account Name</Label>
                   <Input
                     value={hesabPayConfig.merchantName}
                     onChange={(e) =>
                       setHesabPayConfig({ ...hesabPayConfig, merchantName: e.target.value })
                     }
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Merchant ID / Account Code</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Merchant ID / Account Code</Label>
                   <Input
                     value={hesabPayConfig.merchantId}
                     onChange={(e) =>
                       setHesabPayConfig({ ...hesabPayConfig, merchantId: e.target.value })
                     }
-                    className="text-xs mt-1 font-mono text-emerald-400 font-bold"
+                    className="text-xs mt-1 font-mono text-emerald-700 font-bold bg-white border-slate-300 rounded-xl"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-800">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-slate-100">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">AFN Preset Amounts (Comma Separated)</Label>
+                  <Label className="text-xs font-semibold text-slate-700">AFN Preset Amounts (Comma Separated)</Label>
                   <Input
                     value={hesabPayConfig.presetsAfn?.join(", ") || "500, 1500, 3500, 7500, 15000"}
                     onChange={(e) => {
@@ -179,11 +179,11 @@ function AdminDonations() {
                         .filter((n) => !isNaN(n));
                       setHesabPayConfig({ ...hesabPayConfig, presetsAfn: nums });
                     }}
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">USD Preset Amounts (Comma Separated)</Label>
+                  <Label className="text-xs font-semibold text-slate-700">USD Preset Amounts (Comma Separated)</Label>
                   <Input
                     value={hesabPayConfig.presetsUsd?.join(", ") || "10, 25, 50, 100, 250"}
                     onChange={(e) => {
@@ -193,7 +193,7 @@ function AdminDonations() {
                         .filter((n) => !isNaN(n));
                       setHesabPayConfig({ ...hesabPayConfig, presetsUsd: nums });
                     }}
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
@@ -220,80 +220,80 @@ function AdminDonations() {
 
         {/* TAB 2: BANK WIRE */}
         <TabsContent value="bank" className="space-y-4">
-          <Card className="bg-slate-950 border-slate-800 text-white">
+          <Card className="bg-white border-slate-200 text-slate-900 rounded-2xl shadow-2xs">
             <CardHeader>
-              <CardTitle className="text-base text-white flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-blue-400" />
+              <CardTitle className="text-base text-slate-900 font-bold flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-brand-blue" />
                 Azizi Bank Wire Transfer Credentials
               </CardTitle>
-              <CardDescription className="text-xs text-slate-400">
+              <CardDescription className="text-xs text-slate-500">
                 Official banking coordinates for institutional donors and bank transfers
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Bank Name</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Bank Name</Label>
                   <Input
                     value={bankConfig.bankName}
                     onChange={(e) => setBankConfig({ ...bankConfig, bankName: e.target.value })}
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">SWIFT / BIC Code</Label>
+                  <Label className="text-xs font-semibold text-slate-700">SWIFT / BIC Code</Label>
                   <Input
                     value={bankConfig.swiftCode}
                     onChange={(e) => setBankConfig({ ...bankConfig, swiftCode: e.target.value })}
-                    className="text-xs mt-1 font-mono font-bold text-emerald-400"
+                    className="text-xs mt-1 font-mono font-bold text-emerald-700 bg-white border-slate-300 rounded-xl"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Beneficiary Account Name</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Beneficiary Account Name</Label>
                   <Input
                     value={bankConfig.accountName}
                     onChange={(e) => setBankConfig({ ...bankConfig, accountName: e.target.value })}
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Bank Account Number / IBAN</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Bank Account Number / IBAN</Label>
                   <Input
                     value={bankConfig.accountNumber}
                     onChange={(e) => setBankConfig({ ...bankConfig, accountNumber: e.target.value })}
-                    className="text-xs mt-1 font-mono font-bold text-blue-400"
+                    className="text-xs mt-1 font-mono font-bold text-brand-blue bg-white border-slate-300 rounded-xl"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Branch Name</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Branch Name</Label>
                   <Input
                     value={bankConfig.branchName}
                     onChange={(e) => setBankConfig({ ...bankConfig, branchName: e.target.value })}
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Branch Address</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Branch Address</Label>
                   <Input
                     value={bankConfig.branchAddress}
                     onChange={(e) => setBankConfig({ ...bankConfig, branchAddress: e.target.value })}
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
 
               <div>
-                <Label className="text-xs font-semibold text-slate-300">Wire Transfer Memo Guidelines</Label>
+                <Label className="text-xs font-semibold text-slate-700">Wire Transfer Memo Guidelines</Label>
                 <Input
                   value={bankConfig.instructions}
                   onChange={(e) => setBankConfig({ ...bankConfig, instructions: e.target.value })}
-                  className="text-xs mt-1"
+                  className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                 />
               </div>
 

@@ -189,28 +189,28 @@ function AdminProjects() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-5 border-b border-slate-200">
         <div>
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2.5">
             <Layers className="w-6 h-6 text-brand-blue" />
             Implemented Projects Database & CMS
-            <span className="text-xs px-2.5 py-0.5 rounded-full bg-brand-blue/20 text-brand-blue border border-brand-blue/30 font-mono font-normal">
+            <span className="text-xs px-2.5 py-0.5 rounded-full bg-blue-50 text-brand-blue border border-blue-200 font-mono font-semibold">
               {items.length} Projects Total
             </span>
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Manage all 30 field projects across Afghanistan (Cash, Food, Livelihoods, Health, Capacity Building, Agriculture, Protection).
+          <p className="text-xs text-slate-500 mt-1">
+            Manage all field projects across Afghanistan (Cash, Food, Livelihoods, Health, Capacity Building, Agriculture, Protection).
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <Button
             onClick={handleSyncOfficialProjects}
             disabled={syncing}
             variant="outline"
-            className="border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-200 text-xs font-semibold"
+            className="border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-semibold rounded-xl shadow-2xs"
             title="Purge existing project database records and re-seed all 30 official projects from PDF"
           >
-            <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${syncing ? "animate-spin text-sky-400" : "text-sky-400"}`} />
+            <RefreshCw className={`w-3.5 h-3.5 mr-1.5 ${syncing ? "animate-spin text-brand-blue" : "text-slate-500"}`} />
             {syncing ? "Resetting & Syncing DB..." : "Replace & Sync All 30 Projects to DB"}
           </Button>
 
@@ -242,7 +242,7 @@ function AdminProjects() {
                 },
               })
             }
-            className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold"
+            className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs"
           >
             <Plus className="w-4 h-4 mr-1.5" />
             Add Project
@@ -251,14 +251,14 @@ function AdminProjects() {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-3 bg-slate-950 p-3 rounded-xl border border-slate-800">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200 shadow-2xs">
         <div className="relative w-full lg:w-96">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <Input
             placeholder="Search title, donor, province, sector or code..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 text-xs bg-slate-900 border-slate-700"
+            className="pl-9 text-xs bg-slate-50 border-slate-200 text-slate-900 rounded-xl"
           />
         </div>
 
@@ -267,7 +267,7 @@ function AdminProjects() {
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="h-8 rounded-lg border border-slate-700 bg-slate-900 px-2.5 text-xs text-slate-200"
+            className="h-8 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs text-slate-700 font-medium"
           >
             <option value="all">All Sectors ({items.length})</option>
             {allCategories.map((cat) => (
@@ -278,38 +278,40 @@ function AdminProjects() {
           </select>
 
           {/* Status Buttons */}
-          {["all", "published", "draft", "archived"].map((st) => (
-            <button
-              key={st}
-              onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
-                statusFilter === st
-                  ? "bg-brand-blue text-white"
-                  : "text-slate-400 hover:text-slate-200 bg-slate-900"
-              }`}
-            >
-              {st}
-            </button>
-          ))}
+          <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl">
+            {["all", "published", "draft", "archived"].map((st) => (
+              <button
+                key={st}
+                onClick={() => setStatusFilter(st)}
+                className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize transition-all ${
+                  statusFilter === st
+                    ? "bg-white text-brand-blue shadow-xs"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                {st}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Projects Grid */}
       {loading ? (
-        <div className="py-16 text-center text-slate-400 text-xs flex flex-col items-center justify-center gap-3 bg-slate-950 rounded-xl border border-slate-800">
+        <div className="py-16 text-center text-slate-500 text-xs flex flex-col items-center justify-center gap-3 bg-white rounded-2xl border border-slate-200">
           <RefreshCw className="w-6 h-6 animate-spin text-brand-blue" />
           <span>Loading project catalog from Firestore...</span>
         </div>
       ) : filteredItems.length === 0 ? (
-        <div className="py-16 text-center text-slate-400 text-xs bg-slate-950 rounded-xl border border-slate-800 space-y-3">
+        <div className="py-16 text-center text-slate-500 text-xs bg-white rounded-2xl border border-slate-200 space-y-3">
           <p>No projects found matching the search criteria.</p>
           <Button
             onClick={handleSyncOfficialProjects}
             size="sm"
             variant="outline"
-            className="text-xs border-slate-700 bg-slate-900"
+            className="text-xs border-slate-200 bg-white text-slate-700 hover:bg-slate-50 rounded-xl"
           >
-            <Sparkles className="w-3.5 h-3.5 mr-1.5 text-sky-400" />
+            <Sparkles className="w-3.5 h-3.5 mr-1.5 text-brand-blue" />
             Populate Official 30 Projects to Database
           </Button>
         </div>
@@ -325,54 +327,54 @@ function AdminProjects() {
             const code = proj.data?.projectCode || proj.slug;
 
             return (
-              <Card key={proj.id || proj.slug || idx} className="bg-slate-950 border-slate-800 text-white flex flex-col overflow-hidden hover:border-slate-700 transition-colors">
+              <Card key={proj.id || proj.slug || idx} className="bg-white border-slate-200 text-slate-900 flex flex-col overflow-hidden hover:shadow-md transition-all rounded-2xl shadow-2xs">
                 {proj.coverUrl && (
-                  <div className="aspect-video w-full overflow-hidden bg-slate-900 border-b border-slate-800 relative">
+                  <div className="aspect-video w-full overflow-hidden bg-slate-100 border-b border-slate-100 relative">
                     <img
                       src={proj.coverUrl}
                       alt={titleEn}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-2 left-2 bg-slate-950/80 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-mono text-slate-300 border border-slate-700">
+                    <div className="absolute top-2 left-2 bg-white/90 backdrop-blur-md px-2 py-0.5 rounded text-[10px] font-mono text-slate-700 border border-slate-200 shadow-xs">
                       #{proj.position || idx + 1}
                     </div>
                   </div>
                 )}
                 <CardHeader className="p-4 pb-2">
                   <div className="flex items-start justify-between gap-2 mb-1.5">
-                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 line-clamp-1 max-w-[200px]">
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 line-clamp-1 max-w-[200px]">
                       {category}
                     </span>
                     <span className="text-[10px] font-mono text-slate-400 shrink-0">
                       {code}
                     </span>
                   </div>
-                  <CardTitle className="text-sm font-bold text-white line-clamp-2 leading-snug">
+                  <CardTitle className="text-sm font-bold text-slate-900 line-clamp-2 leading-snug">
                     {titleEn}
                   </CardTitle>
                 </CardHeader>
 
-                <CardContent className="p-4 pt-1 flex-1 flex flex-col justify-between text-xs text-slate-400">
+                <CardContent className="p-4 pt-1 flex-1 flex flex-col justify-between text-xs text-slate-600">
                   <div className="space-y-2.5">
-                    <p className="line-clamp-2 text-slate-300 text-[11px] leading-relaxed">
+                    <p className="line-clamp-2 text-slate-600 text-[11px] leading-relaxed">
                       {summaryEn}
                     </p>
 
-                    <div className="space-y-1.5 pt-2 border-t border-slate-800/80 text-[11px]">
-                      <div className="flex items-center justify-between text-slate-300">
-                        <span className="flex items-center gap-1.5 text-slate-400">
-                          <MapPin className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                    <div className="space-y-1.5 pt-2 border-t border-slate-100 text-[11px]">
+                      <div className="flex items-center justify-between text-slate-700">
+                        <span className="flex items-center gap-1.5 text-slate-500">
+                          <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
                           <span className="truncate max-w-[170px]">{location}</span>
                         </span>
-                        <span className="flex items-center gap-1 text-sky-400 truncate max-w-[130px]" title={donor}>
+                        <span className="flex items-center gap-1 text-brand-blue font-medium truncate max-w-[130px]" title={donor}>
                           <Handshake className="w-3 h-3 shrink-0" />
                           <span className="truncate">{donor}</span>
                         </span>
                       </div>
 
                       {targets && (
-                        <div className="flex items-center gap-1.5 text-slate-400 text-[10px] bg-slate-900/80 px-2 py-1 rounded border border-slate-800/80">
-                          <Users className="w-3 h-3 text-amber-400 shrink-0" />
+                        <div className="flex items-center gap-1.5 text-slate-600 text-[10px] bg-slate-50 px-2 py-1 rounded-lg border border-slate-200/80">
+                          <Users className="w-3 h-3 text-amber-600 shrink-0" />
                           <span className="truncate" title={targets}>
                             Target: {targets}
                           </span>
@@ -381,8 +383,8 @@ function AdminProjects() {
                     </div>
                   </div>
 
-                  <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between">
-                    <span className="text-[10px] font-medium px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800 capitalize">
+                  <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200 capitalize">
                       {proj.status || "published"}
                     </span>
 
@@ -421,16 +423,16 @@ function AdminProjects() {
                             },
                           });
                         }}
-                        className="h-7 px-2 text-xs text-slate-300 hover:text-white bg-slate-900/60 hover:bg-slate-800 border border-slate-800"
+                        className="h-7 px-2 text-xs text-slate-700 hover:text-brand-blue bg-slate-50 hover:bg-blue-50 border border-slate-200 rounded-lg"
                       >
-                        <Edit2 className="w-3.5 h-3.5 mr-1 text-sky-400" />
+                        <Edit2 className="w-3.5 h-3.5 mr-1 text-brand-blue" />
                         Edit
                       </Button>
                       <Button
                         size="sm"
                         variant="ghost"
                         onClick={() => setItemToDelete(proj)}
-                        className="h-7 w-7 p-0 text-slate-400 hover:text-rose-400 bg-slate-900/60 hover:bg-rose-950/40 border border-slate-800 hover:border-rose-800/50"
+                        className="h-7 w-7 p-0 text-slate-400 hover:text-rose-600 bg-slate-50 hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded-lg"
                         title="Delete project"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -452,9 +454,9 @@ function AdminProjects() {
             if (!open) setEditingItem(null);
           }}
         >
-          <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-white border-slate-200 text-slate-900 max-w-3xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-xl">
             <DialogHeader>
-              <DialogTitle className="text-base font-bold text-white flex items-center gap-2">
+              <DialogTitle className="text-base font-bold text-slate-900 flex items-center gap-2">
                 <Target className="w-5 h-5 text-brand-blue" />
                 {editingItem.id ? "Edit Implemented Project" : "New Field Project"}
               </DialogTitle>
@@ -462,7 +464,7 @@ function AdminProjects() {
             <form onSubmit={handleSave} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Project Code</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Project Code</Label>
                   <Input
                     value={editingItem.data?.projectCode || ""}
                     onChange={(e) =>
@@ -472,27 +474,27 @@ function AdminProjects() {
                       })
                     }
                     placeholder="GCD-01-GHZ-PRT"
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">URL Slug</Label>
+                  <Label className="text-xs font-semibold text-slate-700">URL Slug</Label>
                   <Input
                     value={editingItem.slug || ""}
                     onChange={(e) => setEditingItem({ ...editingItem, slug: e.target.value })}
                     placeholder="winter-clothes-distribution-ghazni-prt"
-                    className="text-xs mt-1 font-mono"
+                    className="text-xs mt-1 font-mono bg-white border-slate-300 text-slate-900 rounded-xl"
                     required
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Status</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Status</Label>
                   <select
                     value={editingItem.status || "published"}
                     onChange={(e) =>
                       setEditingItem({ ...editingItem, status: e.target.value as ContentStatus })
                     }
-                    className="w-full h-9 rounded-md border border-slate-700 bg-slate-950 px-3 text-xs text-slate-200 mt-1"
+                    className="w-full h-9 rounded-xl border border-slate-300 bg-white px-3 text-xs text-slate-800 mt-1 focus:ring-1 focus:ring-brand-blue"
                   >
                     <option value="published">Published</option>
                     <option value="draft">Draft</option>
@@ -515,7 +517,7 @@ function AdminProjects() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Category / Sector</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Category / Sector</Label>
                   <Input
                     value={editingItem.data?.category || editingItem.data?.sector || ""}
                     onChange={(e) =>
@@ -529,11 +531,11 @@ function AdminProjects() {
                       })
                     }
                     placeholder="General Cash Distribution, Food, TVET..."
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Province & Location</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Province & Location</Label>
                   <Input
                     value={editingItem.data?.location || editingItem.data?.province || ""}
                     onChange={(e) =>
@@ -547,11 +549,11 @@ function AdminProjects() {
                       })
                     }
                     placeholder="Ghazni Province, Afghanistan"
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Donor / Partner</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Donor / Partner</Label>
                   <Input
                     value={editingItem.data?.donor || editingItem.data?.partner || ""}
                     onChange={(e) =>
@@ -565,7 +567,7 @@ function AdminProjects() {
                       })
                     }
                     placeholder="PRT, WFP, UN Women, DAI/LGCD"
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
@@ -610,7 +612,7 @@ function AdminProjects() {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Beneficiaries Number / Scope</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Beneficiaries Number / Scope</Label>
                   <Input
                     value={editingItem.data?.beneficiaries || ""}
                     onChange={(e) =>
@@ -620,11 +622,11 @@ function AdminProjects() {
                       })
                     }
                     placeholder="1,850 Families / 12,000 Individuals"
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Budget (USD/AFN)</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Budget (USD/AFN)</Label>
                   <Input
                     type="number"
                     value={editingItem.data?.budget ?? ""}
@@ -635,11 +637,11 @@ function AdminProjects() {
                       })
                     }
                     placeholder="75000"
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
                 <div>
-                  <Label className="text-xs font-semibold text-slate-300">Display Position (Order)</Label>
+                  <Label className="text-xs font-semibold text-slate-700">Display Position (Order)</Label>
                   <Input
                     type="number"
                     value={editingItem.position ?? 1}
@@ -649,7 +651,7 @@ function AdminProjects() {
                         position: Number(e.target.value),
                       })
                     }
-                    className="text-xs mt-1"
+                    className="text-xs mt-1 bg-white border-slate-300 text-slate-900 rounded-xl"
                   />
                 </div>
               </div>
@@ -710,11 +712,11 @@ function AdminProjects() {
                   type="button"
                   variant="outline"
                   onClick={() => setEditingItem(null)}
-                  className="text-xs"
+                  className="text-xs border-slate-300 text-slate-700 hover:bg-slate-50 rounded-xl"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold">
+                <Button type="submit" className="bg-brand-blue hover:bg-brand-blue-hover text-white text-xs font-semibold rounded-xl shadow-xs">
                   Save Project
                 </Button>
               </DialogFooter>
