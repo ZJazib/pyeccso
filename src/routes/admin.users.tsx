@@ -8,6 +8,7 @@ import {
   type UserRole,
 } from "@/lib/firebaseCms";
 import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -263,6 +264,13 @@ function AdminUsers() {
                   <option value="viewer">Viewer (Read Only Access)</option>
                 </select>
               </div>
+
+              <ImageUpload
+                label="Staff Member Avatar / Profile Photo"
+                value={(editingUser as any).photoURL}
+                onChange={(url) => setEditingUser({ ...editingUser, photoURL: url } as any)}
+                description="Upload staff profile portrait (auto-compressed)."
+              />
 
               <DialogFooter>
                 <Button

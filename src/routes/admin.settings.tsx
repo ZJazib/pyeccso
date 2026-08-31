@@ -6,6 +6,7 @@ import {
 } from "@/lib/firebaseCms";
 import { I18nField } from "@/components/admin/I18nField";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -324,15 +325,46 @@ function AdminSettings() {
                 required
               />
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <ImageUpload
                   label="Official Organization Logo"
                   value={globalSettings.logoUrl}
                   onChange={(url) =>
                     setGlobalSettings({ ...globalSettings, logoUrl: url || "/images/logo.png" })
                   }
+                  description="Primary high-resolution brand logo (header, footer, reports)."
+                />
+                <ImageUpload
+                  label="Browser Favicon / Shortcut Icon"
+                  value={(globalSettings as any).faviconUrl}
+                  onChange={(url) =>
+                    setGlobalSettings({ ...globalSettings, faviconUrl: url } as any)
+                  }
+                  description="Square brand icon shown in browser tab and mobile bookmarks."
+                />
+                <ImageUpload
+                  label="Official NGO Stamp & Seal Graphic"
+                  value={(globalSettings as any).stampSealUrl}
+                  onChange={(url) =>
+                    setGlobalSettings({ ...globalSettings, stampSealUrl: url } as any)
+                  }
+                  description="Transparent PNG seal used on certificates and letters."
                 />
               </div>
+
+              <FileUpload
+                label="Official Ministry of Economy (MoEc) Registration Certificate (PDF)"
+                value={(globalSettings as any).moecCertificateUrl}
+                fileName={(globalSettings as any).moecCertificateFileName}
+                onChange={(url, meta) =>
+                  setGlobalSettings({
+                    ...globalSettings,
+                    moecCertificateUrl: url,
+                    moecCertificateFileName: meta?.fileName || (globalSettings as any).moecCertificateFileName,
+                  } as any)
+                }
+                description="Upload the official state NGO license / registration document PDF."
+              />
             </CardContent>
           </Card>
         </TabsContent>

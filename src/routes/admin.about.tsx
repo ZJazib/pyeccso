@@ -10,6 +10,7 @@ import {
 } from "@/lib/firebaseCms";
 import { I18nField } from "@/components/admin/I18nField";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -254,6 +255,20 @@ function AdminAbout() {
                   multiline
                   rows={2}
                   required
+                />
+
+                <FileUpload
+                  label="Official Organization Profile & Legal Statute Document (PDF)"
+                  value={(aboutInfo as any).profileDocUrl}
+                  fileName={(aboutInfo as any).profileDocFileName}
+                  onChange={(url, meta) =>
+                    setAboutInfo({
+                      ...aboutInfo,
+                      profileDocUrl: url,
+                      profileDocFileName: meta?.fileName || (aboutInfo as any).profileDocFileName,
+                    } as any)
+                  }
+                  description="Upload downloadable organization profile, statute, or legal accreditation dossier."
                 />
               </div>
             </CardContent>

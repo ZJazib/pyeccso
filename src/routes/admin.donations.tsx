@@ -5,6 +5,8 @@ import {
   saveSiteSetting,
 } from "@/lib/firebaseCms";
 import { I18nField } from "@/components/admin/I18nField";
+import { ImageUpload } from "@/components/admin/ImageUpload";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -205,6 +207,13 @@ function AdminDonations() {
                 multiline
                 rows={2}
               />
+
+              <ImageUpload
+                label="HesabPay Merchant Payment QR Code Image"
+                value={(hesabPayConfig as any).qrCodeUrl}
+                onChange={(url) => setHesabPayConfig({ ...hesabPayConfig, qrCodeUrl: url } as any)}
+                description="Upload the official direct HesabPay payment QR code graphic (auto-compressed)."
+              />
             </CardContent>
           </Card>
         </TabsContent>
@@ -287,6 +296,20 @@ function AdminDonations() {
                   className="text-xs mt-1"
                 />
               </div>
+
+              <FileUpload
+                label="Official Bank Wire Instructions & NGO Exemption Document (PDF)"
+                value={(bankConfig as any).bankDocUrl}
+                fileName={(bankConfig as any).bankDocFileName}
+                onChange={(url, meta) =>
+                  setBankConfig({
+                    ...bankConfig,
+                    bankDocUrl: url,
+                    bankDocFileName: meta?.fileName || (bankConfig as any).bankDocFileName,
+                  } as any)
+                }
+                description="Upload signed bank coordinates document or official wire transfer guide PDF."
+              />
             </CardContent>
           </Card>
         </TabsContent>

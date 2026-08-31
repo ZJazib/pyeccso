@@ -9,6 +9,7 @@ import {
 } from "@/lib/firebaseCms";
 import { I18nField } from "@/components/admin/I18nField";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -527,9 +528,27 @@ function AdminMedia() {
               )}
 
               <ImageUpload
-                label="Feature Media Image"
+                label="Feature Media Image / Photo"
                 value={editingItem.coverUrl}
                 onChange={(url) => setEditingItem({ ...editingItem, coverUrl: url })}
+                description="Upload high-res news photo, press banner, or gallery image (auto-compressed)."
+              />
+
+              <FileUpload
+                label="Attached Publication / Press Kit / Official Statement (PDF/DOCX)"
+                value={editingItem.data?.fileUrl}
+                fileName={editingItem.data?.fileName}
+                onChange={(url, meta) =>
+                  setEditingItem({
+                    ...editingItem,
+                    data: {
+                      ...editingItem.data,
+                      fileUrl: url,
+                      fileName: meta?.fileName || editingItem.data?.fileName,
+                    },
+                  })
+                }
+                description="Upload downloadable report, press release PDF, or tender dossier."
               />
 
               <DialogFooter>

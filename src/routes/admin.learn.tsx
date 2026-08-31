@@ -5,6 +5,8 @@ import {
   saveSiteSetting,
 } from "@/lib/firebaseCms";
 import { I18nField } from "@/components/admin/I18nField";
+import { ImageUpload } from "@/components/admin/ImageUpload";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -118,6 +120,27 @@ function AdminLearn() {
             onChange={(val) => setLearnConfig({ ...learnConfig, description: val as any })}
             multiline
             rows={3}
+          />
+
+          <ImageUpload
+            label="Learning Platform Academy Cover Photo / Banner"
+            value={(learnConfig as any).coverImageUrl}
+            onChange={(url) => setLearnConfig({ ...learnConfig, coverImageUrl: url } as any)}
+            description="High-resolution digital education visual, computer lab photo, or vocational training banner."
+          />
+
+          <FileUpload
+            label="Complete TVET Skills Curriculum & Academic Syllabus (PDF)"
+            value={(learnConfig as any).syllabusDocUrl}
+            fileName={(learnConfig as any).syllabusDocFileName}
+            onChange={(url, meta) =>
+              setLearnConfig({
+                ...learnConfig,
+                syllabusDocUrl: url,
+                syllabusDocFileName: meta?.fileName || (learnConfig as any).syllabusDocFileName,
+              } as any)
+            }
+            description="Upload accredited TVET syllabus or vocational training prospectus PDF."
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-slate-800">

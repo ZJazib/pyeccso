@@ -8,6 +8,7 @@ import {
   type ContentStatus,
 } from "@/lib/firebaseCms";
 import { I18nField } from "@/components/admin/I18nField";
+import { ImageUpload } from "@/components/admin/ImageUpload";
 import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -372,6 +373,13 @@ function AdminOffices() {
                   />
                 </div>
               </div>
+
+              <ImageUpload
+                label="Office Exterior / Facility Photo"
+                value={editingOffice.coverUrl}
+                onChange={(url) => setEditingOffice({ ...editingOffice, coverUrl: url })}
+                description="Upload provincial branch office entrance or building photo (auto-compressed)."
+              />
 
               <DialogFooter>
                 <Button

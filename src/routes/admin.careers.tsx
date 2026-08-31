@@ -8,6 +8,7 @@ import {
   type ContentStatus,
 } from "@/lib/firebaseCms";
 import { I18nField } from "@/components/admin/I18nField";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -417,6 +418,23 @@ function AdminCareers() {
                 }
                 multiline
                 rows={4}
+              />
+
+              <FileUpload
+                label="Official Terms of Reference (ToR) / Job Specification Document (PDF)"
+                value={editingItem.data?.torDocUrl}
+                fileName={editingItem.data?.torDocFileName}
+                onChange={(url, meta) =>
+                  setEditingItem({
+                    ...editingItem,
+                    data: {
+                      ...editingItem.data,
+                      torDocUrl: url,
+                      torDocFileName: meta?.fileName || editingItem.data?.torDocFileName,
+                    },
+                  })
+                }
+                description="Upload official signed Terms of Reference or Vacancy Announcement PDF."
               />
 
               <DialogFooter>

@@ -10,6 +10,7 @@ import {
 } from "@/lib/firebaseCms";
 import { I18nField } from "@/components/admin/I18nField";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -684,6 +685,24 @@ function AdminProjects() {
                 label="Project Hero / Field Photo"
                 value={editingItem.coverUrl}
                 onChange={(url) => setEditingItem({ ...editingItem, coverUrl: url })}
+                description="Upload field photos or high-res project banners directly from your device (auto-compressed)."
+              />
+
+              <FileUpload
+                label="Project Evaluation Report / Completion Document (PDF/DOCX)"
+                value={editingItem.data?.reportUrl}
+                fileName={editingItem.data?.reportFileName}
+                onChange={(url, meta) =>
+                  setEditingItem({
+                    ...editingItem,
+                    data: {
+                      ...editingItem.data,
+                      reportUrl: url,
+                      reportFileName: meta?.fileName || editingItem.data?.reportFileName,
+                    },
+                  })
+                }
+                description="Attach official completion report, impact assessment, or donor brief."
               />
 
               <DialogFooter>

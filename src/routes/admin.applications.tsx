@@ -7,6 +7,7 @@ import {
   type JobApplicationItem,
 } from "@/lib/firebaseCms";
 import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -293,22 +294,22 @@ function AdminApplications() {
                 </div>
               )}
 
-              {selectedApp.data?.cvUrl && (
-                <div className="p-3 rounded-xl bg-blue-950/30 border border-blue-500/30 flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Download className="w-4 h-4 text-brand-blue" />
-                    <span className="font-semibold text-slate-200">Applicant Resume / CV Document</span>
-                  </div>
-                  <a
-                    href={selectedApp.data?.cvUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-xs px-3 py-1.5 rounded-lg bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold"
-                  >
-                    Open Document
-                  </a>
-                </div>
-              )}
+              <FileUpload
+                label="Candidate CV / Supplemental Verification Document (PDF/DOCX)"
+                value={selectedApp.data?.cvUrl}
+                fileName={selectedApp.data?.cvFileName}
+                onChange={(url, meta) =>
+                  setSelectedApp({
+                    ...selectedApp,
+                    data: {
+                      ...selectedApp.data,
+                      cvUrl: url,
+                      cvFileName: meta?.fileName || selectedApp.data?.cvFileName,
+                    },
+                  })
+                }
+                description="Upload, preview, replace, or update candidate's official resume, certifications, or diploma dossier."
+              />
 
               <div>
                 <Label className="text-xs font-semibold text-slate-300">HR Reviewer Notes & Evaluation</Label>

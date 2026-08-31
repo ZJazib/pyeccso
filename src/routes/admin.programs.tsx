@@ -9,6 +9,7 @@ import {
 } from "@/lib/firebaseCms";
 import { I18nField } from "@/components/admin/I18nField";
 import { ImageUpload } from "@/components/admin/ImageUpload";
+import { FileUpload } from "@/components/admin/FileUpload";
 import { DeleteConfirmDialog } from "@/components/admin/DeleteConfirmDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -388,6 +389,24 @@ function AdminPrograms() {
                 label="Program Cover Image"
                 value={editingItem.coverUrl}
                 onChange={(url) => setEditingItem({ ...editingItem, coverUrl: url })}
+                description="Upload high-res program photo (auto-compressed to high-speed WebP)."
+              />
+
+              <FileUpload
+                label="Official Program Curriculum / Brochure Document (PDF/DOCX)"
+                value={editingItem.data?.brochureUrl}
+                fileName={editingItem.data?.brochureFileName}
+                onChange={(url, meta) =>
+                  setEditingItem({
+                    ...editingItem,
+                    data: {
+                      ...editingItem.data,
+                      brochureUrl: url,
+                      brochureFileName: meta?.fileName || editingItem.data?.brochureFileName,
+                    },
+                  })
+                }
+                description="Upload downloadable curriculum guide or program overview sheet."
               />
 
               <DialogFooter>
