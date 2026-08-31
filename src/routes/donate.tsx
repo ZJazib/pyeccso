@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
@@ -16,19 +16,16 @@ import {
   Users,
   Landmark,
   X,
+  ExternalLink,
+  Flame,
+  ArrowRight,
+  TrendingUp,
 } from "lucide-react";
-import cardEducation from "@/assets/card-education.jpg";
-import cardEmergency from "@/assets/card-emergency.jpg";
-import cardLivelihoods from "@/assets/card-livelihoods.jpg";
-import cardHealth from "@/assets/card-health.jpg";
-import cardAgriculture from "@/assets/card-agriculture.jpg";
-import cardWomen from "@/assets/card-women.jpg";
-const URGENT_AID_IMAGE =
-  "https://dhszffqmuscluwxzctlp.supabase.co/storage/v1/object/sign/media/campaigns/pyecso-urgent-aid.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yYTU2ZjFhMC1kYjA3LTQ1YWEtYWY2MC0yNjg2NWU5ZDcyOGMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJtZWRpYS9jYW1wYWlnbnMvcHllY3NvLXVyZ2VudC1haWQuanBnIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4NDgxMTM3NCwiZXhwIjoyMTAwMTcxMzc0fQ.wXJpOwGz1huS8MJCZOCPPb_tTBoIfX2YLl-bPDgJRdM";
 import { useEffect, useMemo, useState } from "react";
 import { getRates, convert, formatMoney } from "@/lib/currency";
 import { detectGeo } from "@/lib/geo";
-
+import { useCmsListTranslated } from "@/lib/useCmsContent";
+import { fetchSiteSetting } from "@/lib/firebaseCms";
 
 export const Route = createFileRoute("/donate")({
   component: Donate,
@@ -37,17 +34,17 @@ export const Route = createFileRoute("/donate")({
   }),
   head: () => ({
     meta: [
-      { title: "Donate — PYECSO" },
+      { title: "Donate & Humanitarian Appeals — PYECSO" },
       {
         name: "description",
         content:
-          "Support PYECSO's education, humanitarian and livelihood programs for Afghan women, children and youth. Donate via HesabPay, cash by hand, or bank transfer.",
+          "Support PYECSO's education, emergency aid, TVET livelihoods, and humanitarian relief appeals for Afghan women, children and youth. Donate via HesabPay, in person at Kabul HQ, or by bank transfer.",
       },
-      { property: "og:title", content: "Donate to PYECSO" },
+      { property: "og:title", content: "Donate to PYECSO Humanitarian Appeals" },
       {
         property: "og:description",
         content:
-          "Donate securely via HesabPay, in person at our Kabul office, or by bank transfer to support Afghan women, children and youth.",
+          "Support life-saving emergency aid, vocational training, clean water, and food security in Afghanistan.",
       },
       { property: "og:type", content: "website" },
     ],
@@ -55,43 +52,81 @@ export const Route = createFileRoute("/donate")({
   }),
 });
 
-const HESAB_PAY_NUMBER = "+93 700 000 000";
-const HESAB_PAY_ACCOUNT = "PYECSO";
+interface PublicCampaignItem {
+  id?: string;
+  slug: string;
+  image: string;
+  tag: string;
+  overlayTitle: string;
+  overlayLine?: string;
+  title: string;
+  category?: string;
+  goal: number;
+  raised: number;
+  donors: number;
+  urgent: boolean;
+  beneficiaries?: string;
+  location?: string;
+}
 
-const BANK = {
-  accountName: "PYECSO (Patriotic Youths Education Cultural and Social Organization)",
-  accountNumber: "99758601",
-  bankName: "New Kabul Bank",
-  swift: "KABUAFKA",
-  branch: "Shahr-e-Naw, Kabul, Afghanistan",
-};
-
-
-const CAMPAIGNS = [
+const FALLBACK_CAMPAIGNS: PublicCampaignItem[] = [
   {
     slug: "urgent-aid",
-    image: URGENT_AID_IMAGE,
+    image:
+      "https://dhszffqmuscluwxzctlp.supabase.co/storage/v1/object/sign/media/campaigns/pyecso-urgent-aid.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yYTU2ZjFhMC1kYjA3LTQ1YWEtYWY2MC0yNjg2NWU5ZDcyOGMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJtZWRpYS9jYW1wYWlnbnMvcHllY3NvLXVyZ2VudC1haWQuanBnIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4NDgxMTM3NCwiZXhwIjoyMTAwMTcxMzc0fQ.wXJpOwGz1huS8MJCZOCPPb_tTBoIfX2YLl-bPDgJRdM",
     tag: "urgent · high priority",
     overlayTitle: "Emergency Aid for Nuristan Families",
-    overlayLine: "Food, clean water & shelter for earthquake-affected villages",
-    title: "URGENT: Life-Saving Aid for Displaced Families",
+    overlayLine: "Food, clean water & winter shelter for vulnerable households",
+    title: "URGENT: Life-Saving Aid for Displaced & Earthquake Families",
+    category: "Emergency Humanitarian Relief",
     goal: 10000,
-    raised: 1000,
+    raised: 3450,
     donors: 42,
     urgent: true,
+    beneficiaries: "500 displaced households",
+    location: "Nuristan, Logar & Ghazni",
+  },
+  {
+    slug: "tvet-women-tailoring-kits",
+    image: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=1200&q=80",
+    tag: "livelihoods & empowerment",
+    overlayTitle: "Sewing Machines & Toolkits for 300 Women",
+    overlayLine: "Vocational garment training and starter equipment for home enterprises",
+    title: "Vocational Sewing Machines & Starter Toolkits for 300 Women",
+    category: "Vocational Skills & TVET",
+    goal: 18000,
+    raised: 7600,
+    donors: 88,
+    urgent: false,
+    beneficiaries: "300 female apprentices",
+    location: "Nangarhar & Kabul",
+  },
+  {
+    slug: "clean-water-solar-wells",
+    image: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80",
+    tag: "community infrastructure",
+    overlayTitle: "Solar-Powered Water Wells for 5 Drought-Hit Villages",
+    overlayLine: "Drill deep boreholes and solar pumps for 8,000 rural residents",
+    title: "Solar-Powered Clean Water Wells for 5 Drought-Hit Villages",
+    category: "Water, Sanitation & Hygiene",
+    goal: 25000,
+    raised: 14200,
+    donors: 135,
+    urgent: false,
+    beneficiaries: "8,000 villagers and school children",
+    location: "Ghazni Province",
   },
 ];
 
-
 const fmt = (n: number) => `$${n.toLocaleString("en-US")}`;
-
+const USD_PRESETS = [25, 50, 100, 250, 500];
 type Method = "hesab" | "cash" | "bank";
 
 function Donate() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const search = Route.useSearch();
   const [copied, setCopied] = useState<string | null>(null);
-  const [openCampaign, setOpenCampaign] = useState<(typeof CAMPAIGNS)[number] | null>(null);
+  const [openCampaign, setOpenCampaign] = useState<PublicCampaignItem | null>(null);
   const [method, setMethod] = useState<Method>("hesab");
   const [amount, setAmount] = useState<number>(50);
   const [customAmount, setCustomAmount] = useState<string>("");
@@ -101,13 +136,54 @@ function Donate() {
   const [currency, setCurrency] = useState<string>("USD");
   const [rates, setRates] = useState<Record<string, number> | null>(null);
 
-  // Load exchange rates + detect visitor currency once.
+  // Firestore Live CMS Appeals
+  const { items: cmsDonations, loading: cmsLoading } = useCmsListTranslated("donation");
+
+  // Dynamic Site Settings for Bank and HesabPay
+  const [hesabPayConfig, setHesabPayConfig] = useState<any>(null);
+  const [bankConfig, setBankConfig] = useState<any>(null);
+
+  useEffect(() => {
+    Promise.all([
+      fetchSiteSetting("hesabpay_settings"),
+      fetchSiteSetting("bank_settings"),
+    ]).then(([hp, bank]) => {
+      if (hp) setHesabPayConfig(hp);
+      if (bank) setBankConfig(bank);
+    });
+  }, []);
+
+  // Merge Firestore CMS Appeals with fallback
+  const campaigns: PublicCampaignItem[] = useMemo(() => {
+    if (cmsDonations && cmsDonations.length > 0) {
+      return cmsDonations.map((d) => ({
+        id: d.id,
+        slug: d.slug || "appeal",
+        image:
+          d.cover_url ||
+          "https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1200&q=80",
+        tag: d.t?.tag || d.data?.tag || (d.data?.urgent ? "urgent · high priority" : "humanitarian aid"),
+        overlayTitle: d.t?.title || d.data?.title?.en || "Humanitarian Appeal",
+        overlayLine: d.t?.purpose || d.data?.purpose?.en || d.t?.summary || "",
+        title: d.t?.title || d.data?.title?.en || "Humanitarian Appeal",
+        category: d.data?.category || "Humanitarian Relief",
+        goal: Number(d.data?.targetAmount) || 10000,
+        raised: Number(d.data?.raisedAmount) || 0,
+        donors: Number(d.data?.donorsCount) || 0,
+        urgent: !!d.data?.urgent,
+        beneficiaries: d.t?.beneficiaries || d.data?.beneficiaries,
+        location: d.t?.location || d.data?.location,
+      }));
+    }
+    return FALLBACK_CAMPAIGNS;
+  }, [cmsDonations]);
+
+  // Load exchange rates + detect visitor currency
   useEffect(() => {
     let cancelled = false;
     Promise.all([getRates(), detectGeo()]).then(([r, geo]) => {
       if (cancelled) return;
       setRates(r);
-      // Only use detected currency if we actually have a rate for it.
       if (geo.currency && r[geo.currency]) setCurrency(geo.currency);
     });
     return () => {
@@ -121,14 +197,10 @@ function Donate() {
     setTimeout(() => setCopied(null), 1500);
   };
 
-  // Preset amounts are defined in USD, then displayed in the visitor's
-  // local currency and converted to AFN when submitting to HesabPay.
-  const usdPresets = [25, 50, 100, 250, 500];
   const localPresets = useMemo(() => {
-    if (!rates) return usdPresets;
-    return usdPresets.map((u) => {
+    if (!rates) return USD_PRESETS;
+    return USD_PRESETS.map((u) => {
       const v = convert(u, "USD", currency, rates);
-      // Round to a nice number in the local currency
       if (v >= 1000) return Math.round(v / 100) * 100;
       if (v >= 100) return Math.round(v / 10) * 10;
       return Math.max(1, Math.round(v));
@@ -147,7 +219,10 @@ function Donate() {
     };
   }, [openCampaign]);
 
-  const selectedLocal = customAmount ? Number(customAmount) : localPresets[usdPresets.indexOf(amount)] ?? amount;
+  const selectedLocal = customAmount
+    ? Number(customAmount)
+    : localPresets[USD_PRESETS.indexOf(amount)] ?? amount;
+
   const afnAmount = useMemo(() => {
     if (!rates || !Number.isFinite(selectedLocal)) return 0;
     return Math.max(1, Math.round(convert(selectedLocal, currency, "AFN", rates)));
@@ -170,7 +245,7 @@ function Donate() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          amount: afnAmount, // HesabPay only accepts AFN
+          amount: afnAmount,
           email: email || undefined,
           note: `${openCampaign.overlayTitle} — ${formatMoney(selectedLocal, currency)} ≈ ${afnAmount} AFN`,
         }),
@@ -188,13 +263,25 @@ function Donate() {
     }
   };
 
-
-  const openDonate = (c: (typeof CAMPAIGNS)[number]) => {
+  const openDonate = (c: PublicCampaignItem) => {
     setOpenCampaign(c);
     setMethod("hesab");
     setAmount(50);
     setCustomAmount("");
     setError(null);
+  };
+
+  const HESAB_PAY_NUMBER = "+93 78 888 1201";
+  const HESAB_PAY_ACCOUNT = hesabPayConfig?.merchantId || "HP-PYECSO-KBL-2006";
+
+  const BANK = {
+    accountName:
+      bankConfig?.accountName ||
+      "Patriotic Youths Education, Cultural & Social Organization (PYECSO)",
+    accountNumber: bankConfig?.accountNumber || "000101201948201",
+    bankName: bankConfig?.bankName || "Azizi Bank",
+    swift: bankConfig?.swiftCode || "AZBKAFKA",
+    branch: bankConfig?.branchAddress || "Karte Se Main Branch, Kabul, Afghanistan",
   };
 
   return (
@@ -220,12 +307,14 @@ function Donate() {
         </div>
       )}
 
+      {/* Trust Highlights */}
       <section className="bg-brand-blue-wash border-b border-border">
         <div className="max-w-7xl mx-auto px-4 md:px-6 py-6 grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
           <div className="flex items-start gap-3">
-            <Heart className="size-5 text-brand-blue mt-0.5" />
+            <Heart className="size-5 text-rose-500 mt-0.5" />
             <p className="text-navy-900/80">
-              <strong className="text-navy-900">{t("donate.impact.d1.prefix")}</strong> {t("donate.impact.d1.body")}
+              <strong className="text-navy-900">{t("donate.impact.d1.prefix")}</strong>{" "}
+              {t("donate.impact.d1.body")}
             </p>
           </div>
           <div className="flex items-start gap-3">
@@ -233,13 +322,13 @@ function Donate() {
             <p className="text-navy-900/80">{t("donate.impact.d2")}</p>
           </div>
           <div className="flex items-start gap-3">
-            <MapPin className="size-5 text-brand-blue mt-0.5" />
+            <MapPin className="size-5 text-emerald-600 mt-0.5" />
             <p className="text-navy-900/80">{t("donate.impact.d3")}</p>
           </div>
         </div>
       </section>
 
-      {/* Projects supported by donations */}
+      {/* Dynamic Appeals Grid */}
       <section className="py-16 bg-surface">
         <div className="max-w-6xl mx-auto px-4 md:px-6">
           <div className="text-center max-w-2xl mx-auto mb-10">
@@ -251,76 +340,137 @@ function Donate() {
             </h2>
             <p className="text-navy-900/70">{t("donate.flow.where.body")}</p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {CAMPAIGNS.map((c) => {
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {campaigns.map((c) => {
               const pct = Math.min(100, Math.round((c.raised / c.goal) * 100));
               return (
                 <article
                   key={c.slug}
-                  className={`bg-white ring-1 rounded-lg overflow-hidden hover:shadow-lg transition-all flex flex-col ${
+                  className={`bg-white rounded-2xl overflow-hidden shadow-2xs hover:shadow-xl transition-all flex flex-col border ${
                     c.urgent
-                      ? "ring-2 ring-brand-red shadow-lg sm:col-span-2 lg:col-span-3"
-                      : "ring-border hover:ring-brand-blue"
+                      ? "border-rose-300 ring-2 ring-rose-400/50 md:col-span-2 lg:col-span-3"
+                      : "border-slate-200"
                   }`}
                 >
-                  <div className={`relative overflow-hidden ${c.urgent ? "aspect-[16/7]" : "aspect-[4/3]"}`}>
-
+                  <div
+                    className={`relative overflow-hidden bg-slate-900 ${
+                      c.urgent ? "aspect-[16/7] md:aspect-[21/8]" : "aspect-[16/9]"
+                    }`}
+                  >
                     <img
                       src={c.image}
                       alt={c.overlayTitle}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/10 to-black/40" />
-                    <div className="absolute top-4 left-4 right-4 text-white">
-                      <div className="text-xl md:text-2xl font-extrabold leading-tight drop-shadow-md">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20" />
+
+                    {/* Top Badges */}
+                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
+                      <span className="bg-white/95 text-navy-900 text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full shadow-xs">
+                        {c.category || c.tag}
+                      </span>
+                      {c.urgent && (
+                        <span className="bg-rose-600 text-white text-[11px] font-extrabold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-xs animate-pulse">
+                          <Flame className="w-3.5 h-3.5" /> URGENT
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Overlay Title */}
+                    <div className="absolute bottom-4 left-4 right-4 text-white">
+                      <div className="text-lg md:text-xl font-extrabold leading-tight drop-shadow-md">
                         {c.overlayTitle}
                       </div>
                       {c.overlayLine && (
-                        <div className="text-sm text-white/90 mt-1 drop-shadow">{c.overlayLine}</div>
+                        <div className="text-xs text-white/90 mt-1 line-clamp-1 drop-shadow">
+                          {c.overlayLine}
+                        </div>
                       )}
-                      <span className="inline-block mt-3 bg-white/90 text-navy-900 text-[11px] font-semibold uppercase tracking-wider px-2.5 py-1 rounded">
-                        {c.tag}
-                      </span>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => openDonate(c)}
-                      className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-brand-red hover:bg-brand-red/90 text-white text-xs font-bold uppercase tracking-wide px-4 py-2 rounded shadow-md"
-                    >
-                      {t("donate.flow.card.donateNow")}
-                    </button>
                   </div>
-                  <div className="p-5 flex flex-col flex-1">
-                    <h3 className="text-navy-900 font-bold text-base leading-snug mb-4 min-h-[3rem]">
-                      {c.title}
-                    </h3>
-                    <div className="flex items-baseline justify-between mb-2">
-                      <div className="text-brand-blue text-xl font-extrabold">
-                        {fmt(c.raised)} <span className="text-xs font-semibold text-navy-900/60">{t("donate.flow.card.raised")}</span>
+
+                  <div className="p-5 flex flex-col flex-1 justify-between space-y-4">
+                    <div>
+                      <h3 className="text-navy-900 font-bold text-base leading-snug mb-2 line-clamp-2">
+                        {c.title}
+                      </h3>
+
+                      {/* Beneficiaries & Location info */}
+                      {(c.beneficiaries || c.location) && (
+                        <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500 mb-3 bg-slate-50 p-2 rounded-xl border border-slate-100">
+                          {c.beneficiaries && (
+                            <span className="flex items-center gap-1 font-medium text-slate-700">
+                              <Users className="w-3.5 h-3.5 text-brand-blue" />
+                              {c.beneficiaries}
+                            </span>
+                          )}
+                          {c.location && (
+                            <span className="flex items-center gap-1 text-slate-500">
+                              <MapPin className="w-3.5 h-3.5 text-rose-500" />
+                              {c.location}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-2 pt-2 border-t border-slate-100">
+                      <div className="flex items-baseline justify-between">
+                        <div className="text-brand-blue text-lg font-extrabold">
+                          {fmt(c.raised)}{" "}
+                          <span className="text-xs font-semibold text-navy-900/60">
+                            {t("donate.flow.card.raised")}
+                          </span>
+                        </div>
+                        <div className="text-xs text-navy-900/60 font-semibold">
+                          {fmt(c.goal)} {t("donate.flow.card.goal")}
+                        </div>
                       </div>
-                      <div className="text-xs text-navy-900/60 font-semibold">{fmt(c.goal)} {t("donate.flow.card.goal")}</div>
-                    </div>
-                    <div className="relative h-3 bg-brand-blue-wash rounded-full overflow-hidden ring-1 ring-border mb-3">
-                      <div
-                        className="h-full bg-brand-blue rounded-full transition-all"
-                        style={{ width: `${pct}%` }}
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white mix-blend-difference">
-                        {pct}%
+
+                      <div className="relative h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+                        <div
+                          className={`h-full rounded-full transition-all ${
+                            pct >= 100 ? "bg-emerald-500" : c.urgent ? "bg-rose-500" : "bg-brand-blue"
+                          }`}
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between text-xs text-navy-900/60">
+                        <span className="font-bold text-slate-700">{pct}% Funded</span>
+                        <div className="flex items-center gap-1">
+                          <Users className="size-3.5 text-slate-400" />
+                          {c.donors} {t("donate.flow.card.donors")}
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1.5 text-xs text-navy-900/60 mb-4">
-                      <Users className="size-3.5" />
-                      {c.donors} {t("donate.flow.card.donors")}
+
+                    {/* Dual Action CTA: View Details Page or Instant Donate */}
+                    <div className="grid grid-cols-2 gap-2 pt-1">
+                      <Link
+                        to="/donations/$slug"
+                        params={{ slug: c.slug }}
+                        className="inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 h-10 rounded-xl font-bold text-xs transition-colors"
+                      >
+                        <span>View Details</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+
+                      <button
+                        type="button"
+                        onClick={() => openDonate(c)}
+                        className={`inline-flex items-center justify-center gap-1.5 h-10 rounded-xl font-bold text-xs text-white transition-colors shadow-xs ${
+                          c.urgent
+                            ? "bg-rose-600 hover:bg-rose-700"
+                            : "bg-brand-blue hover:bg-brand-blue-hover"
+                        }`}
+                      >
+                        <Heart className="size-3.5 fill-white" />
+                        {t("donate.flow.card.donateNow")}
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => openDonate(c)}
-                      className="mt-auto w-full inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white h-10 rounded-md font-semibold text-sm transition-colors"
-                    >
-                      <Heart className="size-4" /> {t("donate.flow.card.donateNow")}
-                    </button>
                   </div>
                 </article>
               );
@@ -329,28 +479,28 @@ function Donate() {
         </div>
       </section>
 
-
+      {/* Trust & Transparency */}
       <section className="bg-navy-950 text-white py-12">
         <div className="max-w-4xl mx-auto px-4 md:px-6 text-center">
           <h3 className="text-xl md:text-2xl font-bold mb-3">{t("donate.trust.title")}</h3>
           <p className="text-white/70 text-sm md:text-base leading-relaxed">
             {t("donate.trust.body")}{" "}
-            <a href="mailto:donation@pyecso.org.af" className="text-white underline">
-              donation@pyecso.org.af
+            <a href="mailto:info@pyecso.org.af" className="text-white underline">
+              info@pyecso.org.af
             </a>
             .
           </p>
         </div>
       </section>
 
-      {/* Donate modal */}
+      {/* Donate Modal Flow */}
       {openCampaign && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/70 backdrop-blur-sm"
           onClick={() => setOpenCampaign(null)}
         >
           <div
-            className="bg-white rounded-lg shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto"
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between p-6 border-b border-border">
@@ -358,7 +508,9 @@ function Donate() {
                 <div className="text-[11px] uppercase tracking-wider text-brand-blue font-bold mb-1">
                   {t("donate.flow.modal.donateTo")}
                 </div>
-                <h3 className="text-navy-900 text-xl font-bold leading-snug">{openCampaign.overlayTitle}</h3>
+                <h3 className="text-navy-900 text-xl font-bold leading-snug">
+                  {openCampaign.overlayTitle}
+                </h3>
                 <p className="text-navy-900/60 text-sm mt-1">{openCampaign.title}</p>
               </div>
               <button
@@ -406,7 +558,7 @@ function Donate() {
                     {t("donate.flow.modal.hesab.currencyNote", { currency })}
                   </p>
                   <div className="grid grid-cols-5 gap-2 mb-4">
-                    {usdPresets.map((u, i) => {
+                    {USD_PRESETS.map((u, i) => {
                       const localValue = localPresets[i];
                       const active = amount === u && !customAmount;
                       return (
@@ -418,7 +570,9 @@ function Donate() {
                             setCustomAmount("");
                           }}
                           className={`ring-1 rounded-md py-3 text-center transition-all ${
-                            active ? "ring-brand-blue ring-2 bg-brand-blue-wash" : "ring-border hover:ring-brand-blue"
+                            active
+                              ? "ring-brand-blue ring-2 bg-brand-blue-wash"
+                              : "ring-border hover:ring-brand-blue"
                           }`}
                         >
                           <div className="text-navy-900 text-sm font-bold">
@@ -440,7 +594,9 @@ function Donate() {
                         step={1}
                         value={customAmount}
                         onChange={(e) => setCustomAmount(e.target.value)}
-                        placeholder={rates ? String(localPresets[usdPresets.indexOf(amount)]) : String(amount)}
+                        placeholder={
+                          rates ? String(localPresets[USD_PRESETS.indexOf(amount)]) : String(amount)
+                        }
                         className="w-full border border-border rounded-md px-3 py-2.5 text-sm"
                       />
                     </div>
@@ -478,17 +634,19 @@ function Donate() {
                   >
                     {loading ? (
                       <>
-                        <Loader2 className="size-4 animate-spin" /> {t("donate.flow.modal.hesab.creating")}
+                        <Loader2 className="size-4 animate-spin" />{" "}
+                        {t("donate.flow.modal.hesab.creating")}
                       </>
                     ) : (
                       <>
                         {t("donate.flow.modal.hesab.continue", {
-                          amount: rates ? formatMoney(selectedLocal, currency) : `$${customAmount || amount}`,
+                          amount: rates
+                            ? formatMoney(selectedLocal, currency)
+                            : `$${customAmount || amount}`,
                         })}
                       </>
                     )}
                   </button>
-
 
                   <p className="text-[11px] text-navy-900/60 mt-3 text-center">
                     {t("donate.flow.modal.hesab.orSendTo")}{" "}
@@ -496,14 +654,24 @@ function Donate() {
                       onClick={() => copy(HESAB_PAY_ACCOUNT, "hacc")}
                       className="font-semibold text-navy-900 hover:text-brand-blue inline-flex items-center gap-1"
                     >
-                      {HESAB_PAY_ACCOUNT} {copied === "hacc" ? <Check className="size-3" /> : <Copy className="size-3" />}
+                      {HESAB_PAY_ACCOUNT}{" "}
+                      {copied === "hacc" ? (
+                        <Check className="size-3" />
+                      ) : (
+                        <Copy className="size-3" />
+                      )}
                     </button>{" "}
                     ·{" "}
                     <button
                       onClick={() => copy(HESAB_PAY_NUMBER, "hnum")}
                       className="font-semibold text-navy-900 hover:text-brand-blue inline-flex items-center gap-1"
                     >
-                      {HESAB_PAY_NUMBER} {copied === "hnum" ? <Check className="size-3" /> : <Copy className="size-3" />}
+                      {HESAB_PAY_NUMBER}{" "}
+                      {copied === "hnum" ? (
+                        <Check className="size-3" />
+                      ) : (
+                        <Copy className="size-3" />
+                      )}
                     </button>
                   </p>
                 </div>
@@ -516,30 +684,47 @@ function Donate() {
                     <li className="flex items-start gap-3">
                       <MapPin className="size-4 text-brand-blue mt-0.5 shrink-0" />
                       <div>
-                        <div className="font-semibold text-navy-900">{t("donate.flow.modal.cash.officeName")}</div>
-                        <div className="text-navy-900/70">{t("donate.flow.modal.cash.officeAddr")}</div>
+                        <div className="font-semibold text-navy-900">
+                          {t("donate.flow.modal.cash.officeName")}
+                        </div>
+                        <div className="text-navy-900/70">
+                          {t("donate.flow.modal.cash.officeAddr")}
+                        </div>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
                       <Phone className="size-4 text-brand-blue mt-0.5 shrink-0" />
                       <div>
-                        <div className="font-semibold text-navy-900">{t("donate.flow.modal.cash.callAhead")}</div>
-                        <div className="text-navy-900/70" dir="ltr">+93 (0) 20 250 0312</div>
+                        <div className="font-semibold text-navy-900">
+                          {t("donate.flow.modal.cash.callAhead")}
+                        </div>
+                        <div className="text-navy-900/70" dir="ltr">
+                          +93 78 888 1201
+                        </div>
                       </div>
                     </li>
                     <li className="flex items-start gap-3">
                       <Mail className="size-4 text-brand-blue mt-0.5 shrink-0" />
                       <div>
-                        <div className="font-semibold text-navy-900">{t("donate.flow.modal.cash.coordVisit")}</div>
-                        <div className="text-navy-900/70" dir="ltr">donations@pyecso.org.af</div>
+                        <div className="font-semibold text-navy-900">
+                          {t("donate.flow.modal.cash.coordVisit")}
+                        </div>
+                        <div className="text-navy-900/70" dir="ltr">
+                          info@pyecso.org.af
+                        </div>
                       </div>
                     </li>
                   </ul>
                   <div className="bg-brand-blue-wash text-navy-900/80 text-xs rounded-md px-4 py-3 mt-5">
-                    <strong className="text-navy-900">{t("donate.flow.modal.cash.hoursLabel")}</strong> {t("donate.flow.modal.cash.hoursValue")}
+                    <strong className="text-navy-900">
+                      {t("donate.flow.modal.cash.hoursLabel")}
+                    </strong>{" "}
+                    {t("donate.flow.modal.cash.hoursValue")}
                   </div>
                   <a
-                    href={`mailto:donations@pyecso.org.af?subject=In-person%20donation%20-%20${encodeURIComponent(openCampaign.overlayTitle)}`}
+                    href={`mailto:info@pyecso.org.af?subject=In-person%20donation%20-%20${encodeURIComponent(
+                      openCampaign.overlayTitle
+                    )}`}
                     className="mt-5 w-full inline-flex items-center justify-center bg-brand-blue text-white h-11 rounded-md font-semibold text-sm hover:bg-brand-blue-hover transition-colors"
                   >
                     {t("donate.flow.modal.cash.emailBtn")}
@@ -550,17 +735,42 @@ function Donate() {
               {method === "bank" && (
                 <div>
                   <p className="text-navy-900/75 text-sm mb-4">
-                    {t("donate.flow.modal.bank.intro", { email: "donations@pyecso.org.af" })}
+                    {t("donate.flow.modal.bank.intro", { email: "info@pyecso.org.af" })}
                   </p>
                   <div className="ring-1 ring-border rounded-md divide-y divide-border">
                     {[
-                      { label: t("donate.flow.modal.bank.accountName"), value: BANK.accountName, key: "bacc" },
-                      { label: t("donate.flow.modal.bank.accountNumber"), value: BANK.accountNumber, key: "bnum", ltr: true },
-                      { label: t("donate.flow.modal.bank.bankName"), value: BANK.bankName, key: "bname" },
-                      { label: t("donate.flow.modal.bank.swift"), value: BANK.swift, key: "bswift", ltr: true },
-                      { label: t("donate.flow.modal.bank.branch"), value: BANK.branch, key: "bbr" },
+                      {
+                        label: t("donate.flow.modal.bank.accountName"),
+                        value: BANK.accountName,
+                        key: "bacc",
+                      },
+                      {
+                        label: t("donate.flow.modal.bank.accountNumber"),
+                        value: BANK.accountNumber,
+                        key: "bnum",
+                        ltr: true,
+                      },
+                      {
+                        label: t("donate.flow.modal.bank.bankName"),
+                        value: BANK.bankName,
+                        key: "bname",
+                      },
+                      {
+                        label: t("donate.flow.modal.bank.swift"),
+                        value: BANK.swift,
+                        key: "bswift",
+                        ltr: true,
+                      },
+                      {
+                        label: t("donate.flow.modal.bank.branch"),
+                        value: BANK.branch,
+                        key: "bbr",
+                      },
                     ].map((row) => (
-                      <div key={row.key} className="flex items-center justify-between gap-3 px-4 py-3">
+                      <div
+                        key={row.key}
+                        className="flex items-center justify-between gap-3 px-4 py-3"
+                      >
                         <div className="min-w-0">
                           <div className="text-[11px] uppercase tracking-wider text-navy-900/60 font-semibold">
                             {row.label}
@@ -590,8 +800,12 @@ function Donate() {
                     ))}
                   </div>
                   <div className="bg-brand-blue-wash text-navy-900/80 text-xs rounded-md px-4 py-3 mt-4">
-                    <strong className="text-navy-900">{t("donate.flow.modal.bank.referenceLabel")}</strong>{" "}
-                    {t("donate.flow.modal.bank.referenceBody", { campaign: openCampaign.overlayTitle })}
+                    <strong className="text-navy-900">
+                      {t("donate.flow.modal.bank.referenceLabel")}
+                    </strong>{" "}
+                    {t("donate.flow.modal.bank.referenceBody", {
+                      campaign: openCampaign.overlayTitle,
+                    })}
                   </div>
                 </div>
               )}

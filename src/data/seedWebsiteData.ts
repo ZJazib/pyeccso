@@ -476,6 +476,143 @@ export const SEED_CONTENT_ITEMS = [
       },
     },
   },
+
+  // ==========================================
+  // 7. DONATIONS & HUMANITARIAN APPEALS
+  // ==========================================
+  {
+    type: "donation",
+    slug: "urgent-aid",
+    status: "published",
+    position: 1,
+    cover_url: "https://dhszffqmuscluwxzctlp.supabase.co/storage/v1/object/sign/media/campaigns/pyecso-urgent-aid.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV8yYTU2ZjFhMC1kYjA3LTQ1YWEtYWY2MC0yNjg2NWU5ZDcyOGMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJtZWRpYS9jYW1wYWlnbnMvcHllY3NvLXVyZ2VudC1haWQuanBnIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4NDgxMTM3NCwiZXhwIjoyMTAwMTcxMzc0fQ.wXJpOwGz1huS8MJCZOCPPb_tTBoIfX2YLl-bPDgJRdM",
+    data: {
+      title: {
+        en: "Emergency Aid for Nuristan & Displaced Families",
+        dr: "کمک‌های عاجل اضطراری برای خانواده‌های آسیب‌دیده و بی‌جاشده در نورستان",
+        ps: "په نورستان کې د زلزله ځپلو او بې ځایه شویو کورنیو لپاره بیړنۍ مرستې",
+      },
+      category: "Emergency Humanitarian Relief",
+      purpose: {
+        en: "Provide emergency food baskets, clean drinking water, heating stoves, and temporary shelter to 500 vulnerable families.",
+        dr: "تهیه بسته‌های غذایی اضطراری، آب آشامیدنی صحی، بخاری و سرپناه مؤقت برای ۵۰۰ خانواده نیازمند.",
+        ps: "۵۰۰ اړمنو کورنیو ته د بیړنیو خوراکي کڅوړو، پاکو اوبو او د سرپناه توکو رسول.",
+      },
+      targetAmount: 10000,
+      raisedAmount: 3450,
+      targetAmountAfn: 700000,
+      raisedAmountAfn: 241500,
+      donorsCount: 42,
+      beneficiaries: "500 displaced and earthquake-affected households (approx. 3,500 people)",
+      location: "Nuristan, Logar & Ghazni Provinces",
+      urgent: true,
+      tag: "urgent · high priority",
+      summary: {
+        en: "Emergency humanitarian relief delivering clean water, high-calorie food rations, and winter emergency shelter to remote snowbound communities.",
+        dr: "امدادرسانی بشردوستانه شامل توزیع آب صحی، مواد خوراکی مقوی و سرپناه اضطراری برای روستاهای کوهستانی.",
+        ps: "د لرو پرتو غرنیو سیمو خلکو ته د بیړنیو مرستو لکه خوراکي توکو، پاکو اوبو او ژمنیو ګرمونکو وسایلو رسول.",
+      },
+      body: {
+        en: "PYECSO field teams are currently responding to severe emergency needs in remote mountainous districts. Your contribution directly funds emergency food parcels (flour, cooking oil, rice, pulses), winterization heating stoves, and water purification units. Every contribution is tracked with 100% financial transparency and verified by community development councils.",
+        dr: "تیم‌های ساحوی پایکسو در حال حاضر در ولسوالی‌های کوهستانی مصروف امدادرسانی هستند. کمک‌های شما مستقیماً برای خرید بسته‌های خوراکی، وسایل گرمایشی و دستگاه‌های تصفیه آب به مصرف می‌رسد.",
+        ps: "د پایکسو ژغورونکې ډلې په غرنیو ولسوالیو کې اړمنو کسانو ته مرستې رسوي. ستاسو مرستې په مستقیم ډول د خوراکي کڅوړو او ژمنیو توکو په برابرولو لګول کیږي.",
+      },
+      budgetBreakdown: [
+        { item: "Emergency Food Basket (50kg flour, oil, rice, beans)", costUsd: 65, costAfn: 4550 },
+        { item: "Winter Heating Package (Stove & firewood/coal for 1 month)", costUsd: 45, costAfn: 3150 },
+        { item: "Clean Water & Hygiene Kit for 1 Family", costUsd: 25, costAfn: 1750 },
+        { item: "Emergency Thermal Blanket & Warm Clothing Pack", costUsd: 35, costAfn: 2450 },
+      ],
+    },
+  },
+  {
+    type: "donation",
+    slug: "tvet-women-tailoring-kits",
+    status: "published",
+    position: 2,
+    cover_url: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=1200&q=80",
+    data: {
+      title: {
+        en: "Vocational Sewing Machines & Starter Toolkits for 300 Women",
+        dr: "اهدای ماشین‌های خیاطی و بسته‌های ابزار کار برای ۳۰۰ زن بی‌بضاعت",
+        ps: "۳۰۰ بېوزله ښځو ته د خیاطۍ د ماشینونو او د کار وسایلو ویش",
+      },
+      category: "Vocational Skills & TVET",
+      purpose: {
+        en: "Equip 300 female apprentices with certified training, durable sewing machines, and fabric starter kits for home-based micro-enterprises.",
+        dr: "ارائه آموزش‌های مسلکی و اهدای ماشین خیاطی برای ایجاد کارگاه‌های خانگی و کسب درآمد پایدار.",
+        ps: "ښځینه زده کوونکو ته د مسلکي خیاطۍ روزنه او د کورني عاید لپاره د خیاطۍ ماشینونو ورکړه.",
+      },
+      targetAmount: 18000,
+      raisedAmount: 7600,
+      targetAmountAfn: 1260000,
+      raisedAmountAfn: 532000,
+      donorsCount: 88,
+      beneficiaries: "300 vulnerable female-headed households",
+      location: "Jalalabad, Nangarhar & Kabul",
+      urgent: false,
+      tag: "livelihoods & empowerment",
+      summary: {
+        en: "Support sustainable livelihoods for female breadwinners through certified vocational garment training and commercial sewing toolkits.",
+        dr: "توانمندسازی اقتصادی زنان سرپرست خانواده از طریق آموزش‌های فنی و تجهیز آنها با ابزار کار مستقل.",
+        ps: "د کورنیو د سرپرستو میرمنو لپاره د خیاطۍ تخصصي زده کړې او د کار وسایل برابرول.",
+      },
+      body: {
+        en: "Women across rural and suburban Afghan districts face severe barriers to employment. By providing professional sewing machines, garment construction toolkits, and 3 months of business bookkeeping training, this appeal helps women earn a reliable living from home with independence and dignity.",
+        dr: "این برنامه با اهدای ماشین‌های خیاطی مدرن، پارچه و وسایل برش به همراه آموزش‌های حسابداری، زمینه استقلال مالی را برای زنان فراهم می‌کند.",
+        ps: "دا پروګرام میرمنو ته د خیاطۍ پرمختللي وسایل او د عاید پیدا کولو زمینه برابروي ترڅو خپلې کورنۍ وساتي.",
+      },
+      budgetBreakdown: [
+        { item: "Heavy-Duty Sewing Machine with Electric & Pedal Attachment", costUsd: 120, costAfn: 8400 },
+        { item: "Fabric, Threads, Scissor & Cutting Starter Kit", costUsd: 40, costAfn: 2800 },
+        { item: "3 Months Technical Mentorship & Market Linkage Training", costUsd: 50, costAfn: 3500 },
+      ],
+    },
+  },
+  {
+    type: "donation",
+    slug: "clean-water-solar-wells",
+    status: "published",
+    position: 3,
+    cover_url: "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1200&q=80",
+    data: {
+      title: {
+        en: "Solar-Powered Clean Water Wells for 5 Drought-Hit Villages",
+        dr: "احداث ۵ حلقه چاه عمیق خورشیدی آب آشامیدنی در روستاهای مواجه با خشکسالی",
+        ps: "د وچکالۍ ځپلو ۵ کلیو لپاره د لمریزې برېښنا د پاکو اوبو څاګانې",
+      },
+      category: "Water, Sanitation & Hygiene (WASH)",
+      purpose: {
+        en: "Drill deep boreholes powered by solar pumps to deliver reliable, pathogen-free water to 8,000 rural residents and school students.",
+        dr: "حفر چاه‌های عمیق آب مجهز به پمپ‌های خورشیدی و شبکه آبرسانی برای ۸,۰۰۰ تن از باشندگان روستایی.",
+        ps: "۸۰۰۰ کلیوالو او د ښوونځیو زده کوونکو ته د لمریزو پمپونو په واسطه د پاکو څښاک اوبو برابرول.",
+      },
+      targetAmount: 25000,
+      raisedAmount: 14200,
+      targetAmountAfn: 1750000,
+      raisedAmountAfn: 994000,
+      donorsCount: 135,
+      beneficiaries: "8,000 villagers, farmers and school children",
+      location: "Ghazni (Qarabagh & Andar Districts)",
+      urgent: false,
+      tag: "community infrastructure",
+      summary: {
+        en: "Constructing solar-driven clean water boreholes, community standposts, and storage reservoirs to eradicate waterborne diseases.",
+        dr: "ایجاد شبکه‌های آبرسانی خورشیدی پایدار برای ریشه‌کن کردن امراض ناشی از آب‌های آلوده.",
+        ps: "د لمریزو څاګانو او ذخیرو په جوړولو سره د ککړو اوبو له امله د ناروغیو مخنیوی.",
+      },
+      body: {
+        en: "Prolonged drought has dried up surface springs across Ghazni, forcing young girls and mothers to walk up to 6 kilometers daily for murky water. Installing solar-powered submersible pumps with 10,000-liter storage tanks provides pure drinking water directly to village centers and schools.",
+        dr: "خشکسالی‌های پی‌درپی منابع آبی منطقه را خشک کرده است. این پروژه با حفر چاه‌های عمیق و نصب تانکرهای آب، آب پاک را به درب خانه‌های مردم می‌رساند.",
+        ps: "دغه لمریزې څاګانې کلیوالو ته پاکې او صحي اوبه برابروي ترڅو میندې او ماشومان له ناروغیو وژغورل شي.",
+      },
+      budgetBreakdown: [
+        { item: "Deep Borehole Drilling & Well Casing (100-120m)", costUsd: 2200, costAfn: 154000 },
+        { item: "Submersible High-Flow Solar Pump & Solar Array", costUsd: 1800, costAfn: 126000 },
+        { item: "10,000L Elevated Water Tank & Community Distribution Standposts", costUsd: 1000, costAfn: 70000 },
+      ],
+    },
+  },
 ];
 
 export const SEED_SITE_SETTINGS = [
