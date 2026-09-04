@@ -40,23 +40,28 @@ export function pickI18n(
   return String(value);
 }
 
+const FIXED_SEED_DATE = "2024-01-01T00:00:00.000Z";
+
 /** Get seed fallback items for a specific content type */
 function getSeedFallback(type: string): CmsItem[] {
-  return SEED_CONTENT_ITEMS.filter((item) => item.type === type).map((item, index) => ({
-    id: `seed-${type}-${item.slug ?? index}`,
-    type: item.type,
-    slug: item.slug,
-    status: (item.status as any) || "published",
-    position: item.position,
-    coverUrl: item.cover_url,
-    cover_url: item.cover_url,
-    data: item.data,
-    publishedAt: new Date().toISOString(),
-    published_at: new Date().toISOString(),
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  }));
+  return SEED_CONTENT_ITEMS.filter((item) => item.type === type).map((item, index) => {
+    const rawPub = (item.data as any)?.published_at || (item.data as any)?.date || (item as any).published_at || FIXED_SEED_DATE;
+    return {
+      id: `seed-${type}-${item.slug ?? index}`,
+      type: item.type,
+      slug: item.slug,
+      status: (item.status as any) || "published",
+      position: item.position ?? index + 1,
+      coverUrl: item.cover_url || null,
+      cover_url: item.cover_url || null,
+      data: item.data || {},
+      publishedAt: rawPub,
+      published_at: rawPub,
+      createdAt: FIXED_SEED_DATE,
+      updatedAt: FIXED_SEED_DATE,
+      updated_at: FIXED_SEED_DATE,
+    };
+  });
 }
 
 /** Fetch a list of published CMS items of a given type from Firebase Firestore with live real-time sync. */

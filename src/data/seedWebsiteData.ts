@@ -130,7 +130,7 @@ export const SEED_CONTENT_ITEMS = [
         dr: "تکمیل موفقانه روند توزیع کمک‌های زمستانی برای ۲,۵۰۰ خانواده توسط موسسه پایکسو",
         ps: "د پایکسو لخوا ۲۵۰۰ کورنیو ته د ژمنیو مرستو د ویش بهیر په بریالیتوب سره بشپړ شو",
       },
-      published_at: new Date(Date.now() - 3 * 86400000).toISOString(),
+      published_at: "2025-02-15T08:00:00.000Z",
       summary: {
         en: "The emergency distribution campaign reached remote snowbound villages in Logar and Ghazni with vital food and heating assistance.",
         dr: "کمپاین امدادرسانی زمستانی پایکسو توانست به دوردست‌ترین روستاهای صعب‌العبور لوگر و غزنی کمک‌های حیاتی برساند.",
@@ -155,7 +155,7 @@ export const SEED_CONTENT_ITEMS = [
         dr: "فراغت ۲۵۰ تن از جوانان از اکادمی مهارت‌های مسلکی پایکسو در ننگرهار",
         ps: "په ننګرهار کې د پایکسو د مسلکي زده کړو اکاډمۍ څخه د ۲۵۰ ځوانانو فراغت",
       },
-      published_at: new Date(Date.now() - 10 * 86400000).toISOString(),
+      published_at: "2025-02-05T08:00:00.000Z",
       summary: {
         en: "Graduates completed intensive courses in electrical work, plumbing, garment fabrication, and digital bookkeeping.",
         dr: "فارغان دوره‌های فشرده برق‌کاری، نلدوانی، خیاطی و حسابداری را با موفقیت سپری نمودند.",

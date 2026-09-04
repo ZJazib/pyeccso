@@ -5,7 +5,6 @@ import { PageHero } from "@/components/site/PageHero";
 import { useTranslation } from "react-i18next";
 import { useCmsListTranslated } from "@/lib/useCmsContent";
 import { useMemo, useState } from "react";
-import { resolveProjectCover } from "@/lib/projectCover";
 
 export const Route = createFileRoute("/projects/")({
   component: Projects,
@@ -96,19 +95,50 @@ function Projects() {
       return Number.isFinite(n) ? n : 0;
     };
     const dateOf = (p: typeof list[number]) => {
-      const raw = (p.data?.start_date ?? p.data?.date ?? p.data?.year ?? p.published_at ?? p.updated_at ?? 0) as string | number;
+      const raw = (p.data?.start_date ?? p.data?.date ?? p.data?.year ?? 0) as string | number;
       const ts = typeof raw === "number" ? raw : Date.parse(String(raw));
       return Number.isFinite(ts) ? ts : 0;
     };
     const title = (p: typeof list[number]) => (p.t.title ?? "").toLowerCase();
+    const pos = (p: typeof list[number]) => (p.position ?? (p.data?.position as number) ?? 0);
 
     const sorted = [...list];
     switch (sort) {
-      case "newest": sorted.sort((a, b) => dateOf(b) - dateOf(a)); break;
-      case "oldest": sorted.sort((a, b) => dateOf(a) - dateOf(b)); break;
-      case "az":     sorted.sort((a, b) => title(a).localeCompare(title(b))); break;
-      case "za":     sorted.sort((a, b) => title(b).localeCompare(title(a))); break;
-      case "impact": sorted.sort((a, b) => impactOf(b) - impactOf(a)); break;
+      case "newest":
+        sorted.sort((a, b) => {
+          const diff = dateOf(b) - dateOf(a);
+          if (diff !== 0) return diff;
+          return pos(a) - pos(b);
+        });
+        break;
+      case "oldest":
+        sorted.sort((a, b) => {
+          const diff = dateOf(a) - dateOf(b);
+          if (diff !== 0) return diff;
+          return pos(a) - pos(b);
+        });
+        break;
+      case "az":
+        sorted.sort((a, b) => {
+          const diff = title(a).localeCompare(title(b));
+          if (diff !== 0) return diff;
+          return pos(a) - pos(b);
+        });
+        break;
+      case "za":
+        sorted.sort((a, b) => {
+          const diff = title(b).localeCompare(title(a));
+          if (diff !== 0) return diff;
+          return pos(a) - pos(b);
+        });
+        break;
+      case "impact":
+        sorted.sort((a, b) => {
+          const diff = impactOf(b) - impactOf(a);
+          if (diff !== 0) return diff;
+          return pos(a) - pos(b);
+        });
+        break;
     }
     return sorted;
   }, [projects, sector, province, donor, q, sort]);
@@ -277,7 +307,6 @@ function Projects() {
                 const location = (p.data?.location as string) ?? "";
                 const donor = ((p.data?.partner as string) || (p.data?.donor as string)) ?? "";
                 const category = (p.data?.category as string) || tag;
-                const cover = resolveProjectCover(p as any);
                 return (
                   <Link
                     key={p.id}
@@ -286,23 +315,8 @@ function Projects() {
                     className="block group"
                   >
                     <article className="h-full bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md group-hover:-translate-y-0.5 transition-all flex flex-col">
-                      {cover ? (
-                        <div className="aspect-[16/9] overflow-hidden bg-navy-900/5 relative">
-                          <img
-                            src={cover}
-                            alt={p.t.title}
-                            loading="lazy"
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                          />
-                          {category && (
-                            <span className={`absolute top-3 left-3 inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase`}>
-                              {category}
-                            </span>
-                          )}
-                        </div>
-                      ) : null}
                       <div className="p-5 flex flex-col flex-1">
-                        {!cover && category && (
+                        {category && (
                           <div className="mb-3">
                             <span className={`inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2.5 py-1 rounded uppercase`}>
                               {category}

@@ -7,7 +7,6 @@ import {
 import { SiteLayout } from "@/components/site/SiteLayout";
 import { useTranslation } from "react-i18next";
 import { useCmsListTranslated } from "@/lib/useCmsContent";
-import { resolveProjectCover } from "@/lib/projectCover";
 import heroImage from "@/assets/hero-schoolgirl.jpg";
 
 
@@ -207,7 +206,6 @@ function Home() {
             {projects.slice(0, 3).map((p) => {
               const tag = (p.data?.category as string) || (p.data?.sector_tag as string);
               const sectorColor = (tag && SECTOR_COLOR[tag]) || "bg-brand-blue";
-              const cover = resolveProjectCover(p as any);
               const location = (p.data?.location as string) ?? "";
               const partner = (p.data?.partner as string) ?? "";
 
@@ -219,23 +217,8 @@ function Home() {
                   className="group block h-full"
                 >
                   <article className="h-full bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md group-hover:-translate-y-0.5 transition-all flex flex-col">
-                    {cover ? (
-                      <div className="relative aspect-[4/3] overflow-hidden bg-navy-900/5">
-                        <img
-                          src={cover}
-                          alt={p.t.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                          loading="lazy"
-                        />
-                        {tag && (
-                          <span className={`absolute top-3 left-3 inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded uppercase shadow-xs`}>
-                            {tag}
-                          </span>
-                        )}
-                      </div>
-                    ) : null}
                     <div className="p-6 flex flex-col flex-1">
-                      {!cover && tag && (
+                      {tag && (
                         <div className="mb-3">
                           <span className={`inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2.5 py-1 rounded uppercase`}>
                             {tag}

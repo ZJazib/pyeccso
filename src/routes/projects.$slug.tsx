@@ -510,7 +510,6 @@ function ProjectDetail() {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {related.map((p) => {
-                const rc = resolveProjectCover(p as any);
                 return (
                   <Link
                     key={p.id}
@@ -518,16 +517,6 @@ function ProjectDetail() {
                     params={{ slug: p.slug ?? "" }}
                     className="group block bg-surface dark:bg-navy-950 ring-1 ring-border dark:ring-white/10 rounded-xl overflow-hidden hover:shadow-md transition"
                   >
-                    {rc ? (
-                      <div className="aspect-[16/10] overflow-hidden">
-                        <img
-                          src={rc}
-                          alt={p.t.title}
-                          loading="lazy"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                        />
-                      </div>
-                    ) : null}
                     <div className="p-4">
                       {(p.data?.category as string) && (
                         <span className="inline-block text-[10px] font-bold tracking-wider text-brand-blue uppercase mb-2">
