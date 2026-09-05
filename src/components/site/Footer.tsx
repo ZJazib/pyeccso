@@ -112,11 +112,26 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="size-4 text-brand-blue shrink-0" />
-                <span>+93 (0) 20 250 0312</span>
+                <a href="tel:+93799758601" className="hover:text-white transition-colors" dir="ltr">
+                  +93 799 75 86 01
+                </a>
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="size-4 text-brand-blue shrink-0" />
-                <span>info@pyecso.org.af</span>
+                <a href="mailto:info@pyecso.org.af" className="hover:text-white transition-colors">
+                  info@pyecso.org.af
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail className="size-4 text-emerald-400 shrink-0" />
+                <div className="flex items-center gap-2">
+                  <a href="mailto:donations@pyecso.org.af" className="hover:text-white transition-colors">
+                    donations@pyecso.org.af
+                  </a>
+                  <span className="text-[10px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-medium">
+                    Donations
+                  </span>
+                </div>
               </li>
               <li className="flex items-center gap-3">
                 <Globe className="size-4 text-brand-blue shrink-0" />

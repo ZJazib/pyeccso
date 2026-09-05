@@ -32,7 +32,7 @@ type Province = {
 };
 
 const FALLBACK_PROVINCES: Province[] = [
-  { name: "Kabul (HQ)", query: "Patriotic+Youths+Education+Culture+and+Social+Organization+PYECSO", lat: 34.5409913, lng: 69.1738007, zoom: 17, address: "Karte Se, District 6, Kabul", phone: "+93 (0) 20 250 0312", email: "kabul.hq@pyecso.org.af" },
+  { name: "Kabul (HQ)", query: "Patriotic+Youths+Education+Culture+and+Social+Organization+PYECSO", lat: 34.5409913, lng: 69.1738007, zoom: 17, address: "Karte Se, District 6, Kabul", phone: "+93 799 75 86 01", email: "info@pyecso.org.af" },
   { name: "Nangarhar", query: "Jalalabad+Nangarhar+Afghanistan", lat: 34.4415, lng: 70.4361, zoom: 12, address: "Zone 3, Jalalabad City", phone: "+93 777 456 789", email: "nangarhar@pyecso.org.af" },
   { name: "Logar", query: "Logar+Province+Afghanistan", lat: 33.9833, lng: 69.0167, zoom: 11, address: "Pul-e-Alam Main Road", phone: "+93 789 112 233", email: "logar@pyecso.org.af" },
   { name: "Ghazni", query: "Ghazni+Afghanistan", lat: 33.5533, lng: 68.4239, zoom: 11, address: "Plan-e-Sevvom, Ghazni City", phone: "+93 782 334 455", email: "ghazni@pyecso.org.af" },
@@ -45,7 +45,7 @@ const FALLBACK_PROVINCES: Province[] = [
   { name: "Takhar", query: "Taloqan+Takhar+Afghanistan", lat: 36.7361, lng: 69.5347, zoom: 10, address: "Taloqan City Center", phone: "+93 788 998 877", email: "takhar@pyecso.org.af" },
 ];
 
-type ContactInfo = { address?: string; phone?: string; email?: string; website?: string };
+type ContactInfo = { address?: string; phone?: string; email?: string; donationsEmail?: string; website?: string };
 
 function Contact() {
   const { t } = useTranslation();
@@ -132,10 +132,40 @@ function Contact() {
           <div>
             <h2 className="text-navy-900 text-2xl font-bold mb-6">{t("contact.title")}</h2>
             <ul className="space-y-4 text-navy-900/80">
-              <li className="flex items-start gap-3"><MapPin className="size-5 text-brand-blue mt-0.5" /> <span className="whitespace-pre-line">{contact.address || t("contact.address")}</span></li>
-              <li className="flex items-center gap-3"><Phone className="size-5 text-brand-blue" /> {contact.phone || "+93 (0) 20 250 0312"}</li>
-              <li className="flex items-center gap-3"><Mail className="size-5 text-brand-blue" /> {contact.email || "info@pyecso.org.af"}</li>
-              <li className="flex items-center gap-3"><Globe className="size-5 text-brand-blue" /> {contact.website || "www.pyecso.org.af"}</li>
+              <li className="flex items-start gap-3">
+                <MapPin className="size-5 text-brand-blue mt-0.5 shrink-0" />
+                <span className="whitespace-pre-line">{contact.address || t("contact.address")}</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone className="size-5 text-brand-blue shrink-0" />
+                <a href={`tel:${(contact.phone || "+93 799 75 86 01").replace(/\s+/g, "")}`} className="hover:text-brand-blue font-medium transition-colors" dir="ltr">
+                  {contact.phone || "+93 799 75 86 01"}
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail className="size-5 text-brand-blue shrink-0" />
+                <div>
+                  <span className="text-xs text-navy-900/60 block">General Inquiries:</span>
+                  <a href={`mailto:${contact.email || "info@pyecso.org.af"}`} className="hover:text-brand-blue font-medium transition-colors">
+                    {contact.email || "info@pyecso.org.af"}
+                  </a>
+                </div>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail className="size-5 text-emerald-600 shrink-0" />
+                <div>
+                  <span className="text-xs text-navy-900/60 block">Donations & Appeals:</span>
+                  <a href={`mailto:${contact.donationsEmail || "donations@pyecso.org.af"}`} className="hover:text-emerald-700 font-medium text-emerald-800 transition-colors">
+                    {contact.donationsEmail || "donations@pyecso.org.af"}
+                  </a>
+                </div>
+              </li>
+              <li className="flex items-center gap-3">
+                <Globe className="size-5 text-brand-blue shrink-0" />
+                <a href={`https://${(contact.website || "www.pyecso.org.af").replace(/^https?:\/\//, "")}`} target="_blank" rel="noreferrer" className="hover:text-brand-blue transition-colors">
+                  {contact.website || "www.pyecso.org.af"}
+                </a>
+              </li>
             </ul>
           </div>
 

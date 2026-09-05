@@ -75,7 +75,7 @@ function AdminSettings() {
     twitter: "https://x.com/pyecso_org",
     linkedin: "https://linkedin.com/company/pyecso",
     youtube: "https://youtube.com/@pyecso",
-    whatsapp: "+93788881201",
+    whatsapp: "+93799758601",
   });
 
   // Connection & Diagnostics State

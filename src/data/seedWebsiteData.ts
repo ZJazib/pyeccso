@@ -632,8 +632,9 @@ export const SEED_SITE_SETTINGS = [
     key: "contact",
     value: {
       address: "House 45, Street 3, Karte Se, District 6, Kabul, Afghanistan",
-      phone: "+93 (0) 20 250 0312 / +93 788 123 456",
+      phone: "+93 799 75 86 01",
       email: "info@pyecso.org.af",
+      donations_email: "donations@pyecso.org.af",
       support_email: "support@pyecso.org.af",
       website: "https://pyecso.org.af",
       office_hours: "Saturday – Thursday: 8:00 AM – 4:30 PM",
@@ -646,8 +647,8 @@ export const SEED_SITE_SETTINGS = [
         {
           name: "Kabul (National Head Office)",
           address: "Karte Se, District 6, Kabul, Afghanistan",
-          phone: "+93 (0) 20 250 0312",
-          email: "kabul.hq@pyecso.org.af",
+          phone: "+93 799 75 86 01",
+          email: "info@pyecso.org.af",
           query: "Patriotic+Youths+Education+Culture+and+Social+Organization+PYECSO",
           lat: 34.5409913,
           lng: 69.1738007,

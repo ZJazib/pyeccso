@@ -754,9 +754,9 @@ export async function seedFirebaseFirestore(): Promise<{
           dr: "خانه شماره ۱۴، سرک سوم، کارته سه، ناحیه ۶، کابل، افغانستان",
           ps: "۱۴مه کور، ۳یمه کوڅه، ۳مه کارته، ۶مه ناحیه، کابل، افغانستان",
         },
-        phone1: "+93 78 888 1201",
-        phone2: "+93 70 123 4567",
+        phone1: "+93 799 75 86 01",
         email: "info@pyecso.org.af",
+        donationsEmail: "donations@pyecso.org.af",
         partnershipEmail: "partnerships@pyecso.org.af",
         workingHours: {
           en: "Saturday – Thursday: 8:00 AM – 4:30 PM",

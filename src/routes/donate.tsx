@@ -699,7 +699,9 @@ function Donate() {
                           {t("donate.flow.modal.cash.callAhead")}
                         </div>
                         <div className="text-navy-900/70" dir="ltr">
-                          +93 78 888 1201
+                          <a href="tel:+93799758601" className="hover:text-brand-blue transition-colors">
+                            +93 799 75 86 01
+                          </a>
                         </div>
                       </div>
                     </li>
@@ -710,7 +712,9 @@ function Donate() {
                           {t("donate.flow.modal.cash.coordVisit")}
                         </div>
                         <div className="text-navy-900/70" dir="ltr">
-                          info@pyecso.org.af
+                          <a href="mailto:donations@pyecso.org.af" className="hover:text-brand-blue transition-colors">
+                            donations@pyecso.org.af
+                          </a>
                         </div>
                       </div>
                     </li>
@@ -722,7 +726,7 @@ function Donate() {
                     {t("donate.flow.modal.cash.hoursValue")}
                   </div>
                   <a
-                    href={`mailto:info@pyecso.org.af?subject=In-person%20donation%20-%20${encodeURIComponent(
+                    href={`mailto:donations@pyecso.org.af?subject=In-person%20donation%20-%20${encodeURIComponent(
                       openCampaign.overlayTitle
                     )}`}
                     className="mt-5 w-full inline-flex items-center justify-center bg-brand-blue text-white h-11 rounded-md font-semibold text-sm hover:bg-brand-blue-hover transition-colors"
@@ -735,7 +739,7 @@ function Donate() {
               {method === "bank" && (
                 <div>
                   <p className="text-navy-900/75 text-sm mb-4">
-                    {t("donate.flow.modal.bank.intro", { email: "info@pyecso.org.af" })}
+                    {t("donate.flow.modal.bank.intro", { email: "donations@pyecso.org.af" })}
                   </p>
                   <div className="ring-1 ring-border rounded-md divide-y divide-border">
                     {[
