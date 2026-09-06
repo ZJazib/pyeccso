@@ -235,7 +235,7 @@ function AdminAbout() {
                 <I18nField
                   label="Organizational Vision"
                   value={aboutInfo.vision}
-                  onChange={(val) => setAboutInfo({ ...aboutInfo, vision: val })}
+                  onChange={(val) => setAboutInfo({ ...aboutInfo, vision: val as { en: string; dr: string; ps: string } })}
                   multiline
                   rows={2}
                   required
@@ -243,7 +243,7 @@ function AdminAbout() {
                 <I18nField
                   label="Organizational Mission"
                   value={aboutInfo.mission}
-                  onChange={(val) => setAboutInfo({ ...aboutInfo, mission: val })}
+                  onChange={(val) => setAboutInfo({ ...aboutInfo, mission: val as { en: string; dr: string; ps: string } })}
                   multiline
                   rows={2}
                   required
@@ -251,7 +251,7 @@ function AdminAbout() {
                 <I18nField
                   label="Core Values & Guiding Principles"
                   value={aboutInfo.values}
-                  onChange={(val) => setAboutInfo({ ...aboutInfo, values: val })}
+                  onChange={(val) => setAboutInfo({ ...aboutInfo, values: val as { en: string; dr: string; ps: string } })}
                   multiline
                   rows={2}
                   required
