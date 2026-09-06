@@ -611,7 +611,7 @@ export async function setUserRole(
   displayName?: string
 ): Promise<boolean> {
   const userId = email.replace(/[^a-zA-Z0-9]/g, "_");
-  return saveUserRole(userId, email, role, displayName);
+  return saveUserRole(userId, email, role as AdminUserRole["role"], displayName);
 }
 
 // -----------------------------------------------------------------------------

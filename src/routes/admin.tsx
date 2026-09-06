@@ -203,7 +203,7 @@ function AdminContent() {
               <div className="space-y-0.5 mt-1">
                 {section.items.map((item) => {
                   const Icon = item.icon;
-                  const isActive = item.exact
+                  const isActive = (item as { exact?: boolean }).exact
                     ? currentPath === item.to
                     : currentPath === item.to || currentPath.startsWith(`${item.to}/`);
                   return (
