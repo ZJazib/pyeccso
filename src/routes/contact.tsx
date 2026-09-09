@@ -32,7 +32,7 @@ type Province = {
 };
 
 const FALLBACK_PROVINCES: Province[] = [
-  { name: "Kabul (HQ)", query: "Patriotic+Youths+Education+Culture+and+Social+Organization+PYECSO", lat: 34.5409913, lng: 69.1738007, zoom: 17, address: "Karte Se, District 6, Kabul", phone: "+93 799 75 86 01", email: "info@pyecso.org.af" },
+  { name: "Kabul (HQ)", query: "Qala-e-Fatullah+Kabul+Afghanistan", lat: 34.5450, lng: 69.1670, zoom: 17, address: "House #12, Qali-e-Fatullah 3th Street, Kabul, Afghanistan", phone: "+93 799 75 86 01", email: "info@pyecso.org.af" },
   { name: "Nangarhar", query: "Jalalabad+Nangarhar+Afghanistan", lat: 34.4415, lng: 70.4361, zoom: 12, address: "Zone 3, Jalalabad City", phone: "+93 777 456 789", email: "nangarhar@pyecso.org.af" },
   { name: "Logar", query: "Logar+Province+Afghanistan", lat: 33.9833, lng: 69.0167, zoom: 11, address: "Pul-e-Alam Main Road", phone: "+93 789 112 233", email: "logar@pyecso.org.af" },
   { name: "Ghazni", query: "Ghazni+Afghanistan", lat: 33.5533, lng: 68.4239, zoom: 11, address: "Plan-e-Sevvom, Ghazni City", phone: "+93 782 334 455", email: "ghazni@pyecso.org.af" },

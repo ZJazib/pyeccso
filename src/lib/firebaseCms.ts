@@ -750,9 +750,9 @@ export async function seedFirebaseFirestore(): Promise<{
       },
       contact: {
         hqAddress: {
-          en: "House #14, Street 3, Karte Se, District 6, Kabul, Afghanistan",
-          dr: "خانه شماره ۱۴، سرک سوم، کارته سه، ناحیه ۶، کابل، افغانستان",
-          ps: "۱۴مه کور، ۳یمه کوڅه، ۳مه کارته، ۶مه ناحیه، کابل، افغانستان",
+          en: "House #12, Qali-e-Fatullah 3th Street, Kabul, Afghanistan",
+          dr: "خانه شماره ۱۲، سرک سوم، قلعه فتح‌الله، کابل، افغانستان",
+          ps: "۱۲مه کور، ۳یمه کوڅه، قلعه فتح‌الله، کابل، افغانستان",
         },
         phone1: "+93 799 75 86 01",
         email: "info@pyecso.org.af",

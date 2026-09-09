@@ -108,7 +108,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <MapPin className="size-4 text-brand-blue shrink-0 mt-0.5" />
-                <span>Kabul, Afghanistan</span>
+                <span>House #12, Qali-e-Fatullah 3th Street, Kabul, Afghanistan</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="size-4 text-brand-blue shrink-0" />
