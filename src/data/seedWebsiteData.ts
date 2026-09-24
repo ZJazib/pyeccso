@@ -385,19 +385,19 @@ export const SEED_CONTENT_ITEMS = [
     data: {
       title: {
         en: "Education",
-        dr: "تعلیم و تربیه",
+        dr: "معارف و آموزش",
         ps: "ښوونه او روزنه",
       },
       icon: "GraduationCap",
       summary: {
-        en: "Primary and secondary education, accelerated learning, literacy programs, vocational skills, teacher training, and essential school supplies.",
-        dr: "آموزش و پرورش، برنامه‌های سوادآموزی، مهارت‌های مسلکی، ارتقای ظرفیت معلمان و توزیع لوازم درسی برای کودکان و جوانان.",
-        ps: "لومړنۍ او منځنۍ زده کړې، د چټکو زده کړو ټولګي، د سواد زده کړه، مسلکي مهارتونه، د ښوونکو روزنه او د ښوونځیو توکي.",
+        en: "Schools, digital learning, teacher training, scholarships, and youth capacity building.",
+        dr: "مکاتب، آموزش دیجیتال، ارتقای ظرفیت معلمان، بورسیه‌های تحصیلی و توانمندسازی جوانان.",
+        ps: "ښوونځي، ډیجیټل زده کړې، د ښوونکو روزنه، تحصیلي بورسونه او د ځوانانو د ظرفیت لوړول.",
       },
       description: {
-        en: "Primary and secondary education, accelerated learning, literacy programs, vocational skills, teacher training, and essential school supplies.",
-        dr: "آموزش و پرورش، برنامه‌های سوادآموزی، مهارت‌های مسلکی، ارتقای ظرفیت معلمان و توزیع لوازم درسی برای کودکان و جوانان.",
-        ps: "لومړنۍ او منځنۍ زده کړې، د چټکو زده کړو ټولګي، د سواد زده کړه، مسلکي مهارتونه، د ښوونکو روزنه او د ښوونځیو توکي.",
+        en: "Schools, digital learning, teacher training, scholarships, and youth capacity building.",
+        dr: "مکاتب، آموزش دیجیتال، ارتقای ظرفیت معلمان، بورسیه‌های تحصیلی و توانمندسازی جوانان.",
+        ps: "ښوونځي، ډیجیټل زده کړې، د ښوونکو روزنه، تحصیلي بورسونه او د ځوانانو د ظرفیت لوړول.",
       },
     },
   },
@@ -410,8 +410,8 @@ export const SEED_CONTENT_ITEMS = [
     data: {
       title: {
         en: "Health",
-        dr: "صحت عامه و تغذیه",
-        ps: "روغتیا او تغذیه",
+        dr: "صحت عامه",
+        ps: "روغتیا",
       },
       icon: "HeartPulse",
       summary: {
@@ -435,10 +435,10 @@ export const SEED_CONTENT_ITEMS = [
     data: {
       title: {
         en: "Agriculture",
-        dr: "زراعت و مالداری",
-        ps: "کرنه او مالداري",
+        dr: "زراعت",
+        ps: "کرنه",
       },
-      icon: "Leaf",
+      icon: "Sprout",
       summary: {
         en: "Sustainable farming, livelihoods, food security, and training for rural farmers and youth.",
         dr: "زراعت پایدار، معیشت، مصونیت غذایی و آموزش‌های مسلکی برای دهقانان و جوانان روستایی.",

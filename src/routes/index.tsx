@@ -157,33 +157,88 @@ function Home() {
       </section>
 
 
-      {sectorsOfWork.length > 0 && (
-        <section className="py-20 md:py-24">
-          <div className="max-w-7xl mx-auto px-4 md:px-6">
-            <div className="max-w-2xl mb-10">
-              <div className="text-brand-blue uppercase tracking-[0.2em] text-xs font-bold mb-3">{t("home.sectorsOfWork.eyebrow")}</div>
-              <h2 className="text-navy-900 text-3xl md:text-4xl font-bold tracking-tight">{t("home.sectorsOfWork.title")}</h2>
-              <p className="text-navy-900/70 mt-3">{t("home.sectorsOfWork.body")}</p>
+      <section className="py-16 md:py-24 bg-surface-alt/60">
+        <div className="max-w-7xl mx-auto px-4 md:px-6">
+          <div className="bg-white rounded-3xl border border-slate-200/90 shadow-sm p-6 sm:p-8 md:p-10 lg:p-12">
+            <div className="max-w-3xl mb-8">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-navy-900 tracking-tight">
+                {t("home.sectorsOfWork.eyebrow", "PYECSO sectors of work")}
+              </h2>
+              <p className="text-slate-600 text-base sm:text-lg mt-2 leading-relaxed">
+                {t("home.sectorsOfWork.title", "Our four core sectors driving impact across Afghanistan.")}
+              </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-              {sectorsOfWork.slice(0, 4).map((s, i) => {
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 md:gap-6 mb-8 sm:mb-10">
+              {(sectorsOfWork.length > 0 ? sectorsOfWork.slice(0, 4) : [
+                {
+                  id: "education",
+                  t: {
+                    title: t("sectors.education.title", "Education"),
+                    summary: t("sectors.education.summary", "Schools, digital learning, teacher training, scholarships, and youth capacity building.")
+                  },
+                  data: { icon: "GraduationCap" }
+                },
+                {
+                  id: "health",
+                  t: {
+                    title: t("sectors.health.title", "Health"),
+                    summary: t("sectors.health.summary", "Community health, maternal & child care, nutrition, mental health, and awareness campaigns.")
+                  },
+                  data: { icon: "HeartPulse" }
+                },
+                {
+                  id: "agriculture",
+                  t: {
+                    title: t("sectors.agriculture.title", "Agriculture"),
+                    summary: t("sectors.agriculture.summary", "Sustainable farming, livelihoods, food security, and training for rural farmers and youth.")
+                  },
+                  data: { icon: "Sprout" }
+                },
+                {
+                  id: "social-development",
+                  t: {
+                    title: t("sectors.socialDevelopment.title", "Social Development"),
+                    summary: t("sectors.socialDevelopment.summary", "Protection, gender equality, civic engagement, and community empowerment programs.")
+                  },
+                  data: { icon: "Users" }
+                }
+              ]).map((s, i) => {
                 const iconName = (s.data?.icon as string) || "Sprout";
                 const Icon = SECTOR_ICONS[iconName] ?? Sprout;
-                const color = SECTOR_COLORS[i % SECTOR_COLORS.length];
+                const title = s.t?.title || (s as any).title;
+                const summary = s.t?.summary || s.t?.description || (s as any).summary;
+
                 return (
-                  <article key={s.id} className="bg-white ring-1 ring-border rounded-lg p-6 hover:shadow-md hover:-translate-y-0.5 transition-all rtl:text-right">
-                    <div className={`size-14 ${color} text-white rounded-lg flex items-center justify-center mb-4`}>
-                      <Icon className="size-6" />
+                  <article
+                    key={s.id || i}
+                    className="bg-white hover:bg-slate-50/70 rounded-2xl border border-slate-200/80 p-5 sm:p-6 transition-all flex items-start gap-4 sm:gap-5 rtl:text-right shadow-2xs"
+                  >
+                    <div className="size-12 md:size-13 rounded-full bg-slate-100 text-navy-900 flex items-center justify-center shrink-0 border border-slate-200/70 shadow-2xs">
+                      <Icon className="size-5 md:size-6 text-navy-900" />
                     </div>
-                    <h3 className="text-navy-900 font-bold text-lg mb-2 leading-snug">{s.t.title}</h3>
-                    <p className="text-navy-900/70 text-sm leading-relaxed">{s.t.summary || s.t.description}</p>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-navy-900 font-bold text-lg sm:text-xl mb-1.5 leading-snug">
+                        {title}
+                      </h3>
+                      <p className="text-slate-600 text-sm md:text-base leading-relaxed">
+                        {summary}
+                      </p>
+                    </div>
                   </article>
                 );
               })}
             </div>
+
+            <p className="text-slate-600 text-sm md:text-base font-normal leading-relaxed text-pretty pt-2 border-t border-slate-100/80 mt-2">
+              {t(
+                "home.sectorsOfWork.registrationNote",
+                "Registered with Afghanistan's Ministry of Economy (No. 1201) and the Ministry of Labor and Social Affairs."
+              )}
+            </p>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
 
       <section className="py-20">
