@@ -148,10 +148,10 @@ export async function fetchContentItemsByType(
       items.push(data);
     });
 
-    // Auto-migrate projects if the database has fewer than 30 projects or contains outdated items not from PDF
-    if (type === "project" && (items.length < 30 || items.some((i) => !IMPLEMENTED_PROJECTS.some((p) => p.slug === i.slug)))) {
-      console.log("Migrating and synchronizing 30 official implemented projects from PDF to Firestore...");
-      await syncImplementedProjectsToFirestore({ purgeExisting: true });
+    // Only auto-seed initial 30 projects if Firestore has 0 project records
+    if (type === "project" && items.length === 0) {
+      console.log("Seeding initial implemented projects from PDF to Firestore...");
+      await syncImplementedProjectsToFirestore({ purgeExisting: false });
       const refreshedSnap = await getDocs(q);
       items = [];
       refreshedSnap.forEach((d) => {

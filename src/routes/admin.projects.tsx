@@ -63,14 +63,7 @@ function AdminProjects() {
   const loadData = async () => {
     setLoading(true);
     try {
-      let data = await fetchContentItemsByType("project", true);
-      if (data.length < 30) {
-        // If Firestore has not been seeded with all 30 PDF projects yet, automatically sync them
-        const syncRes = await syncImplementedProjectsToFirestore();
-        if (syncRes.success) {
-          data = await fetchContentItemsByType("project", true);
-        }
-      }
+      const data = await fetchContentItemsByType("project", true);
       setItems(data);
     } catch (e) {
       console.warn("Failed to load projects:", e);
@@ -86,7 +79,7 @@ function AdminProjects() {
   const handleSyncOfficialProjects = async () => {
     setSyncing(true);
     try {
-      const res = await syncImplementedProjectsToFirestore();
+      const res = await syncImplementedProjectsToFirestore({ purgeExisting: true });
       if (res.success) {
         toast.success(res.message);
         await loadData();
@@ -105,15 +98,23 @@ function AdminProjects() {
     if (!editingItem) return;
     try {
       const budgetNum = parseBudget(editingItem.data?.budget);
+      const rawTitleEn = getLocalizedText(editingItem.data?.title, "en");
+      const generatedSlug = (editingItem.slug || rawTitleEn || `project-${Date.now()}`)
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9_-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
       const res = await saveContentItem({
         id: editingItem.id,
         type: "project",
-        slug: editingItem.slug || `project-${Date.now()}`,
+        slug: generatedSlug || `project-${Date.now()}`,
         status: editingItem.status || "published",
         position: editingItem.position ?? items.length + 1,
         coverUrl: editingItem.coverUrl || null,
         data: {
           ...editingItem.data,
+          title: editingItem.data?.title || { en: rawTitleEn || "Untitled Project", dr: "", ps: "" },
           category: editingItem.data?.category || editingItem.data?.sector || "General Humanitarian",
           sector: editingItem.data?.sector || editingItem.data?.category || "General Humanitarian",
           partner: editingItem.data?.partner || editingItem.data?.donor || "PYECSO Partner",
@@ -125,7 +126,7 @@ function AdminProjects() {
         },
       });
       if (res.success) {
-        toast.success("Project saved successfully to Firestore!");
+        toast.success("Project saved and published successfully to Firestore!");
         setEditingItem(null);
         await loadData();
       } else {
