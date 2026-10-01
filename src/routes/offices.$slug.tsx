@@ -24,13 +24,13 @@ function OfficeDetail() {
       extra={(item) => (
         <>
           {item.data?.address && (
-            <div className="mt-8 bg-white dark:bg-navy-900 ring-1 ring-border dark:ring-white/10 rounded-lg p-5">
-              <div className="text-xs text-navy-900/60 dark:text-white/60 mb-1">Address</div>
-              <div className="text-navy-900 dark:text-white whitespace-pre-line">{item.data.address}</div>
+            <div className="mt-8 bg-white ring-1 ring-border rounded-lg p-5">
+              <div className="text-xs text-navy-900/60 mb-1">Address</div>
+              <div className="text-navy-900 whitespace-pre-line">{item.data.address}</div>
             </div>
           )}
           {item.data?.map_url && (
-            <div className="mt-6 rounded-lg overflow-hidden ring-1 ring-border dark:ring-white/10 aspect-video">
+            <div className="mt-6 rounded-lg overflow-hidden ring-1 ring-border aspect-video">
               <iframe src={item.data.map_url} className="w-full h-full" loading="lazy" allowFullScreen title="Map" />
             </div>
           )}

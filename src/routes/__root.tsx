@@ -169,8 +169,18 @@ function RootComponent() {
     return () => i18n.off("languageChanged", handler);
   }, [i18n]);
 
-  // Language default is English; users can switch manually via the language
-  // switcher and their choice persists in localStorage.
+  // Ensure dark mode is completely purged and disabled across the application
+  useEffect(() => {
+    if (typeof document !== "undefined") {
+      document.documentElement.classList.remove("dark");
+      document.documentElement.style.colorScheme = "light";
+      try {
+        localStorage.removeItem("pyecso.theme");
+      } catch {
+        // ignore localStorage access errors
+      }
+    }
+  }, []);
 
 
   return (

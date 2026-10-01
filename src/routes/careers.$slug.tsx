@@ -26,8 +26,8 @@ function CareerDetail() {
         <>
           {item.t.requirements && (
             <div className="mt-8">
-              <h3 className="text-xl font-bold text-navy-900 dark:text-white mb-3">Requirements</h3>
-              <div className="text-navy-900/80 dark:text-white/80 whitespace-pre-line">{item.t.requirements}</div>
+              <h3 className="text-xl font-bold text-navy-900 mb-3">Requirements</h3>
+              <div className="text-navy-900/80 whitespace-pre-line">{item.t.requirements}</div>
             </div>
           )}
           <div className="mt-8">

@@ -95,11 +95,11 @@ function Media() {
 
             {activeTab === "news" && (
               <div>
-                <h3 className="text-navy-900 dark:text-white text-xl font-bold mb-5">{t("media.sections.stories")}</h3>
+                <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.sections.stories")}</h3>
                 {newsLoading ? (
-                  <div className="text-navy-900/60 dark:text-white/60 text-sm">Loading…</div>
+                  <div className="text-navy-900/60 text-sm">Loading…</div>
                 ) : newsItems.length === 0 ? (
-                  <div className="text-navy-900/60 dark:text-white/60 text-sm">No news yet.</div>
+                  <div className="text-navy-900/60 text-sm">No news yet.</div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
                     {newsItems.map((n) => (
@@ -107,15 +107,15 @@ function Media() {
                         key={n.id}
                         to="/news/$slug"
                         params={{ slug: n.slug ?? "" }}
-                        className="bg-white dark:bg-navy-900 ring-1 ring-border dark:ring-white/10 rounded-lg overflow-hidden hover:shadow-md transition-shadow block"
+                        className="bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md transition-shadow block"
                       >
                         {n.cover_url && (
                           <img src={n.cover_url} alt={n.t.title} className="w-full aspect-[4/3] object-cover" loading="lazy" />
                         )}
                         <div className="p-4">
-                          <h4 className="text-navy-900 dark:text-white font-semibold text-sm leading-snug mb-1 line-clamp-2">{n.t.title}</h4>
+                          <h4 className="text-navy-900 font-semibold text-sm leading-snug mb-1 line-clamp-2">{n.t.title}</h4>
                           {n.published_at && (
-                            <p className="text-navy-900/60 dark:text-white/60 text-xs">
+                            <p className="text-navy-900/60 text-xs">
                               {new Date(n.published_at).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
                             </p>
                           )}

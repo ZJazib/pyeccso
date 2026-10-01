@@ -24,7 +24,7 @@ export function CmsDetail({ type, slug, backTo, backLabel, breadcrumbLabel, buil
   if (loading) {
     return (
       <SiteLayout>
-        <div className="max-w-4xl mx-auto px-4 py-24 text-center text-navy-900/60 dark:text-white/60">
+        <div className="max-w-4xl mx-auto px-4 py-24 text-center text-navy-900/60">
           Loading…
         </div>
       </SiteLayout>
@@ -64,14 +64,14 @@ export function CmsDetail({ type, slug, backTo, backLabel, breadcrumbLabel, buil
         ]}
       />
 
-      <section className="py-14 bg-surface dark:bg-navy-950">
+      <section className="py-14 bg-surface">
         <div className="max-w-4xl mx-auto px-4 md:px-6">
           <Link to={backTo} className="inline-flex items-center gap-2 text-brand-blue font-semibold text-sm mb-6">
             <ArrowLeft className="size-4" /> {backLabel}
           </Link>
 
           {cover && (
-            <div className="rounded-xl overflow-hidden ring-1 ring-border dark:ring-white/10 mb-8">
+            <div className="rounded-xl overflow-hidden ring-1 ring-border mb-8">
               <img src={cover} alt={title} className="w-full h-64 md:h-80 object-cover" />
             </div>
           )}
@@ -79,11 +79,11 @@ export function CmsDetail({ type, slug, backTo, backLabel, breadcrumbLabel, buil
           {meta.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
               {meta.map((m, i) => (
-                <div key={i} className="bg-white dark:bg-navy-900 ring-1 ring-border dark:ring-white/10 rounded-lg p-4">
-                  <div className="text-xs text-navy-900/60 dark:text-white/60 flex items-center gap-1 mb-1">
+                <div key={i} className="bg-white ring-1 ring-border rounded-lg p-4">
+                  <div className="text-xs text-navy-900/60 flex items-center gap-1 mb-1">
                     <m.icon className="size-3.5" /> {m.label}
                   </div>
-                  <div className="font-semibold text-navy-900 dark:text-white text-sm">{m.value}</div>
+                  <div className="font-semibold text-navy-900 text-sm">{m.value}</div>
                 </div>
               ))}
             </div>
@@ -91,7 +91,7 @@ export function CmsDetail({ type, slug, backTo, backLabel, breadcrumbLabel, buil
 
           {body && (
             <article
-              className="prose prose-slate dark:prose-invert max-w-none prose-headings:text-navy-900 dark:prose-headings:text-white prose-a:text-brand-blue"
+              className="prose prose-slate max-w-none prose-headings:text-navy-900 prose-a:text-brand-blue"
               dangerouslySetInnerHTML={{ __html: body }}
             />
           )}
