@@ -170,7 +170,7 @@ function ProjectDetail() {
             <img
               src={cover}
               alt={title}
-              className="w-full h-full object-cover opacity-35"
+              className="w-full h-full object-cover opacity-35 animate-hero-pan"
               width={1920}
               height={900}
               loading="eager"
@@ -180,31 +180,31 @@ function ProjectDetail() {
           </div>
         )}
         <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-16 md:py-24">
-          <nav className="flex items-center gap-2 text-sm text-white/70 mb-5">
-            <Link to="/" className="hover:text-white">{t("nav.home")}</Link>
+          <nav className="flex items-center gap-2 text-sm text-white/70 mb-5 animate-hero-1">
+            <Link to="/" className="hover:text-white transition-colors">{t("nav.home")}</Link>
             <span className="text-white/40">/</span>
-            <Link to="/projects" className="hover:text-white">Projects</Link>
+            <Link to="/projects" className="hover:text-white transition-colors">Projects</Link>
             <span className="text-white/40">/</span>
             <span className="text-white truncate max-w-[40ch]">{title}</span>
           </nav>
-          <div className="flex flex-wrap items-center gap-2 mb-4">
+          <div className="flex flex-wrap items-center gap-2 mb-4 animate-hero-1">
             {d.category && (
-              <span className="bg-brand-blue text-white text-[11px] font-bold tracking-wider px-2.5 py-1 rounded uppercase">
+              <span className="bg-brand-blue text-white text-[11px] font-bold tracking-wider px-2.5 py-1 rounded uppercase shadow-2xs">
                 {d.category}
               </span>
             )}
             {status && (
-              <span className={`text-[11px] font-bold tracking-wider px-2.5 py-1 rounded uppercase ${statusStyle(status)}`}>
+              <span className={`text-[11px] font-bold tracking-wider px-2.5 py-1 rounded uppercase shadow-2xs ${statusStyle(status)}`}>
                 {status}
               </span>
             )}
           </div>
-          <h1 className="text-3xl md:text-5xl font-bold tracking-tight leading-[1.1] mb-5 max-w-4xl">
+          <h1 className="text-3xl md:text-5xl font-bold tracking-tight leading-[1.1] mb-5 max-w-4xl animate-hero-2">
             {title}
           </h1>
-          <div className="w-16 h-1 bg-brand-blue mb-5" />
+          <div className="w-16 h-1 bg-brand-blue mb-5 rounded-full animate-hero-3" />
           {summary && (
-            <p className="text-white/85 text-base md:text-lg max-w-3xl leading-relaxed">{summary}</p>
+            <p className="text-white/85 text-base md:text-lg max-w-3xl leading-relaxed text-pretty animate-hero-3">{summary}</p>
           )}
         </div>
       </section>
@@ -476,19 +476,19 @@ function ProjectDetail() {
                 <Link
                   to="/donate"
                   search={{ status: undefined }}
-                  className="inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white rounded-md px-4 py-2.5 text-sm font-semibold"
+                  className="btn-hover inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue-hover text-white rounded-md px-4 py-2.5 text-sm font-semibold shadow-xs"
                 >
                   <Heart className="size-4" /> Donate
                 </Link>
                 <Link
                   to="/careers"
-                  className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white rounded-md px-4 py-2.5 text-sm font-semibold"
+                  className="btn-hover inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white rounded-md px-4 py-2.5 text-sm font-semibold shadow-xs"
                 >
                   <HandHeart className="size-4" /> Volunteer
                 </Link>
                 <Link
                   to="/contact"
-                  className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white rounded-md px-4 py-2.5 text-sm font-semibold"
+                  className="btn-hover inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white rounded-md px-4 py-2.5 text-sm font-semibold shadow-xs"
                 >
                   <MessageCircle className="size-4" /> Contact us
                 </Link>
@@ -504,31 +504,32 @@ function ProjectDetail() {
           <div className="max-w-7xl mx-auto px-4 md:px-6">
             <div className="flex items-end justify-between mb-6">
               <h2 className="text-2xl font-bold text-navy-900">Related Projects</h2>
-              <Link to="/projects" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1">
-                All projects <ArrowRight className="size-4" />
+              <Link to="/projects" className="text-brand-blue text-sm font-semibold inline-flex items-center gap-1 group">
+                <span>All projects</span> <ArrowRight className="size-4 transition-transform duration-200 group-hover:translate-x-1 rtl:group-hover:-translate-x-1" />
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-              {related.map((p) => {
+              {related.map((p, idx) => {
                 return (
                   <Link
                     key={p.id}
                     to="/projects/$slug"
                     params={{ slug: p.slug ?? "" }}
-                    className="group block bg-surface ring-1 ring-border rounded-xl overflow-hidden hover:shadow-md transition"
+                    style={{ animationDelay: `${idx * 80}ms` }}
+                    className="card-lift group block bg-surface ring-1 ring-border rounded-xl overflow-hidden shadow-2xs"
                   >
-                    <div className="p-4">
+                    <div className="p-5">
                       {(p.data?.category as string) && (
                         <span className="inline-block text-[10px] font-bold tracking-wider text-brand-blue uppercase mb-2">
                           {p.data?.category as string}
                         </span>
                       )}
-                      <h3 className="font-bold text-navy-900 text-sm leading-snug group-hover:text-brand-blue">
+                      <h3 className="font-bold text-navy-900 text-sm leading-snug group-hover:text-brand-blue transition-colors duration-200">
                         {p.t.title}
                       </h3>
                       {(p.data?.location as string) && (
                         <div className="mt-2 text-xs text-navy-900/60 flex items-center gap-1">
-                          <MapPin className="size-3" /> {p.data?.location as string}
+                          <MapPin className="size-3 text-brand-blue" /> {p.data?.location as string}
                         </div>
                       )}
                     </div>

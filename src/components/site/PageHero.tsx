@@ -18,7 +18,7 @@ export function PageHero({ title, description, breadcrumb, actions }: PageHeroPr
         <img
           src={heroImage}
           alt=""
-          className="w-full h-full object-cover object-right opacity-60"
+          className="w-full h-full object-cover object-right opacity-60 animate-hero-pan"
           width={1920}
           height={900}
           loading="eager"
@@ -30,11 +30,11 @@ export function PageHero({ title, description, breadcrumb, actions }: PageHeroPr
       </div>
       <div className="relative max-w-7xl mx-auto px-4 md:px-6 py-20 md:py-24">
         {breadcrumb && (
-          <nav className="flex items-center gap-2 text-sm text-white/70 mb-6">
+          <nav className="flex items-center gap-2 text-sm text-white/70 mb-6 animate-hero-1">
             {breadcrumb.map((b, i) => (
               <span key={i} className="flex items-center gap-2">
                 {b.to ? (
-                  <Link to={b.to} className="hover:text-white">{b.label}</Link>
+                  <Link to={b.to} className="hover:text-white transition-colors duration-200">{b.label}</Link>
                 ) : (
                   <span className="text-white">{b.label}</span>
                 )}
@@ -43,16 +43,16 @@ export function PageHero({ title, description, breadcrumb, actions }: PageHeroPr
             ))}
           </nav>
         )}
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-balance leading-[1.05] mb-5 max-w-3xl">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-balance leading-[1.05] mb-5 max-w-3xl animate-hero-2">
           {title}
         </h1>
-        <div className="w-16 h-1 bg-brand-blue mb-6" />
+        <div className="w-16 h-1 bg-brand-blue mb-6 animate-hero-3 rounded-full" />
         {description && (
-          <p className="text-white/85 text-base md:text-lg max-w-2xl leading-relaxed text-pretty">
+          <p className="text-white/85 text-base md:text-lg max-w-2xl leading-relaxed text-pretty animate-hero-3">
             {description}
           </p>
         )}
-        {actions && <div className="mt-8 flex flex-wrap items-center gap-3">{actions}</div>}
+        {actions && <div className="mt-8 flex flex-wrap items-center gap-3 animate-hero-4">{actions}</div>}
       </div>
     </section>
   );

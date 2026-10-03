@@ -347,7 +347,7 @@ function Donate() {
               return (
                 <article
                   key={c.slug}
-                  className={`bg-white rounded-2xl overflow-hidden shadow-2xs hover:shadow-xl transition-all flex flex-col border ${
+                  className={`card-lift group bg-white rounded-2xl overflow-hidden shadow-2xs flex flex-col border ${
                     c.urgent
                       ? "border-rose-300 ring-2 ring-rose-400/50 md:col-span-2 lg:col-span-3"
                       : "border-slate-200"
@@ -361,7 +361,7 @@ function Donate() {
                     <img
                       src={c.image}
                       alt={c.overlayTitle}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/20" />
@@ -393,7 +393,7 @@ function Donate() {
 
                   <div className="p-5 flex flex-col flex-1 justify-between space-y-4">
                     <div>
-                      <h3 className="text-navy-900 font-bold text-base leading-snug mb-2 line-clamp-2">
+                      <h3 className="text-navy-900 font-bold text-base leading-snug mb-2 line-clamp-2 group-hover:text-brand-blue transition-colors duration-200">
                         {c.title}
                       </h3>
 
@@ -431,7 +431,7 @@ function Donate() {
 
                       <div className="relative h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
                         <div
-                          className={`h-full rounded-full transition-all ${
+                          className={`h-full rounded-full transition-all duration-700 ease-out ${
                             pct >= 100 ? "bg-emerald-500" : c.urgent ? "bg-rose-500" : "bg-brand-blue"
                           }`}
                           style={{ width: `${pct}%` }}
@@ -452,7 +452,7 @@ function Donate() {
                       <Link
                         to="/donations/$slug"
                         params={{ slug: c.slug }}
-                        className="inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 h-10 rounded-xl font-bold text-xs transition-colors"
+                        className="btn-hover inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 h-10 rounded-xl font-bold text-xs"
                       >
                         <span>View Details</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -461,7 +461,7 @@ function Donate() {
                       <button
                         type="button"
                         onClick={() => openDonate(c)}
-                        className={`inline-flex items-center justify-center gap-1.5 h-10 rounded-xl font-bold text-xs text-white transition-colors shadow-xs ${
+                        className={`btn-hover inline-flex items-center justify-center gap-1.5 h-10 rounded-xl font-bold text-xs text-white shadow-xs ${
                           c.urgent
                             ? "bg-rose-600 hover:bg-rose-700"
                             : "bg-brand-blue hover:bg-brand-blue-hover"
@@ -496,11 +496,11 @@ function Donate() {
       {/* Donate Modal Flow */}
       {openCampaign && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/70 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy-950/70 backdrop-blur-sm animate-in fade-in duration-200"
           onClick={() => setOpenCampaign(null)}
         >
           <div
-            className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto"
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-y-auto animate-in zoom-in-95 fade-in duration-250 ease-out"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between p-6 border-b border-border">

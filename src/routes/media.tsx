@@ -97,23 +97,39 @@ function Media() {
               <div>
                 <h3 className="text-navy-900 text-xl font-bold mb-5">{t("media.sections.stories")}</h3>
                 {newsLoading ? (
-                  <div className="text-navy-900/60 text-sm">Loading…</div>
+                  <div className="text-navy-900/60 text-sm py-8 text-center">Loading stories…</div>
                 ) : newsItems.length === 0 ? (
-                  <div className="text-navy-900/60 text-sm">No news yet.</div>
+                  <div className="bg-white ring-1 ring-border rounded-2xl p-8 md:p-12 text-center shadow-2xs">
+                    <div className="size-14 mx-auto rounded-full bg-brand-blue-wash text-brand-blue flex items-center justify-center mb-4">
+                      <Newspaper className="size-6" />
+                    </div>
+                    <h4 className="text-navy-900 font-bold text-lg mb-2">No Published Stories</h4>
+                    <p className="text-navy-900/70 text-sm max-w-md mx-auto leading-relaxed">
+                      There are currently no news stories published in this section. Please check back soon for our latest field updates, community highlights, and press releases.
+                    </p>
+                  </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    {newsItems.map((n) => (
+                    {newsItems.map((n, idx) => (
                       <Link
                         key={n.id}
                         to="/news/$slug"
                         params={{ slug: n.slug ?? "" }}
-                        className="bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md transition-shadow block"
+                        style={{ animationDelay: `${idx * 50}ms` }}
+                        className="card-lift group bg-white ring-1 ring-border rounded-xl overflow-hidden shadow-2xs block"
                       >
                         {n.cover_url && (
-                          <img src={n.cover_url} alt={n.t.title} className="w-full aspect-[4/3] object-cover" loading="lazy" />
+                          <div className="w-full aspect-[4/3] overflow-hidden bg-slate-100">
+                            <img
+                              src={n.cover_url}
+                              alt={n.t.title}
+                              className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                              loading="lazy"
+                            />
+                          </div>
                         )}
                         <div className="p-4">
-                          <h4 className="text-navy-900 font-semibold text-sm leading-snug mb-1 line-clamp-2">{n.t.title}</h4>
+                          <h4 className="text-navy-900 font-semibold text-sm leading-snug mb-1 line-clamp-2 group-hover:text-brand-blue transition-colors duration-200">{n.t.title}</h4>
                           {n.published_at && (
                             <p className="text-navy-900/60 text-xs">
                               {new Date(n.published_at).toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" })}
@@ -149,7 +165,7 @@ function Media() {
             </div>
             <a
               href="mailto:media@pyecso.org.af?subject=Share%20Your%20Story%20with%20PYECSO&body=Hello%20PYECSO%20Media%20Team%2C%0A%0AI%27d%20like%20to%20share%20a%20story%3A%0A%0A(Please%20describe%20your%20story%20and%20attach%20any%20photos%20or%20videos.)%0A%0AName%3A%0ALocation%3A%0AContact%20number%3A"
-              className="bg-brand-blue hover:bg-brand-blue-hover text-white rounded-md px-6 py-2.5 text-sm font-semibold inline-flex items-center gap-2"
+              className="btn-hover bg-brand-blue hover:bg-brand-blue-hover text-white rounded-md px-6 py-2.5 text-sm font-semibold inline-flex items-center gap-2 shadow-xs"
             >
               {t("media.share.button")} <ArrowRight className="size-4" />
             </a>
@@ -168,7 +184,7 @@ function Media() {
           </div>
           <div className="flex gap-2 w-full max-w-md">
             <input placeholder={t("media.newsletter.placeholder")} className="flex-1 bg-white/10 border border-white/20 rounded-md px-3 py-2.5 text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-brand-blue" />
-            <button className="bg-brand-blue hover:bg-brand-blue-hover text-white rounded-md px-5 text-sm font-semibold">{t("media.newsletter.button")}</button>
+            <button className="btn-hover bg-brand-blue hover:bg-brand-blue-hover text-white rounded-md px-5 text-sm font-semibold shadow-xs">{t("media.newsletter.button")}</button>
           </div>
         </div>
       </section>

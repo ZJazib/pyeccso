@@ -236,7 +236,7 @@ function Contact() {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full bg-brand-blue hover:bg-brand-blue/90 disabled:opacity-50 text-white rounded-md py-3 text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+              className="btn-hover w-full bg-brand-blue hover:bg-brand-blue-hover disabled:opacity-50 text-white rounded-md py-3 text-sm font-semibold transition-all flex items-center justify-center gap-2 shadow-xs active:scale-[0.99]"
             >
               {submitting ? (
                 <>
@@ -265,10 +265,10 @@ function Contact() {
                 <button
                   key={p.name}
                   onClick={() => setActive(p)}
-                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ring-1 transition-colors ${
+                  className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium ring-1 transition-all duration-200 hover:scale-[1.02] active:scale-95 ${
                     isActive
-                      ? "bg-brand-blue text-white ring-brand-blue"
-                      : "bg-white text-navy-900 ring-border hover:bg-brand-blue/10"
+                      ? "bg-brand-blue text-white ring-brand-blue shadow-xs"
+                      : "bg-white text-navy-900 ring-border hover:bg-brand-blue-wash hover:text-brand-blue"
                   }`}
                 >
                   <MapPin className="size-4" />

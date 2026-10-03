@@ -197,7 +197,7 @@ function Projects() {
             <div className="bg-brand-blue-wash rounded-lg p-6">
               <h4 className="text-brand-blue font-bold mb-2">{t("projects.partnerBox.title")}</h4>
               <p className="text-navy-900/70 text-sm mb-4">{t("projects.partnerBox.body")}</p>
-              <Link to="/contact" className="inline-flex items-center gap-2 bg-white border border-brand-blue text-brand-blue rounded-md px-4 py-2 text-sm font-semibold">
+              <Link to="/contact" className="btn-hover inline-flex items-center gap-2 bg-white border border-brand-blue text-brand-blue rounded-md px-4 py-2 text-sm font-semibold shadow-xs">
                 {t("projects.partnerBox.cta")} <Handshake className="size-4" />
               </Link>
             </div>
@@ -301,7 +301,7 @@ function Projects() {
                   </div>
                 </div>
               )}
-              {filtered.map((p) => {
+              {filtered.map((p, idx) => {
                 const tag = (p.data?.category as string) || (p.data?.sector_tag as string) || "";
                 const sectorColor = (SECTOR_COLOR[tag] || SECTOR_COLOR[p.data?.sector_tag as string]) || "bg-brand-blue";
                 const location = (p.data?.location as string) ?? "";
@@ -312,18 +312,19 @@ function Projects() {
                     key={p.id}
                     to="/projects/$slug"
                     params={{ slug: p.slug ?? "" }}
-                    className="block group"
+                    style={{ animationDelay: `${Math.min(idx * 35, 350)}ms` }}
+                    className="block group h-full animate-in fade-in-50 duration-300 fill-mode-backwards"
                   >
-                    <article className="h-full bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md group-hover:-translate-y-0.5 transition-all flex flex-col">
+                    <article className="card-lift h-full bg-white ring-1 ring-border rounded-xl overflow-hidden shadow-2xs flex flex-col">
                       <div className="p-5 flex flex-col flex-1">
                         {category && (
                           <div className="mb-3">
-                            <span className={`inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2.5 py-1 rounded uppercase`}>
+                            <span className={`inline-block ${sectorColor} text-white text-[10px] font-bold tracking-wider px-2.5 py-1 rounded uppercase shadow-2xs`}>
                               {category}
                             </span>
                           </div>
                         )}
-                        <h4 className="text-navy-900 font-bold text-sm mb-2 leading-snug group-hover:text-brand-blue transition-colors">{p.t.title}</h4>
+                        <h4 className="text-navy-900 font-bold text-sm mb-2 leading-snug group-hover:text-brand-blue transition-colors duration-200">{p.t.title}</h4>
                         <p className="text-navy-900/70 text-sm leading-relaxed mb-4 line-clamp-3">{p.t.summary || p.t.description}</p>
                         <div className="mt-auto pt-3 border-t border-border grid grid-cols-2 gap-3 text-xs">
                           <div>
@@ -341,7 +342,6 @@ function Projects() {
                     </article>
                   </Link>
                 );
-
               })}
             </div>
           </div>
@@ -354,7 +354,7 @@ function Projects() {
             <div className="text-xl font-bold">{t("projects.footerCta.title")}</div>
             <div className="text-white/70 text-sm">{t("projects.footerCta.body")}</div>
           </div>
-          <Link to="/contact" className="bg-white text-navy-900 rounded-md px-6 py-3 text-sm font-semibold inline-flex items-center gap-2 hover:bg-brand-blue-wash transition-colors">
+          <Link to="/contact" className="btn-hover bg-white text-navy-900 rounded-md px-6 py-3 text-sm font-semibold inline-flex items-center gap-2 hover:bg-brand-blue-wash shadow-xs">
             {t("projects.footerCta.button")} <ArrowRight className="size-4" />
           </Link>
         </div>

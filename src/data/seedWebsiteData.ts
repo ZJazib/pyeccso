@@ -116,58 +116,8 @@ export const SEED_CONTENT_ITEMS = [
   ...IMPLEMENTED_PROJECTS,
 
   // ==========================================
-  // 3. MEDIA (News, Events & Publications)
+  // 3. MEDIA (Events & Publications)
   // ==========================================
-  {
-    type: "news",
-    slug: "pyecso-winter-distribution-milestone-2025",
-    status: "published",
-    position: 1,
-    cover_url: "https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?auto=format&fit=crop&w=1200&q=80",
-    data: {
-      title: {
-        en: "PYECSO Successfully Concludes Winter Aid Relief for 2,500 Families",
-        dr: "تکمیل موفقانه روند توزیع کمک‌های زمستانی برای ۲,۵۰۰ خانواده توسط موسسه پایکسو",
-        ps: "د پایکسو لخوا ۲۵۰۰ کورنیو ته د ژمنیو مرستو د ویش بهیر په بریالیتوب سره بشپړ شو",
-      },
-      published_at: "2025-02-15T08:00:00.000Z",
-      summary: {
-        en: "The emergency distribution campaign reached remote snowbound villages in Logar and Ghazni with vital food and heating assistance.",
-        dr: "کمپاین امدادرسانی زمستانی پایکسو توانست به دوردست‌ترین روستاهای صعب‌العبور لوگر و غزنی کمک‌های حیاتی برساند.",
-        ps: "دغه مرستې د لوګر او غزني په لرو پرتو واورو پوښلو سیمو کې اړمنو کسانو ته ورسول شوې.",
-      },
-      body: {
-        en: "Under harsh sub-zero temperatures, PYECSO field teams coordinated with local community elders to deliver heating stoves, coal packages, and direct financial subsidies. Transparency and safety protocols were strictly adhered to during all phases.",
-        dr: "تیم‌های ساحوی پایکسو در سخت‌ترین شرایط اقلیمی با همکاری بزرگان محلی، بسته‌های سوخت و کمک‌های نقدی را با کمال احترام توزیع نمودند.",
-        ps: "د پایکسو کاري ډلو د ځایی مشرانو په همکارۍ اړمنو کورنیو ته سوځیدونکي توکي او نغدي مرستې په شفافه توګه وسپارلې.",
-      },
-    },
-  },
-  {
-    type: "news",
-    slug: "tvet-graduation-ceremony-jalalabad",
-    status: "published",
-    position: 2,
-    cover_url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80",
-    data: {
-      title: {
-        en: "Graduation of 250 Young Apprentices from PYECSO Technical Academy",
-        dr: "فراغت ۲۵۰ تن از جوانان از اکادمی مهارت‌های مسلکی پایکسو در ننگرهار",
-        ps: "په ننګرهار کې د پایکسو د مسلکي زده کړو اکاډمۍ څخه د ۲۵۰ ځوانانو فراغت",
-      },
-      published_at: "2025-02-05T08:00:00.000Z",
-      summary: {
-        en: "Graduates completed intensive courses in electrical work, plumbing, garment fabrication, and digital bookkeeping.",
-        dr: "فارغان دوره‌های فشرده برق‌کاری، نلدوانی، خیاطی و حسابداری را با موفقیت سپری نمودند.",
-        ps: "فارغانو د برښنا، نلدوانۍ، خیاطۍ او محاسبې په برخو کې تخصصي زده کړې ترلاسه کړې.",
-      },
-      body: {
-        en: "Special diplomas and business starter toolkits were awarded during an official ceremony attended by community representatives and civil society leaders.",
-        dr: "در محفل با شکوهی با حضور بزرگان جامعه و نمایندگان مدنی، تصدیق‌نامه‌ها و بسته‌های وسایل کار به فارغان تفویض گردید.",
-        ps: "فارغانو ته د فراغت سندونه او د کار پیل کولو ځانګړي وسایل ورکړل شول.",
-      },
-    },
-  },
   {
     type: "event",
     slug: "afghanistan-youth-education-summit-2026",
@@ -217,92 +167,8 @@ export const SEED_CONTENT_ITEMS = [
   },
 
   // ==========================================
-  // 4. CAREERS (Job Vacancies & Internships)
+  // 4. CAREERS (No current open positions)
   // ==========================================
-  {
-    type: "career",
-    slug: "senior-project-manager-humanitarian",
-    status: "published",
-    position: 1,
-    cover_url: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1200&q=80",
-    data: {
-      title: {
-        en: "Senior Project Manager — Cash & Emergency Relief",
-        dr: "مدیر ارشد پروژه‌های امدادی و کمک‌های نقدی",
-        ps: "د بیړنیو او نغدي مرستو پروژو لوړپوړی مدیر",
-      },
-      location: "Kabul HQ (with travel to provinces)",
-      employment_type: "Full-time",
-      deadline: "2026-09-30",
-      salary: "Competitive NGO Salary ($800 - $1,200 USD)",
-      summary: {
-        en: "Lead the strategic planning, field team management, donor reporting, and operational execution of multi-district cash projects.",
-        dr: "رهبری برنامه‌ریزی، مدیریت تیم‌های ساحوی، گزارش‌دهی به تمویل‌کننده‌گان و نظارت بر اجرای پروژه‌ها.",
-        ps: "د پروژو د پلان جوړونې، کاري ډلو مدیریت، او تمویل کوونکو ته د راپور ورکولو مشري.",
-      },
-      body: {
-        en: "Requirements: Master's or Bachelor's degree in Social Sciences, Business, or International Development with at least 5 years of proven NGO project management experience. Fluency in Dari, Pashto, and English is mandatory.",
-        dr: "شرایط: داشتن سند تحصیلی ماستری یا لیسانس و حداقل ۵ سال تجربه کاری در مدیریت پروژه‌های موسسات غیردولتی. تسلط کامل بر زبان‌های دری، پشتو و انگلیسی.",
-        ps: "شرایط: د لیسانس یا ماسټرۍ سند او په اړونده برخه کې ۵ کاله کاري تجربه. په پښتو، دري او انګلیسي روانې خبرې کول.",
-      },
-    },
-  },
-  {
-    type: "career",
-    slug: "monitoring-evaluation-specialist",
-    status: "published",
-    position: 2,
-    cover_url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80",
-    data: {
-      title: {
-        en: "Monitoring & Evaluation (M&E) Specialist",
-        dr: "متخصص نظارت و ارزیابی (M&E)",
-        ps: "د څارنې او ارزونې (M&E) متخصص",
-      },
-      location: "Kabul (Covering Central & Eastern Zones)",
-      employment_type: "Full-time",
-      deadline: "2026-09-25",
-      salary: "Competitive ($600 - $900 USD)",
-      summary: {
-        en: "Design M&E indicator frameworks, conduct field verification visits, manage KoboToolbox data collection, and author third-party verification reports.",
-        dr: "طراحی چهارچوب‌های نظارتی، سفرهای ارزیابی ساحوی، جمع‌آوری ارقام با کوبوتول‌باکس و تهیه گزارش‌های ارزیابی.",
-        ps: "د څارنې او ارزونې سیستم جوړول، ساحوي لیدنې او د معلوماتو راټولول.",
-      },
-      body: {
-        en: "Requirements: 3+ years experience with quantitative data collection (Kobo, ODK), strong analytical writing skills, and familiarity with humanitarian accountability standards.",
-        dr: "شرایط: حداقل ۳ سال تجربه در جمع‌آوری و تحلیل معلومات و تسلط بر معیارهای حسابدهی بشردوستانه.",
-        ps: "شرایط: لږترلږه ۳ کاله تجربه او د معلوماتو د تحلیل مهارت.",
-      },
-    },
-  },
-  {
-    type: "career",
-    slug: "tvet-tailoring-instructor-jalalabad",
-    status: "published",
-    position: 3,
-    cover_url: "https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=1200&q=80",
-    data: {
-      title: {
-        en: "Vocational Instructor — Tailoring & Garment Design",
-        dr: "استاد آموزش‌های حرفه‌ای خیاطی و طراحی لباس",
-        ps: "د مسلکي خیاطۍ او جامو ډیزاین ښوونکی",
-      },
-      location: "Jalalabad, Nangarhar",
-      employment_type: "Part-time / Full-time",
-      deadline: "2026-09-20",
-      salary: "Standard Scale",
-      summary: {
-        en: "Deliver practical daily sewing and design training to youth students enrolled in the PYECSO vocational center.",
-        dr: "تدریس عملی مهارت‌های خیاطی، برش و دوخت برای شاگردان مرکز آموزش‌های فنی و حرفه‌ای.",
-        ps: "ځوانو زده کوونکو ته د خیاطۍ عملي او مسلکي زده کړې ورکول.",
-      },
-      body: {
-        en: "Requirements: Proven master craftsman certification or diploma with minimum 3 years teaching experience.",
-        dr: "شرایط: داشتن تخصص و سند فراغت در رشته خیاطی همراه با ۳ سال تجربه تدریس.",
-        ps: "شرایط: په خیاطۍ کې تخصص او د تدریس تجربه لرل.",
-      },
-    },
-  },
 
   // ==========================================
   // 5. ABOUT US (Leadership, Partners & Testimonials)

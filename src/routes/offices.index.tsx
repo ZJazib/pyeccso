@@ -37,20 +37,25 @@ function Offices() {
             <div className="text-center text-navy-900/60 py-10">No offices published yet.</div>
           )}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {items.map((o) => (
+            {items.map((o, idx) => (
               <Link
                 key={o.id}
                 to="/offices/$slug"
                 params={{ slug: o.slug! }}
-                className="group bg-white ring-1 ring-border rounded-lg overflow-hidden hover:shadow-md transition-shadow flex flex-col"
+                style={{ animationDelay: `${idx * 60}ms` }}
+                className="card-lift group bg-white ring-1 ring-border rounded-xl overflow-hidden shadow-2xs flex flex-col"
               >
                 {o.cover_url && (
                   <div className="aspect-video bg-slate-100 overflow-hidden">
-                    <img src={o.cover_url} alt={o.t.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    <img
+                      src={o.cover_url}
+                      alt={o.t.name}
+                      className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+                    />
                   </div>
                 )}
                 <div className="p-5 flex flex-col flex-1">
-                  <h3 className="font-bold text-navy-900 text-lg mb-1">{o.t.name || o.t.title}</h3>
+                  <h3 className="font-bold text-navy-900 text-lg mb-1 group-hover:text-brand-blue transition-colors duration-200">{o.t.name || o.t.title}</h3>
                   {o.data?.city && (
                     <div className="text-sm text-navy-900/70 flex items-center gap-1 mb-3">
                       <MapPin className="size-3.5 text-brand-blue" /> {o.data.city}
@@ -63,7 +68,7 @@ function Offices() {
                     {o.data?.phone && <div className="flex items-center gap-1"><Phone className="size-3" /> {o.data.phone}</div>}
                     {o.data?.email && <div className="flex items-center gap-1"><Mail className="size-3" /> {o.data.email}</div>}
                   </div>
-                  <div className="mt-4 text-brand-blue font-semibold text-sm inline-flex items-center gap-1">
+                  <div className="mt-4 text-brand-blue font-semibold text-sm inline-flex items-center gap-1 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform duration-200">
                     View details <ArrowRight className="size-3.5" />
                   </div>
                 </div>

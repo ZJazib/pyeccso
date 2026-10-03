@@ -231,3 +231,190 @@ html[dir="rtl"] .ltr-inline {
 html[dir="rtl"] .object-right { object-position: left; }
 html[dir="rtl"] .object-left { object-position: right; }
 
+/* ============================================================
+   Modern, Professional NGO Animations & Transitions
+   ============================================================ */
+
+/* Hero Cinematic Ambient Pan */
+@keyframes heroPanZoom {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: scale(1.04) translate3d(-0.8%, -0.5%, 0);
+  }
+  100% {
+    transform: scale(1) translate3d(0, 0, 0);
+  }
+}
+
+.animate-hero-pan {
+  animation: heroPanZoom 26s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform;
+}
+
+/* Subtle Hero Eyebrow Badge Glow */
+@keyframes badgeGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 14px 2px rgba(30, 91, 168, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.35);
+  }
+}
+
+.animate-badge-glow {
+  animation: badgeGlow 4s ease-in-out infinite;
+}
+
+/* Gentle Card Lift on Hover */
+.card-lift {
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+}
+
+.card-lift:hover {
+  transform: translateY(-4px) scale(1.006);
+  box-shadow: 0 16px 32px -8px rgba(10, 35, 80, 0.12), 0 4px 12px -2px rgba(10, 35, 80, 0.05);
+}
+
+.card-lift:active {
+  transform: translateY(-1px) scale(1);
+  transition-duration: 0.15s;
+}
+
+/* Interactive Button Hover Physics */
+.btn-hover {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 0.22s ease,
+              color 0.22s ease;
+  will-change: transform;
+}
+
+.btn-hover:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 16px -4px rgba(30, 91, 168, 0.35);
+}
+
+.btn-hover:active {
+  transform: translateY(0.5px);
+  box-shadow: 0 2px 6px -2px rgba(30, 91, 168, 0.25);
+}
+
+/* Smooth Nav Link Hover Underline */
+.nav-link-hover {
+  position: relative;
+  transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.nav-link-hover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background-color: var(--brand-blue);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 9999px;
+}
+
+.nav-link-hover:hover::after,
+.nav-link-hover.active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+html[dir="rtl"] .nav-link-hover::after {
+  transform-origin: left;
+}
+
+html[dir="rtl"] .nav-link-hover:hover::after,
+html[dir="rtl"] .nav-link-hover.active::after {
+  transform-origin: right;
+}
+
+/* Smooth Image Zoom Container */
+.img-zoom-parent {
+  overflow: hidden;
+}
+
+.img-zoom-parent img,
+.img-zoom-target {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.img-zoom-parent:hover img,
+.group:hover .img-zoom-target {
+  transform: scale(1.05);
+}
+
+/* Hero Content Reveal Keyframes */
+@keyframes heroFadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-hero-1 {
+  animation: heroFadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+}
+
+.animate-hero-2 {
+  animation: heroFadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.25s backwards;
+}
+
+.animate-hero-3 {
+  animation: heroFadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.4s backwards;
+}
+
+.animate-hero-4 {
+  animation: heroFadeInUp 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.55s backwards;
+}
+
+/* Stagger Utilities */
+.stagger-1 { transition-delay: 60ms !important; }
+.stagger-2 { transition-delay: 120ms !important; }
+.stagger-3 { transition-delay: 180ms !important; }
+.stagger-4 { transition-delay: 240ms !important; }
+.stagger-5 { transition-delay: 300ms !important; }
+.stagger-6 { transition-delay: 360ms !important; }
+
+/* Strict Accessibility: Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .animate-hero-pan,
+  .animate-badge-glow,
+  .animate-hero-1,
+  .animate-hero-2,
+  .animate-hero-3,
+  .animate-hero-4 {
+    animation: none !important;
+    transform: none !important;
+  }
+  .card-lift:hover,
+  .card-lift:active,
+  .btn-hover:hover,
+  .btn-hover:active,
+  .img-zoom-parent:hover img,
+  .group:hover .img-zoom-target {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+

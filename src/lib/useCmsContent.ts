@@ -111,6 +111,8 @@ export function useCmsList(type: string) {
             updated_at: d.updatedAt,
           }));
           setItems(mapped);
+        } else {
+          setItems(getSeedFallback(type));
         }
         setLoading(false);
       },

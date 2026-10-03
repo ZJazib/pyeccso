@@ -28,26 +28,26 @@ export function LanguageSwitcher({ variant = "top" }: Props) {
 
   const trigger =
     variant === "top"
-      ? "flex items-center gap-1.5 hover:text-white text-white/80"
-      : "flex items-center gap-1.5 text-navy-900/80 hover:text-brand-blue";
+      ? "flex items-center gap-1.5 hover:text-white text-white/80 transition-colors duration-200"
+      : "flex items-center gap-1.5 text-navy-900/80 hover:text-brand-blue transition-colors duration-200";
 
   return (
     <div ref={ref} className="relative">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className={trigger}
+        className={`${trigger} group cursor-pointer`}
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <Globe className="size-3.5" />
+        <Globe className="size-3.5 transition-transform duration-200 group-hover:scale-110" />
         <span className="font-medium">{current.nativeLabel}</span>
-        <ChevronDown className="size-3" />
+        <ChevronDown className={`size-3 transition-transform duration-250 ease-out ${open ? "rotate-180" : ""}`} />
       </button>
       {open && (
         <ul
           role="listbox"
-          className="absolute end-0 mt-2 min-w-[160px] bg-white text-navy-900 shadow-lg ring-1 ring-black/5 rounded-md py-1 z-50"
+          className="absolute end-0 mt-2 min-w-[160px] bg-white text-navy-900 shadow-xl ring-1 ring-black/5 rounded-md py-1 z-50 animate-in fade-in-0 zoom-in-95 slide-in-from-top-1.5 duration-200 ease-out origin-top-right"
         >
           {LANGUAGES.map((l) => {
             const active = l.code === current.code;
@@ -61,15 +61,15 @@ export function LanguageSwitcher({ variant = "top" }: Props) {
                     applyLanguageSideEffects(l.code);
                     setOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between gap-3 px-3 py-2 text-sm hover:bg-brand-blue-wash ${
-                    active ? "text-brand-blue font-semibold" : ""
+                  className={`w-full flex items-center justify-between gap-3 px-3 py-2 text-sm transition-colors duration-150 hover:bg-brand-blue-wash ${
+                    active ? "text-brand-blue font-semibold bg-brand-blue-wash/50" : ""
                   }`}
                 >
                   <span className="flex flex-col items-start">
                     <span>{l.nativeLabel}</span>
                     <span className="text-[10px] text-navy-900/60">{l.label}</span>
                   </span>
-                  {active && <Check className="size-3.5" />}
+                  {active && <Check className="size-3.5 animate-in zoom-in-50 duration-150" />}
                 </button>
               </li>
             );
