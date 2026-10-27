@@ -223,7 +223,7 @@ function Home() {
                   const iconName = (s.data?.icon as string) || "Sprout";
                   const Icon = SECTOR_ICONS[iconName] ?? Sprout;
                   const title = s.t?.title || (s as any).title;
-                  const summary = s.t?.summary || s.t?.description || (s as any).summary;
+                  const summary = s.t?.summary || (s.t as any)?.description || (s as any).summary;
 
                   return (
                     <article
